@@ -1,0 +1,28 @@
+# Python: arquivos gerados automaticamente
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Dados locais: a persistência oficial fica no Hugging Face (ADR-002)
+data/*
+!data/.gitkeep
+
+# dbt: artefatos de execução
+transform/target/
+transform/dbt_packages/
+transform/logs/
+transform/.user.yml
+logs/
+
+# Site gerado: é produzido pelo pipeline, não é código-fonte
+build/
+
+# Segredos e configurações pessoais
+.env
+.DS_Store
+.vscode/
+.idea/
