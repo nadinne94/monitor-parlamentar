@@ -1,0 +1,15 @@
+[project]
+name = "monitor-parlamentar"
+version = "0.0.1"
+description = "Acompanhamento mensal da atuação de parlamentares a partir de dados abertos."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/monitor"]
