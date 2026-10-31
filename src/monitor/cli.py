@@ -1,5 +1,6 @@
 """CLI do projeto. O GitHub Actions chama exatamente estes comandos."""
 
+from datetime import datetime
 from typing import Annotated
 
 import typer
@@ -14,12 +15,25 @@ def principal() -> None:
     """Monitor Parlamentar: pipeline de dados abertos."""
 
 
+def validar_mes(valor: str | None) -> str | None:
+    """Aceita None ou um mês no formato AAAA-MM."""
+    if valor is None:
+        return None
+    try:
+        datetime.strptime(valor, "%Y-%m")
+    except ValueError:
+        raise typer.BadParameter("use o formato AAAA-MM, por exemplo 2026-09.") from None
+    return valor
+
+
 @app.command()
 def ingest(
     fonte: Annotated[
         str | None, typer.Option(help="Nome da fonte. Padrão: todas as ativas.")
     ] = None,
-    mes: Annotated[str | None, typer.Option(help="Mês de referência (AAAA-MM).")] = None,
+    mes: Annotated[
+        str | None, typer.Option(help="Mês de referência (AAAA-MM).", callback=validar_mes)
+    ] = None,
 ) -> None:
     """Coleta os dados brutos das fontes ativas."""
     alvo = [f for f in fontes_ativas() if fonte is None or f.nome == fonte]

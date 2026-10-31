@@ -44,3 +44,10 @@ def test_ingest_fonte_inexistente_falha(duas_fontes):
 
     assert resultado.exit_code == 1
     assert "Nenhuma fonte ativa" in resultado.output
+
+
+@pytest.mark.parametrize("mes", ["2026-13", "09-2026", "setembro"])
+def test_ingest_rejeita_mes_invalido(duas_fontes, mes):
+    resultado = runner.invoke(app, ["ingest", "--mes", mes])
+
+    assert resultado.exit_code == 2
