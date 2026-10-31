@@ -49,3 +49,10 @@ def test_arquivo_sem_fontes_devolve_lista_vazia(tmp_path):
     caminho = _escrever(tmp_path, "")
 
     assert carregar_fontes(caminho) == []
+
+
+def test_sources_yaml_do_repositorio_e_valido():
+    """Garante que o arquivo versionado continua legível."""
+    nomes = [f.nome for f in carregar_fontes()]
+
+    assert "camara_api" in nomes
