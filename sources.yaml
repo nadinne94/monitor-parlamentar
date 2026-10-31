@@ -1,0 +1,9 @@
+# Fontes de dados do projeto (ver ADR-003, seção 4).
+# Adicionar uma fonte: criar o módulo e incluí-la aqui.
+# Desligar uma fonte: marcar ativa: false.
+fontes:
+  camara_api:
+    ativa: true
+    # Fatos do contrato canônico que esta fonte fornece.
+    # Cada incremento do roadmap acrescenta o seu.
+    fatos: []
