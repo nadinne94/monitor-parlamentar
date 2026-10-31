@@ -37,3 +37,10 @@ def test_ingest_com_filtro_processa_so_a_fonte_pedida(duas_fontes):
     assert resultado.exit_code == 0
     assert "fonte=senado_api mes=2026-09" in resultado.output
     assert "camara_api" not in resultado.output
+
+
+def test_ingest_fonte_inexistente_falha(duas_fontes):
+    resultado = runner.invoke(app, ["ingest", "--fonte", "nao_existe"])
+
+    assert resultado.exit_code == 1
+    assert "Nenhuma fonte ativa" in resultado.output
