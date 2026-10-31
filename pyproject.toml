@@ -5,7 +5,9 @@ description = "Acompanhamento mensal da atuação de parlamentares a partir de d
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 license = { text = "MIT" }
-dependencies = []
+dependencies = [
+    "pyyaml>=6.0.3",
+]
 
 [build-system]
 requires = ["hatchling"]
