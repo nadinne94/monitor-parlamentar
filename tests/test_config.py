@@ -43,3 +43,9 @@ fontes:
     ativas = fontes_ativas(caminho)
 
     assert [f.nome for f in ativas] == ["camara_api"]
+
+
+def test_arquivo_sem_fontes_devolve_lista_vazia(tmp_path):
+    caminho = _escrever(tmp_path, "")
+
+    assert carregar_fontes(caminho) == []

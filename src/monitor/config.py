@@ -18,14 +18,14 @@ class Fonte:
 
 def carregar_fontes(caminho: Path = ARQUIVO_FONTES) -> list[Fonte]:
     """Lê o sources.yaml e devolve a lista de fontes declaradas."""
-    conteudo = yaml.safe_load(caminho.read_text(encoding="utf-8"))
+    conteudo = yaml.safe_load(caminho.read_text(encoding="utf-8")) or {}
     return [
         Fonte(
             nome=nome,
             ativa=bool(cfg.get("ativa", False)),
             fatos=tuple(cfg.get("fatos", [])),
         )
-        for nome, cfg in conteudo["fontes"].items()
+        for nome, cfg in (conteudo.get("fontes") or {}).items()
     ]
 
 
