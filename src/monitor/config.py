@@ -27,3 +27,8 @@ def carregar_fontes(caminho: Path = ARQUIVO_FONTES) -> list[Fonte]:
         )
         for nome, cfg in conteudo["fontes"].items()
     ]
+
+
+def fontes_ativas(caminho: Path = ARQUIVO_FONTES) -> list[Fonte]:
+    """Apenas as fontes marcadas como ativas."""
+    return [f for f in carregar_fontes(caminho) if f.ativa]
