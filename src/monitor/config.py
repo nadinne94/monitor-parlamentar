@@ -1,5 +1,6 @@
 """Configuração central: caminhos do projeto e fontes de dados."""
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -8,6 +9,10 @@ import yaml
 RAIZ = Path(__file__).resolve().parents[2]
 ARQUIVO_FONTES = RAIZ / "sources.yaml"
 DIR_TRANSFORM = RAIZ / "transform"
+DIR_DADOS = RAIZ / "data"
+DIR_SAIDA_SITE = RAIZ / "build" / "site"
+# Mesmo caminho usado pelo dbt (transform/profiles.yml).
+CAMINHO_DUCKDB = Path(os.environ.get("MONITOR_DUCKDB_PATH", DIR_DADOS / "monitor.duckdb"))
 
 
 @dataclass(frozen=True)

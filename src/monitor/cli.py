@@ -6,7 +6,8 @@ from typing import Annotated
 
 import typer
 
-from monitor.config import DIR_TRANSFORM, fontes_ativas
+from monitor.config import CAMINHO_DUCKDB, DIR_SAIDA_SITE, DIR_TRANSFORM, fontes_ativas
+from monitor.site.gerador import carregar_dados, renderizar
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -54,3 +55,16 @@ def transform() -> None:
     except subprocess.CalledProcessError as erro:
         typer.echo("O dbt build falhou. Veja o log acima.", err=True)
         raise typer.Exit(code=erro.returncode) from None
+
+
+@app.command()
+def site() -> None:
+    """Gera o site estático em build/site a partir do banco."""
+    if not CAMINHO_DUCKDB.exists():
+        typer.echo(
+            f"Banco não encontrado em {CAMINHO_DUCKDB}. Rode `monitor transform` antes.",
+            err=True,
+        )
+        raise typer.Exit(code=1)
+    paginas = renderizar(carregar_dados(CAMINHO_DUCKDB), DIR_SAIDA_SITE)
+    typer.echo(f"Site gerado em {DIR_SAIDA_SITE} ({len(paginas)} página(s)).")
