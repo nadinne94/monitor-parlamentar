@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<section class="abertura">
+    <h1>O que seu deputado fez este mês?</h1>
+    <p class="lead">Proposições apresentadas, presença em plenário, votos nominais e gastos da cota parlamentar
+        dos deputados federais de Minas Gerais, mês a mês.</p>
+    <p class="aviso">Em construção. Os primeiros relatórios cobrem a legislatura que começa em fevereiro de 2027.</p>
+</section>
+
+<section>
+    <h2>Meses previstos</h2>
+    {% if dados.meses %}
+    <ol class="meses">
+        {% for mes in dados.meses %}
+        <li>{{ mes | mes }}</li>
+        {% endfor %}
+    </ol>
+    {% else %}
+    <p>Nenhum mês disponível ainda.</p>
+    {% endif %}
+</section>
+{% endblock %}
