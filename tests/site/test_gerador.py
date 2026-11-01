@@ -45,3 +45,18 @@ def test_index_sem_meses_mostra_estado_vazio(tmp_path):
 
     html = (tmp_path / "index.html").read_text(encoding="utf-8")
     assert "Nenhum mês disponível" in html
+
+
+def test_copia_estaticos_e_desativa_jekyll(tmp_path, dados):
+    renderizar(dados, tmp_path)
+
+    assert (tmp_path / "static" / "estilo.css").is_file()
+    assert (tmp_path / ".nojekyll").is_file()
+
+
+def test_apaga_build_anterior(tmp_path, dados):
+    (tmp_path / "antigo.html").write_text("velho", encoding="utf-8")
+
+    renderizar(dados, tmp_path)
+
+    assert not (tmp_path / "antigo.html").exists()
