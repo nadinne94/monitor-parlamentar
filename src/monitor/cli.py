@@ -1,11 +1,12 @@
 """CLI do projeto. O GitHub Actions chama exatamente estes comandos."""
 
+import subprocess
 from datetime import datetime
 from typing import Annotated
 
 import typer
 
-from monitor.config import fontes_ativas
+from monitor.config import DIR_TRANSFORM, fontes_ativas
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -43,3 +44,14 @@ def ingest(
     if not alvo:
         typer.echo(f"Nenhuma fonte ativa com o nome '{fonte}'.", err=True)
         raise typer.Exit(code=1)
+
+
+@app.command()
+def transform() -> None:
+    """Executa os modelos e testes do dbt."""
+    comando = ["dbt", "build", "--project-dir", ".", "--profiles-dir", "."]
+    try:
+        subprocess.run(comando, cwd=DIR_TRANSFORM, check=True)
+    except subprocess.CalledProcessError as erro:
+        typer.echo("O dbt build falhou. Veja o log acima.", err=True)
+        raise typer.Exit(code=erro.returncode) from None

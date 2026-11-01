@@ -7,6 +7,7 @@ import yaml
 
 RAIZ = Path(__file__).resolve().parents[2]
 ARQUIVO_FONTES = RAIZ / "sources.yaml"
+DIR_TRANSFORM = RAIZ / "transform"
 
 
 @dataclass(frozen=True)

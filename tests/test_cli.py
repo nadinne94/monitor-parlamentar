@@ -1,8 +1,10 @@
+import subprocess
+
 import pytest
 from typer.testing import CliRunner
 
 from monitor.cli import app
-from monitor.config import Fonte
+from monitor.config import DIR_TRANSFORM, Fonte
 
 runner = CliRunner()
 
@@ -51,3 +53,32 @@ def test_ingest_rejeita_mes_invalido(duas_fontes, mes):
     resultado = runner.invoke(app, ["ingest", "--mes", mes])
 
     assert resultado.exit_code == 2
+
+
+def test_transform_executa_dbt_build_na_pasta_transform(monkeypatch):
+    chamadas = []
+
+    def run_falso(comando, **kwargs):
+        chamadas.append((comando, kwargs))
+
+    monkeypatch.setattr("monitor.cli.subprocess.run", run_falso)
+
+    resultado = runner.invoke(app, ["transform"])
+
+    assert resultado.exit_code == 0
+    comando, kwargs = chamadas[0]
+    assert comando[:2] == ["dbt", "build"]
+    assert kwargs["cwd"] == DIR_TRANSFORM
+    assert kwargs["check"] is True
+
+
+def test_transform_propaga_falha_do_dbt(monkeypatch):
+    def run_que_falha(comando, **kwargs):
+        raise subprocess.CalledProcessError(returncode=1, cmd=comando)
+
+    monkeypatch.setattr("monitor.cli.subprocess.run", run_que_falha)
+
+    resultado = runner.invoke(app, ["transform"])
+
+    assert resultado.exit_code == 1
+    assert "dbt build falhou" in resultado.output
