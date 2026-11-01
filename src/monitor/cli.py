@@ -38,12 +38,11 @@ def ingest(
 ) -> None:
     """Coleta os dados brutos das fontes ativas."""
     alvo = [f for f in fontes_ativas() if fonte is None or f.nome == fonte]
-    for f in alvo:
-        typer.echo(f"[ingest] fonte={f.nome} mes={mes or 'atual'}: ainda não implementado.")
-
     if not alvo:
         typer.echo(f"Nenhuma fonte ativa com o nome '{fonte}'.", err=True)
         raise typer.Exit(code=1)
+    for f in alvo:
+        typer.echo(f"[ingest] fonte={f.nome} mes={mes or 'atual'}: ainda não implementado.")
 
 
 @app.command()
