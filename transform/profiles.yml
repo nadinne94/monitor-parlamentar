@@ -1,0 +1,7 @@
+monitor_parlamentar:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('MONITOR_DUCKDB_PATH', '../data/monitor.duckdb') }}"
+      threads: 4
