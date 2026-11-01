@@ -1,0 +1,13 @@
+name: monitor_parlamentar
+version: "0.0.1"
+config-version: 2
+profile: monitor_parlamentar
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  monitor_parlamentar:
+    exemplo:
+      +materialized: table

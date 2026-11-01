@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: exemplo_meses
+    description: "Modelo de exemplo: meses de fevereiro a dezembro de 2027."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: mes_ref
+        data_type: date
+        description: "Primeiro dia do mês de referência."
+        data_tests:
+          - not_null
+          - unique
