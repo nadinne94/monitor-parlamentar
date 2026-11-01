@@ -1,5 +1,6 @@
 import subprocess
 
+import duckdb
 import pytest
 from typer.testing import CliRunner
 
@@ -82,3 +83,38 @@ def test_transform_propaga_falha_do_dbt(monkeypatch):
 
     assert resultado.exit_code == 1
     assert "dbt build falhou" in resultado.output
+
+
+def test_site_sem_banco_falha_com_orientacao(tmp_path, monkeypatch):
+    monkeypatch.setattr("monitor.cli.CAMINHO_DUCKDB", tmp_path / "nao_existe.duckdb")
+
+    resultado = runner.invoke(app, ["site"])
+
+    assert resultado.exit_code == 1
+    assert "Rode `monitor transform` antes" in resultado.output
+
+
+def test_site_gera_paginas_a_partir_do_banco(tmp_path, monkeypatch):
+    banco = tmp_path / "teste.duckdb"
+    with duckdb.connect(str(banco)) as conexao:
+        conexao.execute("create table exemplo_meses as select date '2027-02-01' as mes_ref")
+    saida = tmp_path / "site"
+    monkeypatch.setattr("monitor.cli.CAMINHO_DUCKDB", banco)
+    monkeypatch.setattr("monitor.cli.DIR_SAIDA_SITE", saida)
+
+    resultado = runner.invoke(app, ["site"])
+
+    assert resultado.exit_code == 0
+    assert "fevereiro de 2027" in (saida / "index.html").read_text(encoding="utf-8")
+
+
+def test_pipeline_executa_as_etapas_em_ordem(monkeypatch):
+    etapas = []
+    monkeypatch.setattr("monitor.cli.ingest", lambda **kwargs: etapas.append("ingest"))
+    monkeypatch.setattr("monitor.cli.transform", lambda: etapas.append("transform"))
+    monkeypatch.setattr("monitor.cli.site", lambda: etapas.append("site"))
+
+    resultado = runner.invoke(app, ["pipeline", "--mes", "2026-09"])
+
+    assert resultado.exit_code == 0
+    assert etapas == ["ingest", "transform", "site"]

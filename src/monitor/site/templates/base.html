@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}Monitor Parlamentar{% endblock %}</title>
+    <meta name="description"
+        content="O que os deputados federais de Minas Gerais fizeram em cada mês: proposições, presença, votos e gastos.">
+    <link rel="stylesheet" href="static/estilo.css">
+</head>
+
+<body>
+    <header class="topo">
+        <a class="marca" href="./">Monitor Parlamentar</a>
+    </header>
+    <main>
+        {% block conteudo %}{% endblock %}
+    </main>
+    <footer class="rodape">
+        <p>Dados: <a href="https://dadosabertos.camara.leg.br/">Dados Abertos da Câmara dos Deputados</a>.
+            Atualizado em {{ dados.gerado_em | data_hora }}. Versão {{ dados.versao }}.</p>
+    </footer>
+</body>
+
+</html>
