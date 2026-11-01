@@ -1,8 +1,15 @@
 from datetime import date, datetime
 
+import duckdb
 import pytest
 
-from monitor.site.gerador import DadosSite, formatar_data_hora, formatar_mes, renderizar
+from monitor.site.gerador import (
+    DadosSite,
+    carregar_dados,
+    formatar_data_hora,
+    formatar_mes,
+    renderizar,
+)
 
 
 @pytest.mark.parametrize(
@@ -60,3 +67,16 @@ def test_apaga_build_anterior(tmp_path, dados):
     renderizar(dados, tmp_path)
 
     assert not (tmp_path / "antigo.html").exists()
+
+
+def test_carregar_dados_le_do_duckdb(tmp_path):
+    caminho = tmp_path / "teste.duckdb"
+    with duckdb.connect(str(caminho)) as conexao:
+        conexao.execute(
+            "create table exemplo_meses as "
+            "select * from (values (date '2027-03-01'), (date '2027-02-01')) as t(mes_ref)"
+        )
+
+    dados = carregar_dados(caminho)
+
+    assert dados.meses == [date(2027, 2, 1), date(2027, 3, 1)]

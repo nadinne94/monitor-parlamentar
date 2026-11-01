@@ -9,6 +9,7 @@ from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import duckdb
 from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescape
 
 from monitor import __version__
@@ -79,3 +80,10 @@ def renderizar(dados: DadosSite, destino: Path) -> list[Path]:
     # Impede o GitHub Pages de processar o site com Jekyll.
     (destino / ".nojekyll").touch()
     return [pagina]
+
+
+def carregar_dados(caminho_duckdb: Path) -> DadosSite:
+    """Consulta o banco. No Incremento 0, só o modelo de exemplo."""
+    with duckdb.connect(str(caminho_duckdb), read_only=True) as conexao:
+        linhas = conexao.execute("select mes_ref from exemplo_meses order by mes_ref").fetchall()
+    return DadosSite(meses=[linha[0] for linha in linhas])
