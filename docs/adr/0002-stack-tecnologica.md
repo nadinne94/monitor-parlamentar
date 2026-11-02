@@ -1,6 +1,6 @@
 # ADR-002: Stack tecnológica
 
-- **Status:** Aceito. A decisão sobre o site está em revisão no [ADR-004](0004-gerador-de-site-proprio.md)
+- **Status:** Aceito. A decisão sobre o site foi substituída pelo [ADR-004](0004-gerador-de-site-proprio.md); a persistência dos dados brutos foi adiada pelo [ADR-005](0005-adiar-persistencia-dados-brutos.md)
 - **Data:** 2026-10-30
 - **Decisora:** Nadinne
 - **Relacionado:** [ADR-001](0001-escopo-do-mvp.md)
