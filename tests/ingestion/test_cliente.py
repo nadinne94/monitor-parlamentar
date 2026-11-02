@@ -1,4 +1,5 @@
 import httpx
+import pytest
 
 from monitor.ingestion.core.cliente import USER_AGENT, ClienteApi
 
@@ -35,3 +36,19 @@ def test_get_json_envia_parametros_e_cabecalhos():
     assert requisicao.url.params["itens"] == "100"
     assert requisicao.headers["Accept"] == "application/json"
     assert requisicao.headers["User-Agent"] == USER_AGENT
+
+
+@pytest.mark.parametrize("status", [429, 500, 503])
+def test_tenta_de_novo_apos_falha_temporaria(status):
+    respostas = iter([httpx.Response(status), httpx.Response(200, json={"ok": True})])
+    chamadas = []
+
+    def handler(request):
+        chamadas.append(request)
+        return next(respostas)
+
+    with cliente_com(handler) as cliente:
+        corpo = cliente.get_json("/deputados")
+
+    assert corpo == {"ok": True}
+    assert len(chamadas) == 2

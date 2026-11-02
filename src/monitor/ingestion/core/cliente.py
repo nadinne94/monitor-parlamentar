@@ -7,8 +7,17 @@ pelo link `next`. Não conhece nenhum recurso específico (deputados, votações
 from typing import Any
 
 import httpx
+from tenacity import Retrying, retry_if_exception, stop_after_attempt, wait_exponential
 
 USER_AGENT = "monitor-parlamentar (+https://github.com/nadinne94/monitor-parlamentar)"
+
+
+def eh_falha_temporaria(erro: BaseException) -> bool:
+    """Falhas que valem uma nova tentativa: 429 e erros 5xx."""
+    if isinstance(erro, httpx.HTTPStatusError):
+        status = erro.response.status_code
+        return status == 429 or status >= 500
+    return False
 
 
 class ClienteApi:
@@ -31,9 +40,19 @@ class ClienteApi:
         self._espera_inicial = espera_inicial
 
     def get_json(self, caminho: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
-        resposta = self._http.get(caminho, params=params)
-        resposta.raise_for_status()
-        return resposta.json()
+        """GET com novas tentativas em falhas temporárias. Erros 4xx falham na hora."""
+        tentativas = Retrying(
+            stop=stop_after_attempt(self._max_tentativas),
+            wait=wait_exponential(multiplier=self._espera_inicial, max=30),
+            retry=retry_if_exception(eh_falha_temporaria),
+            reraise=True,
+        )
+        for tentativa in tentativas:
+            with tentativa:
+                resposta = self._http.get(caminho, params=params)
+                resposta.raise_for_status()
+                return resposta.json()
+        raise AssertionError("inalcançável")  # pragma: no cover
 
     def close(self) -> None:
         self._http.close()
