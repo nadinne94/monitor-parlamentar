@@ -8,6 +8,8 @@ from typing import Any
 
 import httpx
 
+USER_AGENT = "monitor-parlamentar (+https://github.com/nadinne94/monitor-parlamentar)"
+
 
 class ClienteApi:
     def __init__(
@@ -19,7 +21,12 @@ class ClienteApi:
         espera_inicial: float = 1.0,
         transport: httpx.BaseTransport | None = None,
     ) -> None:
-        self._http = httpx.Client(base_url=base_url, timeout=timeout, transport=transport)
+        self._http = httpx.Client(
+            base_url=base_url,
+            timeout=timeout,
+            headers={"Accept": "application/json", "User-Agent": USER_AGENT},
+            transport=transport,
+        )
         self._max_tentativas = max_tentativas
         self._espera_inicial = espera_inicial
 

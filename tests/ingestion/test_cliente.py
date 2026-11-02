@@ -1,6 +1,6 @@
 import httpx
 
-from monitor.ingestion.core.cliente import ClienteApi
+from monitor.ingestion.core.cliente import USER_AGENT, ClienteApi
 
 BASE = "https://api.exemplo.gov.br/v2"
 
@@ -17,3 +17,21 @@ def test_get_json_devolve_o_corpo_da_resposta():
         corpo = cliente.get_json("/deputados")
 
     assert corpo == {"dados": [{"id": 1}]}
+
+
+def test_get_json_envia_parametros_e_cabecalhos():
+    recebidas = []
+
+    def handler(request):
+        recebidas.append(request)
+        return httpx.Response(200, json={})
+
+    with cliente_com(handler) as cliente:
+        cliente.get_json("/deputados", {"siglaUf": "MG", "itens": 100})
+
+    requisicao = recebidas[0]
+    assert requisicao.url.path == "/v2/deputados"
+    assert requisicao.url.params["siglaUf"] == "MG"
+    assert requisicao.url.params["itens"] == "100"
+    assert requisicao.headers["Accept"] == "application/json"
+    assert requisicao.headers["User-Agent"] == USER_AGENT
