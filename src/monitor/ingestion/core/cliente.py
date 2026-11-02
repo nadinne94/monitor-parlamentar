@@ -17,7 +17,9 @@ def eh_falha_temporaria(erro: BaseException) -> bool:
     if isinstance(erro, httpx.HTTPStatusError):
         status = erro.response.status_code
         return status == 429 or status >= 500
-    return False
+    """Falhas que valem uma nova tentativa: rede, tempo esgotado, 429 e erros 5xx."""
+    ...
+    return isinstance(erro, httpx.TransportError)
 
 
 class ClienteApi:

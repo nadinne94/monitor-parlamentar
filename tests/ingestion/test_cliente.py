@@ -52,3 +52,19 @@ def test_tenta_de_novo_apos_falha_temporaria(status):
 
     assert corpo == {"ok": True}
     assert len(chamadas) == 2
+
+
+def test_tenta_de_novo_apos_erro_de_conexao():
+    chamadas = []
+
+    def handler(request):
+        chamadas.append(request)
+        if len(chamadas) == 1:
+            raise httpx.ConnectError("conexão recusada")
+        return httpx.Response(200, json={"ok": True})
+
+    with cliente_com(handler) as cliente:
+        corpo = cliente.get_json("/deputados")
+
+    assert corpo == {"ok": True}
+    assert len(chamadas) == 2
