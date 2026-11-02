@@ -68,3 +68,29 @@ def test_tenta_de_novo_apos_erro_de_conexao():
 
     assert corpo == {"ok": True}
     assert len(chamadas) == 2
+
+
+def test_erro_definitivo_falha_sem_nova_tentativa():
+    chamadas = []
+
+    def handler(request):
+        chamadas.append(request)
+        return httpx.Response(404)
+
+    with cliente_com(handler) as cliente, pytest.raises(httpx.HTTPStatusError):
+        cliente.get_json("/nao-existe")
+
+    assert len(chamadas) == 1
+
+
+def test_desiste_depois_do_maximo_de_tentativas():
+    chamadas = []
+
+    def handler(request):
+        chamadas.append(request)
+        return httpx.Response(503)
+
+    with cliente_com(handler, max_tentativas=3) as cliente, pytest.raises(httpx.HTTPStatusError):
+        cliente.get_json("/deputados")
+
+    assert len(chamadas) == 3
