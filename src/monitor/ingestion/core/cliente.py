@@ -4,6 +4,7 @@ Responsável por: requisições com novas tentativas em falhas temporárias e pa
 pelo link `next`. Não conhece nenhum recurso específico (deputados, votações etc.).
 """
 
+from collections.abc import Iterator
 from typing import Any
 
 import httpx
@@ -55,6 +56,19 @@ class ClienteApi:
                 resposta.raise_for_status()
                 return resposta.json()
         raise AssertionError("inalcançável")  # pragma: no cover
+
+    def paginar(self, caminho: str, params: dict[str, Any] | None = None) -> Iterator[dict]:
+        """Percorre todas as páginas seguindo o link `next` e devolve cada item de `dados`."""
+        corpo = self.get_json(caminho, params)
+        while True:
+            yield from corpo.get("dados", [])
+            proxima = next(
+                (link["href"] for link in corpo.get("links", []) if link.get("rel") == "next"),
+                None,
+            )
+            if proxima is None:
+                return
+            corpo = self.get_json(proxima)
 
     def close(self) -> None:
         self._http.close()

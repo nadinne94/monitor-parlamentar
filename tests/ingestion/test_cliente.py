@@ -94,3 +94,44 @@ def test_desiste_depois_do_maximo_de_tentativas():
         cliente.get_json("/deputados")
 
     assert len(chamadas) == 3
+
+
+def pagina(dados, proxima=None):
+    links = [{"rel": "self", "href": "..."}]
+    if proxima:
+        links.append({"rel": "next", "href": proxima})
+    return {"dados": dados, "links": links}
+
+
+def test_paginar_uma_pagina():
+    def handler(request):
+        return httpx.Response(200, json=pagina([{"id": 1}, {"id": 2}]))
+
+    with cliente_com(handler) as cliente:
+        itens = list(cliente.paginar("/deputados"))
+
+    assert itens == [{"id": 1}, {"id": 2}]
+
+
+def test_paginar_segue_o_link_next():
+    paginas = {
+        "1": pagina([{"id": 1}], proxima=f"{BASE}/deputados?pagina=2&itens=1"),
+        "2": pagina([{"id": 2}], proxima=f"{BASE}/deputados?pagina=3&itens=1"),
+        "3": pagina([{"id": 3}]),
+    }
+
+    def handler(request):
+        return httpx.Response(200, json=paginas[request.url.params.get("pagina", "1")])
+
+    with cliente_com(handler) as cliente:
+        itens = list(cliente.paginar("/deputados", {"itens": 1}))
+
+    assert itens == [{"id": 1}, {"id": 2}, {"id": 3}]
+
+
+def test_paginar_resposta_vazia_nao_e_erro():
+    def handler(request):
+        return httpx.Response(200, json=pagina([]))
+
+    with cliente_com(handler) as cliente:
+        assert list(cliente.paginar("/deputados")) == []
