@@ -165,9 +165,9 @@ O detalhe ainda oferece um dado que o contrato não tem e que será útil: `cond
 
 1. **Paginação:** o cliente HTTP deve seguir o link `next` até ele deixar de existir, e não calcular páginas. Funciona para uma página (deputados de MG) e para muitas (proposições, despesas, nos incrementos seguintes).
 2. **Validação tolerante:** campos não essenciais, como `email`, devem ser opcionais no modelo Pydantic. A disponibilidade deles já mudou no passado.
-3. **Decisão pendente: lista apenas ou lista e detalhe?**
-   - **Opção A, só a lista (1 requisição):** atende a todas as colunas, exceto `nome_civil`, que passa a ser anulável no contrato e é preenchida num incremento futuro.
-   - **Opção B, lista e detalhe (54 requisições):** preenche `nome_civil` e traz `situacao` e `condicaoEleitoral`, ao custo de 53 chamadas extras, cuidado com o volume de requisições à API e o descarte obrigatório do CPF.
+3. **Decisão: só a lista (opção A).** A ingestão faz uma única requisição. A coluna `nome_civil` da
+   `dim_parlamentar` fica nula no Incremento 1. O detalhe de cada deputado entra no Incremento 6
+   (virada de legislatura), junto com `situacao`, `condicaoEleitoral` e o descarte obrigatório do CPF.
 4. **Legislatura:** a consulta sem `idLegislatura` devolve sempre a bancada atual. A ingestão deve aceitar a legislatura como parâmetro (57 para testes com dados de 2026; 58 a partir de fevereiro de 2027), em vez de depender do comportamento padrão da API, que muda sozinho em 1º de fevereiro.
 5. **CPF:** se o detalhe for usado (opção B), o descarte do CPF na ingestão é obrigatório e precisa de um teste próprio.
 6. **Tamanho da página:** o cliente pede sempre um valor explícito (`itens=100`) em vez de depender do padrão da API, que nesta consulta foi de 1000 itens e pode mudar.

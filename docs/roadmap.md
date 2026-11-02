@@ -151,6 +151,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 **Escopo**
 - `pipeline.yml` agendado semanalmente, reprocessando os últimos 3 meses.
 - Falha no pipeline abre automaticamente uma issue no GitHub.
+- Detalhe de cada deputado (endpoint `/deputados/{id}`): preenche `nome_civil`, traz `situacao` e `condicaoEleitoral` (titular ou suplente) e descarta o CPF na ingestão, com teste próprio. Ver `docs/spikes/s0-api-deputados.md`.
 - Página de metodologia no site: o que cada métrica mede, de onde vem, limitações conhecidas e data da última atualização.
 - Tratamento da virada de legislatura: testes para deputados que saem, que entram, suplentes e mudança de partido.
 - README final do projeto, como no projeto anterior.
