@@ -1,6 +1,6 @@
 # Roadmap do MVP
 
-Referências: [ADR-001 Escopo](adr/0001-escopo-do-mvp.md) · [ADR-002 Stack](adr/0002-stack-tecnologica.md) · [ADR-003 Contrato](adr/0003-contrato-canonico.md) · [ADR-004 Site](adr/0004-gerador-de-site-proprio.md)
+Referências: [ADR-001 Escopo](adr/0001-escopo-do-mvp.md) · [ADR-002 Stack](adr/0002-stack-tecnologica.md) · [ADR-003 Contrato](adr/0003-contrato-canonico.md) · [ADR-004 Site](adr/0004-gerador-de-site-proprio.md) · [ADR-005 Persistência](adr/0005-adiar-persistencia-dados-brutos.md)
 
 ## Meta
 
@@ -37,7 +37,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 | Spike | Pergunta a responder | Antes de |
 |---|---|---|
 | **S1: Presença na API** | Qual endpoint da API da Câmara representa melhor a presença em sessões deliberativas do plenário? Como aparecem ausências justificadas? | Incremento 5 (mas fazer cedo, durante o Incremento 1) |
-| **S2: Persistência no Hugging Face** | É possível ler e gravar Parquet num dataset do Hugging Face a partir do GitHub Actions, com token em Secrets? Há limites que afetem o projeto? | Incremento 1 |
+| **S2: Persistência no Hugging Face** | É possível ler e gravar Parquet num dataset do Hugging Face a partir do GitHub Actions, com token em Secrets? Há limites que afetem o projeto? | Incremento 4 |
 | **S3: Câmara municipal** | A câmara da cidade usa SAPL? Há API ou exportação em formato aberto? O que a prefeitura oferece? | Pós-MVP (pode ser feito a qualquer momento, como pausa) |
 
 ## Incrementos
@@ -64,14 +64,12 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 
 ### Incremento 1: Deputados de MG · `v0.1.0`
 **Estimativa:** 2 semanas · **Alvo:** fim de novembro/2026
-**Depende de:** S2
 
 **Objetivo:** primeira fatia real, que valida a arquitetura inteira.
 
 **Escopo**
 - `ingestion/core/`: cliente HTTP genérico com retry, backoff, paginação e log estruturado. **É a parte mais testada do projeto.**
 - Ingestão da lista de deputados de MG, validada com Pydantic, gravada em Parquet.
-- Persistência dos dados brutos no Hugging Face.
 - Modelos dbt: staging da Câmara → adaptador → `dim_parlamentar` e `dim_mes` com contrato aplicado.
 - `sources.yaml` com a fonte `camara_api` ativa.
 - Site: página inicial com a lista da bancada e uma página por deputado (nome, foto, partido), gerada por template.
@@ -84,7 +82,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 ### Incremento 2: Proposições · `v0.2.0`
 **Estimativa:** 2 semanas · **Alvo:** meados de dezembro/2026
 
-**Antes de começar:** ADR-005 definindo quais tipos de proposição contam (`tipo_categoria`) e como tratar autoria x coautoria.
+**Antes de começar:** ADR-006 definindo quais tipos de proposição contam (`tipo_categoria`) e como tratar autoria x coautoria.
 
 **Escopo**
 - Ingestão das proposições de autoria dos deputados de MG.
@@ -112,8 +110,10 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 
 ### Incremento 4: Despesas da cota parlamentar · `v0.4.0`
 **Estimativa:** 2 semanas · **Alvo:** meados de janeiro/2027
+**Depende de:** S2 (persistência dos dados brutos, ver ADR-005)
 
 **Escopo**
+- Persistência dos dados brutos no Hugging Face.
 - Ingestão das despesas da CEAP.
 - `fato_despesa` com contrato e testes (ex.: `valor_liquido >= 0`).
 - Mascaramento de CPF de fornecedor pessoa física (teste unitário obrigatório).
@@ -131,10 +131,10 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 
 **Por que por último:** é a métrica com maior risco de interpretação (ausências justificadas, tipos de sessão). O spike S1 resolve a dúvida técnica cedo; a implementação vem quando o restante já está estável.
 
-**Antes de começar:** ADR-006 definindo o que conta como sessão, como presença e como ausência justificada.
+**Antes de começar:** ADR-007 definindo o que conta como sessão, como presença e como ausência justificada.
 
 **Escopo**
-- Ingestão de presença conforme definido no ADR-006.
+- Ingestão de presença conforme definido no ADR-007.
 - `fato_presenca` com contrato e testes.
 - Resumo: colunas de sessões, presença e ausências justificadas.
 - Site: bloco "Presença", sempre separando ausência justificada de ausência.
