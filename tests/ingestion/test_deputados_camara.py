@@ -1,7 +1,13 @@
+import duckdb
 import httpx
 import pytest
 
-from monitor.ingestion.camara.deputados import URL_API_CAMARA, IngestaoError, buscar_deputados
+from monitor.ingestion.camara.deputados import (
+    URL_API_CAMARA,
+    IngestaoError,
+    buscar_deputados,
+    gravar_parquet,
+)
 from monitor.ingestion.camara.modelos import DeputadoApi
 from monitor.ingestion.core.cliente import ClienteApi
 
@@ -49,3 +55,24 @@ def test_deputado_de_outra_uf_e_erro():
 
     with cliente_com_dados(dados) as cliente, pytest.raises(IngestaoError, match="SP"):
         buscar_deputados(cliente, "MG")
+
+
+def test_gravar_parquet_preserva_dados_e_tipos(tmp_path):
+    deputados = [
+        DeputadoApi.model_validate(deputado(1, "Ana", siglaPartido="PT")),
+        DeputadoApi.model_validate(deputado(2, "Bruno")),
+    ]
+    destino = tmp_path / "bruto" / "deputados.parquet"
+    gravar_parquet(deputados, destino)
+    with duckdb.connect() as conexao:
+        linhas = conexao.execute(
+            "select id, nome, sigla_partido, email from read_parquet(?) order by id",
+            [str(destino)],
+        ).fetchall()
+        tipos = conexao.execute(
+            "select typeof(id), typeof(email), typeof(_carregado_em) from read_parquet(?) limit 1",
+            [str(destino)],
+        ).fetchone()
+
+    assert linhas == [(1, "Ana", "PT", None), (2, "Bruno", None, None)]
+    assert tipos == ("BIGINT", "VARCHAR", "TIMESTAMP WITH TIME ZONE")

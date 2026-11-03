@@ -1,9 +1,28 @@
 """Ingestão da lista de deputados da API da Câmara (ver docs/spikes/s0-api-deputados.md)."""
 
+from datetime import UTC, datetime
+from pathlib import Path
+
+import pyarrow as pa
+import pyarrow.parquet as pq
+
 from monitor.ingestion.camara.modelos import DeputadoApi
 from monitor.ingestion.core.cliente import ClienteApi
 
 URL_API_CAMARA = "https://dadosabertos.camara.leg.br/api/v2"
+
+ESQUEMA_DEPUTADOS = pa.schema(
+    [
+        ("id", pa.int64()),
+        ("nome", pa.string()),
+        ("sigla_uf", pa.string()),
+        ("id_legislatura", pa.int64()),
+        ("sigla_partido", pa.string()),
+        ("url_foto", pa.string()),
+        ("email", pa.string()),
+        ("_carregado_em", pa.timestamp("us", tz="UTC")),
+    ]
+)
 
 
 class IngestaoError(Exception):
@@ -21,3 +40,13 @@ def buscar_deputados(cliente: ClienteApi, uf: str) -> list[DeputadoApi]:
     if outras_ufs:
         raise IngestaoError(f"Pedido para {uf}, mas vieram deputados de: {', '.join(outras_ufs)}.")
     return deputados
+
+
+def gravar_parquet(deputados: list[DeputadoApi], destino: Path) -> Path:
+    """Grava os deputados em Parquet, com o horário da carga."""
+    carregado_em = datetime.now(UTC)
+    linhas = [{**d.model_dump(), "_carregado_em": carregado_em} for d in deputados]
+    tabela = pa.Table.from_pylist(linhas, schema=ESQUEMA_DEPUTADOS)
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    pq.write_table(tabela, destino)
+    return destino
