@@ -47,3 +47,10 @@ def gravar_parquet(deputados: list[DeputadoApi], destino: Path) -> Path:
     destino.parent.mkdir(parents=True, exist_ok=True)
     pq.write_table(tabela, destino)
     return destino
+
+
+def ingerir_deputados(uf: str, destino: Path) -> Path:
+    """Busca os deputados da UF na API da Câmara e grava o Parquet bruto."""
+    with ClienteApi(URL_API_CAMARA) as cliente:
+        deputados = buscar_deputados(cliente, uf)
+    return gravar_parquet(deputados, destino)
