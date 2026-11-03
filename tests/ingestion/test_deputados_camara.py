@@ -24,3 +24,15 @@ def test_buscar_deputados_valida_cada_item():
 
     assert [d.nome for d in deputados] == ["Ana", "Bruno"]
     assert all(isinstance(d, DeputadoApi) for d in deputados)
+
+
+def test_buscar_deputados_envia_os_filtros():
+    recebidas = []
+
+    with cliente_com_dados([deputado(1, "Ana")], recebidas) as cliente:
+        buscar_deputados(cliente, "MG")
+
+    params = recebidas[0].url.params
+    assert params["siglaUf"] == "MG"
+    assert params["itens"] == "100"
+    assert recebidas[0].url.path == "/api/v2/deputados"

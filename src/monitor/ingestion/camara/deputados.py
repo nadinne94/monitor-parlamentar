@@ -8,4 +8,5 @@ URL_API_CAMARA = "https://dadosabertos.camara.leg.br/api/v2"
 
 def buscar_deputados(cliente: ClienteApi, uf: str) -> list[DeputadoApi]:
     """Deputados em exercício da UF, validados."""
-    return [DeputadoApi.model_validate(item) for item in cliente.paginar("/deputados")]
+    params = {"siglaUf": uf, "ordem": "ASC", "ordenarPor": "nome", "itens": 100}
+    return [DeputadoApi.model_validate(item) for item in cliente.paginar("/deputados", params)]
