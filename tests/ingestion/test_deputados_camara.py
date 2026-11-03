@@ -1,0 +1,26 @@
+import httpx
+
+from monitor.ingestion.camara.deputados import URL_API_CAMARA, buscar_deputados
+from monitor.ingestion.camara.modelos import DeputadoApi
+from monitor.ingestion.core.cliente import ClienteApi
+
+
+def deputado(id_, nome, uf="MG", **extra):
+    return {"id": id_, "nome": nome, "siglaUf": uf, "idLegislatura": 57, **extra}
+
+
+def cliente_com_dados(dados, recebidas=None):
+    def handler(request):
+        if recebidas is not None:
+            recebidas.append(request)
+        return httpx.Response(200, json={"dados": dados, "links": []})
+
+    return ClienteApi(URL_API_CAMARA, transport=httpx.MockTransport(handler), espera_inicial=0)
+
+
+def test_buscar_deputados_valida_cada_item():
+    with cliente_com_dados([deputado(1, "Ana"), deputado(2, "Bruno")]) as cliente:
+        deputados = buscar_deputados(cliente, "MG")
+
+    assert [d.nome for d in deputados] == ["Ana", "Bruno"]
+    assert all(isinstance(d, DeputadoApi) for d in deputados)
