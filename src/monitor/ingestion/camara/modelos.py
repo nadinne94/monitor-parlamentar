@@ -1,0 +1,19 @@
+"""Modelos de validação das respostas da API da Câmara dos Deputados.
+
+Descrevem os dados como a API os entrega, com os nomes de campo convertidos para
+snake_case. Campos que o projeto não usa são descartados (ver docs/spikes/s0-api-deputados.md).
+"""
+
+from pydantic import BaseModel, Field
+
+
+class DeputadoApi(BaseModel):
+    """Um item da lista `GET /deputados`."""
+
+    id: int
+    nome: str
+    sigla_uf: str = Field(alias="siglaUf")
+    id_legislatura: int = Field(alias="idLegislatura")
+    sigla_partido: str = Field(alias="siglaPartido")
+    url_foto: str = Field(alias="urlFoto")
+    email: str
