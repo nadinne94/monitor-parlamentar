@@ -1,8 +1,9 @@
 """Configuração central: caminhos do projeto e fontes de dados."""
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -20,6 +21,7 @@ class Fonte:
     nome: str
     ativa: bool
     fatos: tuple[str, ...]
+    parametros: dict[str, Any] = field(default_factory=dict)
 
 
 def carregar_fontes(caminho: Path = ARQUIVO_FONTES) -> list[Fonte]:
@@ -30,6 +32,7 @@ def carregar_fontes(caminho: Path = ARQUIVO_FONTES) -> list[Fonte]:
             nome=nome,
             ativa=bool(cfg.get("ativa", False)),
             fatos=tuple(cfg.get("fatos", [])),
+            parametros=dict(cfg.get("parametros") or {}),
         )
         for nome, cfg in (conteudo.get("fontes") or {}).items()
     ]

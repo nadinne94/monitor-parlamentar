@@ -56,3 +56,23 @@ def test_sources_yaml_do_repositorio_e_valido():
     nomes = [f.nome for f in carregar_fontes()]
 
     assert "camara_api" in nomes
+
+
+def test_carrega_parametros_da_fonte(tmp_path):
+    caminho = _escrever(
+        tmp_path,
+        """
+fontes:
+  camara_api:
+    ativa: true
+    parametros:
+      uf: MG
+  senado_api:
+    ativa: true
+""",
+    )
+
+    camara, senado = carregar_fontes(caminho)
+
+    assert camara.parametros == {"uf": "MG"}
+    assert senado.parametros == {}
