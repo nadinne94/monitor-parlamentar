@@ -4,12 +4,12 @@ import pytest
 
 from monitor.ingestion.camara.deputados import (
     URL_API_CAMARA,
-    IngestaoError,
     buscar_deputados,
     gravar_parquet,
 )
 from monitor.ingestion.camara.modelos import DeputadoApi
 from monitor.ingestion.core.cliente import ClienteApi
+from monitor.ingestion.core.erros import IngestaoError
 
 
 def deputado(id_, nome, uf="MG", **extra):

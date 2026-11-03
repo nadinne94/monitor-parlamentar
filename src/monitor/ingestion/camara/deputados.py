@@ -8,6 +8,7 @@ import pyarrow.parquet as pq
 
 from monitor.ingestion.camara.modelos import DeputadoApi
 from monitor.ingestion.core.cliente import ClienteApi
+from monitor.ingestion.core.erros import IngestaoError
 
 URL_API_CAMARA = "https://dadosabertos.camara.leg.br/api/v2"
 
@@ -23,10 +24,6 @@ ESQUEMA_DEPUTADOS = pa.schema(
         ("_carregado_em", pa.timestamp("us", tz="UTC")),
     ]
 )
-
-
-class IngestaoError(Exception):
-    """A API respondeu, mas o conteúdo não faz sentido para o projeto."""
 
 
 def buscar_deputados(cliente: ClienteApi, uf: str) -> list[DeputadoApi]:
