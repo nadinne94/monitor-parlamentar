@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class DeputadoApi(BaseModel):
     """Um item da lista `GET /deputados`."""
 
-    model_config = ConfigDict(extra="ignore", frozen=True)
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
 
     id: int = Field(gt=0)
     nome: str = Field(min_length=1)

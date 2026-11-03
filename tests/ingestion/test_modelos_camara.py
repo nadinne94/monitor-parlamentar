@@ -75,3 +75,11 @@ def test_rejeita_campo_essencial_invalido(item_api, campo, valor):
 
     with pytest.raises(ValidationError):
         DeputadoApi.model_validate(item_api)
+
+
+def test_remove_espacos_nas_pontas(item_api):
+    item_api["nome"] = "  Aécio Neves  "
+
+    deputado = DeputadoApi.model_validate(item_api)
+
+    assert deputado.nome == "Aécio Neves"
