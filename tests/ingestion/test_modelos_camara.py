@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 from monitor.ingestion.camara.modelos import DeputadoApi
 
@@ -41,3 +42,19 @@ def test_campos_nao_essenciais_sao_opcionais(item_api):
     assert deputado.email is None
     assert deputado.url_foto is None
     assert deputado.sigla_partido is None
+
+
+def test_campos_desconhecidos_sao_descartados(item_api):
+    item_api["cpf"] = "00000000000"
+
+    deputado = DeputadoApi.model_validate(item_api)
+
+    assert "cpf" not in deputado.model_dump()
+    assert "uri" not in deputado.model_dump()
+
+
+def test_deputado_e_imutavel(item_api):
+    deputado = DeputadoApi.model_validate(item_api)
+
+    with pytest.raises(ValidationError):
+        deputado.nome = "Outro nome"

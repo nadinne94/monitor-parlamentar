@@ -4,11 +4,13 @@ Descrevem os dados como a API os entrega, com os nomes de campo convertidos para
 snake_case. Campos que o projeto não usa são descartados (ver docs/spikes/s0-api-deputados.md).
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class DeputadoApi(BaseModel):
     """Um item da lista `GET /deputados`."""
+
+    model_config = ConfigDict(extra="ignore", frozen=True)
 
     id: int
     nome: str
