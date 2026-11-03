@@ -76,3 +76,13 @@ def test_gravar_parquet_preserva_dados_e_tipos(tmp_path):
 
     assert linhas == [(1, "Ana", "PT", None), (2, "Bruno", None, None)]
     assert tipos == ("BIGINT", "VARCHAR", "TIMESTAMP WITH TIME ZONE")
+
+
+@pytest.mark.vcr
+def test_api_real_bancada_de_mg():
+    with ClienteApi(URL_API_CAMARA) as cliente:
+        deputados = buscar_deputados(cliente, "MG")
+
+    assert len(deputados) == 53
+    assert {d.sigla_uf for d in deputados} == {"MG"}
+    assert deputados[0].nome == "Aécio Neves"
