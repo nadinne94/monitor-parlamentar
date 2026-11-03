@@ -14,6 +14,6 @@ class DeputadoApi(BaseModel):
     nome: str
     sigla_uf: str = Field(alias="siglaUf")
     id_legislatura: int = Field(alias="idLegislatura")
-    sigla_partido: str = Field(alias="siglaPartido")
-    url_foto: str = Field(alias="urlFoto")
-    email: str
+    sigla_partido: str | None = Field(default=None, alias="siglaPartido")
+    url_foto: str | None = Field(default=None, alias="urlFoto")
+    email: str | None = None

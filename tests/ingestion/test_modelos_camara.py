@@ -29,3 +29,15 @@ def test_converte_item_da_api(item_api):
     assert deputado.id_legislatura == 57
     assert deputado.url_foto == "https://www.camara.leg.br/internet/deputado/bandep/74646.jpg"
     assert deputado.email == "dep.aecioneves@camara.leg.br"
+
+
+def test_campos_nao_essenciais_sao_opcionais(item_api):
+    item_api["email"] = None
+    del item_api["urlFoto"]
+    del item_api["siglaPartido"]
+
+    deputado = DeputadoApi.model_validate(item_api)
+
+    assert deputado.email is None
+    assert deputado.url_foto is None
+    assert deputado.sigla_partido is None
