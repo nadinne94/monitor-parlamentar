@@ -12,10 +12,10 @@ class DeputadoApi(BaseModel):
 
     model_config = ConfigDict(extra="ignore", frozen=True)
 
-    id: int
-    nome: str
-    sigla_uf: str = Field(alias="siglaUf")
-    id_legislatura: int = Field(alias="idLegislatura")
+    id: int = Field(gt=0)
+    nome: str = Field(min_length=1)
+    sigla_uf: str = Field(alias="siglaUf", pattern=r"^[A-Z]{2}$")
+    id_legislatura: int = Field(alias="idLegislatura", gt=0)
     sigla_partido: str | None = Field(default=None, alias="siglaPartido")
     url_foto: str | None = Field(default=None, alias="urlFoto")
     email: str | None = None

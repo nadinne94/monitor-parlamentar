@@ -58,3 +58,20 @@ def test_deputado_e_imutavel(item_api):
 
     with pytest.raises(ValidationError):
         deputado.nome = "Outro nome"
+
+
+@pytest.mark.parametrize(
+    ("campo", "valor"),
+    [
+        ("id", None),
+        ("id", "abc"),
+        ("nome", ""),
+        ("siglaUf", "Minas"),
+        ("idLegislatura", 0),
+    ],
+)
+def test_rejeita_campo_essencial_invalido(item_api, campo, valor):
+    item_api[campo] = valor
+
+    with pytest.raises(ValidationError):
+        DeputadoApi.model_validate(item_api)
