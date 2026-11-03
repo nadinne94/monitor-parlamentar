@@ -1,5 +1,5 @@
 # Fontes de dados do projeto (ver ADR-003, seção 4).
-# Adicionar uma fonte: criar o módulo e incluí-la aqui.
+# Adicionar uma fonte: criar o módulo, registrá-lo em monitor/ingestion/fontes.py e incluí-lo aqui.
 # Desligar uma fonte: marcar ativa: false.
 fontes:
   camara_api:
@@ -7,3 +7,5 @@ fontes:
     # Fatos do contrato canônico que esta fonte fornece.
     # Cada incremento do roadmap acrescenta o seu.
     fatos: []
+    parametros:
+      uf: MG
