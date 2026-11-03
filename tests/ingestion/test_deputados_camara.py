@@ -1,6 +1,7 @@
 import httpx
+import pytest
 
-from monitor.ingestion.camara.deputados import URL_API_CAMARA, buscar_deputados
+from monitor.ingestion.camara.deputados import URL_API_CAMARA, IngestaoError, buscar_deputados
 from monitor.ingestion.camara.modelos import DeputadoApi
 from monitor.ingestion.core.cliente import ClienteApi
 
@@ -36,3 +37,15 @@ def test_buscar_deputados_envia_os_filtros():
     assert params["siglaUf"] == "MG"
     assert params["itens"] == "100"
     assert recebidas[0].url.path == "/api/v2/deputados"
+
+
+def test_lista_vazia_e_erro():
+    with cliente_com_dados([]) as cliente, pytest.raises(IngestaoError, match="nenhum deputado"):
+        buscar_deputados(cliente, "MG")
+
+
+def test_deputado_de_outra_uf_e_erro():
+    dados = [deputado(1, "Ana"), deputado(2, "Carla", uf="SP")]
+
+    with cliente_com_dados(dados) as cliente, pytest.raises(IngestaoError, match="SP"):
+        buscar_deputados(cliente, "MG")
