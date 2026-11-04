@@ -35,6 +35,8 @@ jobs:
   transform:
     name: dbt (transform)
     runs-on: ubuntu-latest
+    env:
+      MONITOR_DIR_BRUTO: ${{ github.workspace }}/tests/fixtures/bruto
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
