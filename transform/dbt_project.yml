@@ -14,8 +14,6 @@ vars:
 
 models:
   monitor_parlamentar:
-    exemplo:
-      +materialized: table
     staging:
       +materialized: view
     intermediate:

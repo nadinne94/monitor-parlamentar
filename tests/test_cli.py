@@ -161,7 +161,11 @@ def test_site_sem_banco_falha_com_orientacao(tmp_path, monkeypatch):
 def test_site_gera_paginas_a_partir_do_banco(tmp_path, monkeypatch):
     banco = tmp_path / "teste.duckdb"
     with duckdb.connect(str(banco)) as conexao:
-        conexao.execute("create table exemplo_meses as select date '2027-02-01' as mes_ref")
+        conexao.execute(
+            "create table dim_parlamentar as select '74646' as id_fonte,"
+            " 'Aécio Neves' as nome_parlamentar, 'PSDB' as partido_atual, 'MG' as uf,"
+            " null::varchar as url_foto, true as em_exercicio"
+        )
     saida = tmp_path / "site"
     monkeypatch.setattr("monitor.cli.CAMINHO_DUCKDB", banco)
     monkeypatch.setattr("monitor.cli.DIR_SAIDA_SITE", saida)
@@ -169,7 +173,7 @@ def test_site_gera_paginas_a_partir_do_banco(tmp_path, monkeypatch):
     resultado = runner.invoke(app, ["site"])
 
     assert resultado.exit_code == 0
-    assert "fevereiro de 2027" in (saida / "index.html").read_text(encoding="utf-8")
+    assert "Aécio Neves" in (saida / "index.html").read_text(encoding="utf-8")
 
 
 def test_pipeline_executa_as_etapas_em_ordem(monkeypatch):

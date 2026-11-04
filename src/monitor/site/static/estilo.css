@@ -85,9 +85,52 @@ h2 {
     border-radius: 6px;
 }
 
-.meses {
+.suave {
+    color: var(--suave);
+}
+
+.perfil {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-top: 1.5rem;
+}
+
+.perfil h1 {
+    margin-top: 0;
+}
+
+.foto {
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+@media (max-width: 32rem) {
+    .bancada {
+        columns: 1;
+    }
+
+    .perfil {
+        flex-direction: column;
+    }
+}
+
+.bancada {
+    list-style: none;
+    padding: 0;
     columns: 2;
-    padding-left: 1.25rem;
+    column-gap: 2rem;
+}
+
+.bancada li {
+    padding: 0.25rem 0;
+    break-inside: avoid;
+}
+
+.partido {
+    color: var(--suave);
+    font-size: 0.85rem;
 }
 
 .rodape {

@@ -7,12 +7,12 @@
     <title>{% block titulo %}Monitor Parlamentar{% endblock %}</title>
     <meta name="description"
         content="O que os deputados federais de Minas Gerais fizeram em cada mês: proposições, presença, votos e gastos.">
-    <link rel="stylesheet" href="static/estilo.css">
+    <link rel="stylesheet" href="{{ raiz }}static/estilo.css">
 </head>
 
 <body>
     <header class="topo">
-        <a class="marca" href="./">Monitor Parlamentar</a>
+        <a class="marca" href="{{ raiz }}index.html">Monitor Parlamentar</a>
     </header>
     <main>
         {% block conteudo %}{% endblock %}
