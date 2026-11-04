@@ -72,6 +72,26 @@ def test_index_sem_deputados_mostra_estado_vazio(tmp_path):
     assert "Nenhum deputado carregado" in html
 
 
+def test_gera_uma_pagina_por_deputado(tmp_path, dados):
+    paginas = renderizar(dados, tmp_path)
+
+    pagina = tmp_path / "deputados" / "74646.html"
+    html = pagina.read_text(encoding="utf-8")
+    assert len(paginas) == 3
+    assert "<h1>Aécio Neves</h1>" in html
+    assert "PSDB-MG" in html
+    assert 'href="../static/estilo.css"' in html
+    assert 'alt="Foto de Aécio Neves"' in html
+    assert "https://www.camara.leg.br/deputados/74646" in html
+
+
+def test_deputado_sem_foto_nao_gera_imagem(tmp_path, dados):
+    renderizar(dados, tmp_path)
+
+    html = (tmp_path / "deputados" / "107970.html").read_text(encoding="utf-8")
+    assert "<img" not in html
+
+
 def test_copia_estaticos_e_desativa_jekyll(tmp_path, dados):
     renderizar(dados, tmp_path)
 

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}{{ p.nome }} · Monitor Parlamentar{% endblock %}
+{% block conteudo %}
+<p><a href="{{ raiz }}index.html">← Bancada de Minas Gerais</a></p>
+
+<section class="perfil">
+    {% if p.url_foto %}
+    <img class="foto" src="{{ p.url_foto }}" alt="Foto de {{ p.nome }}" width="120" height="160" loading="lazy">
+    {% endif %}
+    <div>
+        <h1>{{ p.nome }}</h1>
+        <p class="lead">Deputado federal · {{ p.partido or "sem partido" }}-{{ p.uf }}</p>
+        <p><a href="https://www.camara.leg.br/deputados/{{ p.id_fonte }}">Perfil na Câmara dos Deputados</a></p>
+    </div>
+</section>
+
+<section>
+    <h2>Relatório do mês</h2>
+    <p class="aviso">Os relatórios mensais começam em {{ dados.primeiro_mes | mes }}: proposições, presença, votos e
+        gastos.</p>
+</section>
+{% endblock %}

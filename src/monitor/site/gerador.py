@@ -94,13 +94,23 @@ def renderizar(dados: DadosSite, destino: Path) -> list[Path]:
     shutil.copytree(DIR_STATIC, destino / "static")
 
     ambiente = criar_ambiente()
-    html = ambiente.get_template("index.html").render(dados=dados)
-    pagina = destino / "index.html"
-    pagina.write_text(html, encoding="utf-8")
+    paginas = [_gravar(ambiente, "index.html", destino / "index.html", dados=dados, raiz="")]
+
+    (destino / "deputados").mkdir()
+    for parlamentar in dados.parlamentares:
+        pagina = destino / "deputados" / f"{parlamentar.id_fonte}.html"
+        paginas.append(
+            _gravar(ambiente, "deputado.html", pagina, dados=dados, raiz="../", p=parlamentar)
+        )
 
     # Impede o GitHub Pages de processar o site com Jekyll.
     (destino / ".nojekyll").touch()
-    return [pagina]
+    return paginas
+
+
+def _gravar(ambiente: Environment, template: str, arquivo: Path, **contexto) -> Path:
+    arquivo.write_text(ambiente.get_template(template).render(**contexto), encoding="utf-8")
+    return arquivo
 
 
 def carregar_dados(caminho_duckdb: Path) -> DadosSite:
