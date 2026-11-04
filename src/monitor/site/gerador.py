@@ -17,6 +17,7 @@ from monitor import __version__
 
 DIR_STATIC = Path(__file__).parent / "static"
 FUSO = ZoneInfo("America/Sao_Paulo")
+PRIMEIRO_MES = date(2027, 2, 1)
 
 MESES = (
     "janeiro",
@@ -51,13 +52,25 @@ def chave_ordenacao(texto: str) -> str:
     return sem_acento.casefold()
 
 
+@dataclass(frozen=True)
+class Parlamentar:
+    """Uma linha da dim_parlamentar, com o que o site exibe."""
+
+    id_fonte: str
+    nome: str
+    partido: str | None
+    uf: str
+    url_foto: str | None
+
+
 @dataclass
 class DadosSite:
     """Tudo o que os templates recebem."""
 
-    meses: list[date] = field(default_factory=list)
+    parlamentares: list[Parlamentar] = field(default_factory=list)
     gerado_em: datetime = field(default_factory=lambda: datetime.now(FUSO))
     versao: str = __version__
+    primeiro_mes: date = PRIMEIRO_MES
 
 
 def criar_ambiente() -> Environment:
@@ -91,7 +104,15 @@ def renderizar(dados: DadosSite, destino: Path) -> list[Path]:
 
 
 def carregar_dados(caminho_duckdb: Path) -> DadosSite:
-    """Consulta o banco. No Incremento 0, só o modelo de exemplo."""
+    """Lê os parlamentares em exercício da dim_parlamentar, em ordem alfabética."""
+    consulta = """
+        select id_fonte, nome_parlamentar, partido_atual, uf, url_foto
+        from dim_parlamentar
+        where em_exercicio
+    """
     with duckdb.connect(str(caminho_duckdb), read_only=True) as conexao:
-        linhas = conexao.execute("select mes_ref from exemplo_meses order by mes_ref").fetchall()
-    return DadosSite(meses=[linha[0] for linha in linhas])
+        linhas = conexao.execute(consulta).fetchall()
+    parlamentares = sorted(
+        (Parlamentar(*linha) for linha in linhas), key=lambda p: chave_ordenacao(p.nome)
+    )
+    return DadosSite(parlamentares=parlamentares)

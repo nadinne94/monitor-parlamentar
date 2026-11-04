@@ -5,6 +5,7 @@ import pytest
 
 from monitor.site.gerador import (
     DadosSite,
+    Parlamentar,
     carregar_dados,
     chave_ordenacao,
     formatar_data_hora,
@@ -29,30 +30,46 @@ def test_formatar_data_hora():
     assert formatar_data_hora(datetime(2027, 3, 5, 9, 30)) == "05/03/2027 às 09:30"
 
 
+def test_chave_ordenacao_ignora_acentos_e_caixa():
+    nomes = ["Zé Vitor", "Álvaro", "ana", "Aécio Neves", "Éder"]
+
+    ordenados = sorted(nomes, key=chave_ordenacao)
+
+    assert ordenados == ["Aécio Neves", "Álvaro", "ana", "Éder", "Zé Vitor"]
+
+
+def parlamentar(id_fonte, nome, partido="PT", url_foto=None):
+    return Parlamentar(id_fonte=id_fonte, nome=nome, partido=partido, uf="MG", url_foto=url_foto)
+
+
 @pytest.fixture
 def dados():
     return DadosSite(
-        meses=[date(2027, 2, 1), date(2027, 3, 1)],
+        parlamentares=[
+            parlamentar("74646", "Aécio Neves", "PSDB", "https://exemplo/74646.jpg"),
+            parlamentar("107970", "Ana Paula Leão", "PP"),
+        ],
         gerado_em=datetime(2027, 3, 5, 9, 30),
         versao="9.9.9",
     )
 
 
-def test_index_mostra_meses_data_e_versao(tmp_path, dados):
+def test_index_lista_a_bancada_com_links(tmp_path, dados):
     renderizar(dados, tmp_path)
 
     html = (tmp_path / "index.html").read_text(encoding="utf-8")
-    assert "fevereiro de 2027" in html
-    assert "março de 2027" in html
+    assert "2 deputados em exercício" in html
+    assert 'href="deputados/74646.html"' in html
+    assert html.index("Aécio Neves") < html.index("Ana Paula Leão")
     assert "05/03/2027 às 09:30" in html
     assert "9.9.9" in html
 
 
-def test_index_sem_meses_mostra_estado_vazio(tmp_path):
-    renderizar(DadosSite(meses=[]), tmp_path)
+def test_index_sem_deputados_mostra_estado_vazio(tmp_path):
+    renderizar(DadosSite(parlamentares=[]), tmp_path)
 
     html = (tmp_path / "index.html").read_text(encoding="utf-8")
-    assert "Nenhum mês disponível" in html
+    assert "Nenhum deputado carregado" in html
 
 
 def test_copia_estaticos_e_desativa_jekyll(tmp_path, dados):
@@ -70,22 +87,27 @@ def test_apaga_build_anterior(tmp_path, dados):
     assert not (tmp_path / "antigo.html").exists()
 
 
-def test_carregar_dados_le_do_duckdb(tmp_path):
-    caminho = tmp_path / "teste.duckdb"
+def criar_dim_parlamentar(caminho, linhas):
     with duckdb.connect(str(caminho)) as conexao:
         conexao.execute(
-            "create table exemplo_meses as "
-            "select * from (values (date '2027-03-01'), (date '2027-02-01')) as t(mes_ref)"
+            "create table dim_parlamentar (id_fonte varchar, nome_parlamentar varchar,"
+            " partido_atual varchar, uf varchar, url_foto varchar, em_exercicio boolean)"
         )
+        conexao.executemany("insert into dim_parlamentar values (?, ?, ?, ?, ?, ?)", linhas)
+
+
+def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
+    caminho = tmp_path / "teste.duckdb"
+    criar_dim_parlamentar(
+        caminho,
+        [
+            ("3", "Zé Vitor", "PL", "MG", None, True),
+            ("2", "Álvaro", "PT", "MG", None, True),
+            ("1", "Ana", "PP", "MG", None, False),
+        ],
+    )
 
     dados = carregar_dados(caminho)
 
-    assert dados.meses == [date(2027, 2, 1), date(2027, 3, 1)]
-
-
-def test_chave_ordenacao_ignora_acentos_e_caixa():
-    nomes = ["Zé Vitor", "Álvaro", "ana", "Aécio Neves", "Éder"]
-
-    ordenados = sorted(nomes, key=chave_ordenacao)
-
-    assert ordenados == ["Aécio Neves", "Álvaro", "ana", "Éder", "Zé Vitor"]
+    assert [p.nome for p in dados.parlamentares] == ["Álvaro", "Zé Vitor"]
+    assert dados.parlamentares[0] == Parlamentar("2", "Álvaro", "PT", "MG", None)
