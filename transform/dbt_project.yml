@@ -4,10 +4,21 @@ config-version: 2
 profile: monitor_parlamentar
 
 model-paths: ["models"]
+test-paths: ["tests"]
 target-path: "target"
 clean-targets: ["target", "dbt_packages"]
+
+vars:
+  # Fontes cujos adaptadores alimentam os marts (ADR-003, seção 4).
+  fontes_ativas: ["camara_api"]
 
 models:
   monitor_parlamentar:
     exemplo:
+      +materialized: table
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
       +materialized: table
