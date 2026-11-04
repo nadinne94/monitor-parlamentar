@@ -131,3 +131,13 @@ def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
 
     assert [p.nome for p in dados.parlamentares] == ["Álvaro", "Zé Vitor"]
     assert dados.parlamentares[0] == Parlamentar("2", "Álvaro", "PT", "MG", None)
+
+
+def test_textos_da_api_sao_escapados(tmp_path):
+    malicioso = parlamentar("1", "<script>alert(1)</script>")
+
+    renderizar(DadosSite(parlamentares=[malicioso]), tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert "<script>" not in html
+    assert "&lt;script&gt;" in html
