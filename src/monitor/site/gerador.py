@@ -4,6 +4,7 @@ Lê apenas tabelas do contrato canônico no DuckDB e renderiza HTML com Jinja2.
 """
 
 import shutil
+import unicodedata
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from pathlib import Path
@@ -41,6 +42,13 @@ def formatar_mes(valor: date) -> str:
 def formatar_data_hora(valor: datetime) -> str:
     """datetime(2027, 3, 5, 9, 30) -> '05/03/2027 às 09:30'."""
     return f"{valor:%d/%m/%Y} às {valor:%H:%M}"
+
+
+def chave_ordenacao(texto: str) -> str:
+    """Chave para ordenar nomes como uma pessoa ordenaria: sem acento e sem caixa."""
+    decomposto = unicodedata.normalize("NFD", texto)
+    sem_acento = "".join(c for c in decomposto if not unicodedata.combining(c))
+    return sem_acento.casefold()
 
 
 @dataclass

@@ -6,6 +6,7 @@ import pytest
 from monitor.site.gerador import (
     DadosSite,
     carregar_dados,
+    chave_ordenacao,
     formatar_data_hora,
     formatar_mes,
     renderizar,
@@ -80,3 +81,11 @@ def test_carregar_dados_le_do_duckdb(tmp_path):
     dados = carregar_dados(caminho)
 
     assert dados.meses == [date(2027, 2, 1), date(2027, 3, 1)]
+
+
+def test_chave_ordenacao_ignora_acentos_e_caixa():
+    nomes = ["Zé Vitor", "Álvaro", "ana", "Aécio Neves", "Éder"]
+
+    ordenados = sorted(nomes, key=chave_ordenacao)
+
+    assert ordenados == ["Aécio Neves", "Álvaro", "ana", "Éder", "Zé Vitor"]
