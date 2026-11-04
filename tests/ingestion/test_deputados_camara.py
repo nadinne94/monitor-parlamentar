@@ -4,12 +4,13 @@ import pytest
 
 from monitor.ingestion.camara.deputados import (
     URL_API_CAMARA,
-    IngestaoError,
     buscar_deputados,
     gravar_parquet,
+    ingerir_deputados,
 )
 from monitor.ingestion.camara.modelos import DeputadoApi
 from monitor.ingestion.core.cliente import ClienteApi
+from monitor.ingestion.core.erros import IngestaoError
 
 
 def deputado(id_, nome, uf="MG", **extra):
@@ -86,3 +87,16 @@ def test_api_real_bancada_de_mg():
     assert len(deputados) == 53
     assert {d.sigla_uf for d in deputados} == {"MG"}
     assert deputados[0].nome == "Aécio Neves"
+
+
+@pytest.mark.vcr
+def test_ingerir_deputados_grava_a_bancada_real(tmp_path):
+    destino = tmp_path / "deputados.parquet"
+
+    ingerir_deputados("MG", destino)
+
+    with duckdb.connect() as conexao:
+        total, ufs = conexao.execute(
+            "select count(*), count(distinct sigla_uf) from read_parquet(?)", [str(destino)]
+        ).fetchone()
+    assert (total, ufs) == (53, 1)

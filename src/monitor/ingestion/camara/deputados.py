@@ -8,6 +8,7 @@ import pyarrow.parquet as pq
 
 from monitor.ingestion.camara.modelos import DeputadoApi
 from monitor.ingestion.core.cliente import ClienteApi
+from monitor.ingestion.core.erros import IngestaoError
 
 URL_API_CAMARA = "https://dadosabertos.camara.leg.br/api/v2"
 
@@ -23,10 +24,6 @@ ESQUEMA_DEPUTADOS = pa.schema(
         ("_carregado_em", pa.timestamp("us", tz="UTC")),
     ]
 )
-
-
-class IngestaoError(Exception):
-    """A API respondeu, mas o conteúdo não faz sentido para o projeto."""
 
 
 def buscar_deputados(cliente: ClienteApi, uf: str) -> list[DeputadoApi]:
@@ -50,3 +47,10 @@ def gravar_parquet(deputados: list[DeputadoApi], destino: Path) -> Path:
     destino.parent.mkdir(parents=True, exist_ok=True)
     pq.write_table(tabela, destino)
     return destino
+
+
+def ingerir_deputados(uf: str, destino: Path) -> Path:
+    """Busca os deputados da UF na API da Câmara e grava o Parquet bruto."""
+    with ClienteApi(URL_API_CAMARA) as cliente:
+        deputados = buscar_deputados(cliente, uf)
+    return gravar_parquet(deputados, destino)

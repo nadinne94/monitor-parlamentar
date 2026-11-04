@@ -1,11 +1,13 @@
 import subprocess
 
 import duckdb
+import httpx
 import pytest
 from typer.testing import CliRunner
 
 from monitor.cli import app
 from monitor.config import DIR_TRANSFORM, Fonte
+from monitor.ingestion.core.erros import ConfiguracaoError, IngestaoError
 
 runner = CliRunner()
 
@@ -26,7 +28,7 @@ def duas_fontes(monkeypatch):
     monkeypatch.setattr("monitor.cli.fontes_ativas", lambda: fontes)
 
 
-def test_ingest_sem_filtro_processa_todas_as_ativas(duas_fontes):
+"""def test_ingest_sem_filtro_processa_todas_as_ativas(duas_fontes):
     resultado = runner.invoke(app, ["ingest"])
 
     assert resultado.exit_code == 0
@@ -40,6 +42,68 @@ def test_ingest_com_filtro_processa_so_a_fonte_pedida(duas_fontes):
     assert resultado.exit_code == 0
     assert "fonte=senado_api mes=2026-09" in resultado.output
     assert "camara_api" not in resultado.output
+"""
+
+
+@pytest.fixture
+def ingestores_falsos(monkeypatch):
+    """Substitui as ingestões reais por funções que só anotam a chamada."""
+    chamadas = []
+
+    def falso(nome):
+        def ingerir(parametros, dir_bruto):
+            chamadas.append(nome)
+            return [dir_bruto / nome / "dados.parquet"]
+
+        return ingerir
+
+    ingestores = {"camara_api": falso("camara_api"), "senado_api": falso("senado_api")}
+    monkeypatch.setattr("monitor.cli.INGESTORES", ingestores)
+    return chamadas
+
+
+def test_ingest_sem_filtro_processa_todas_as_ativas(duas_fontes, ingestores_falsos):
+    resultado = runner.invoke(app, ["ingest"])
+
+    assert resultado.exit_code == 0
+    assert ingestores_falsos == ["camara_api", "senado_api"]
+    assert "fonte=camara_api: gravado" in resultado.output
+
+
+def test_ingest_com_filtro_processa_so_a_fonte_pedida(duas_fontes, ingestores_falsos):
+    resultado = runner.invoke(app, ["ingest", "--fonte", "senado_api"])
+
+    assert resultado.exit_code == 0
+    assert ingestores_falsos == ["senado_api"]
+
+
+def test_ingest_fonte_sem_ingestao_implementada_falha(duas_fontes, monkeypatch):
+    monkeypatch.setattr("monitor.cli.INGESTORES", {})
+
+    resultado = runner.invoke(app, ["ingest"])
+
+    assert resultado.exit_code == 1
+    assert "não tem ingestão implementada" in resultado.output
+
+
+@pytest.mark.parametrize(
+    "erro",
+    [
+        IngestaoError("lista vazia"),
+        ConfiguracaoError("falta a uf"),
+        httpx.ConnectError("sem rede"),
+    ],
+)
+def test_ingest_falha_da_fonte_vira_falha_da_cli(duas_fontes, monkeypatch, erro):
+    def ingerir_que_falha(parametros, dir_bruto):
+        raise erro
+
+    monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir_que_falha})
+
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api"])
+
+    assert resultado.exit_code == 1
+    assert str(erro) in resultado.output
 
 
 def test_ingest_fonte_inexistente_falha(duas_fontes):

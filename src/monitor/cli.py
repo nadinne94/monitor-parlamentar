@@ -4,9 +4,18 @@ import subprocess
 from datetime import datetime
 from typing import Annotated
 
+import httpx
 import typer
 
-from monitor.config import CAMINHO_DUCKDB, DIR_SAIDA_SITE, DIR_TRANSFORM, fontes_ativas
+from monitor.config import (
+    CAMINHO_DUCKDB,
+    DIR_BRUTO,
+    DIR_SAIDA_SITE,
+    DIR_TRANSFORM,
+    fontes_ativas,
+)
+from monitor.ingestion.core.erros import ConfiguracaoError, IngestaoError
+from monitor.ingestion.fontes import INGESTORES
 from monitor.site.gerador import carregar_dados, renderizar
 
 app = typer.Typer(no_args_is_help=True)
@@ -49,7 +58,19 @@ def ingest(
         typer.echo(f"Nenhuma fonte ativa com o nome '{fonte}'.", err=True)
         raise typer.Exit(code=1)
     for f in alvo:
-        typer.echo(f"[ingest] fonte={f.nome} mes={mes or 'atual'}: ainda não implementado.")
+        ingestor = INGESTORES.get(f.nome)
+        if ingestor is None:
+            typer.echo(
+                f"A fonte '{f.nome}' está ativa, mas não tem ingestão implementada.", err=True
+            )
+            raise typer.Exit(code=1)
+        try:
+            arquivos = ingestor(f.parametros, DIR_BRUTO)
+        except (ConfiguracaoError, IngestaoError, httpx.HTTPError) as erro:
+            typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)
+            raise typer.Exit(code=1) from None
+        for arquivo in arquivos:
+            typer.echo(f"[ingest] fonte={f.nome}: gravado {arquivo}")
 
 
 @app.command()
