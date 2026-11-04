@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: stg_camara_api__deputados
+    description: "Deputados da API da Câmara, um por linha."
+    columns:
+      - name: id
+        data_tests:
+          - not_null
+          - unique

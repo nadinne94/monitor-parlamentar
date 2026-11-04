@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: camara_api
+    description: "Arquivos brutos gravados pelo `monitor ingest` (fonte camara_api)."
+    config:
+      meta:
+        external_location: "{{ env_var('MONITOR_DIR_BRUTO', '../data/bruto') }}/camara_api/{name}.parquet"
+    tables:
+      - name: deputados
+        description: "Deputados em exercício, um por linha, validados pelo modelo DeputadoApi."
