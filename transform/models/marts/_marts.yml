@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: dim_parlamentar
+    description: "Um parlamentar por fonte. Contrato canônico (ADR-003)."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: parlamentar_sk
+        data_type: varchar
+        data_tests:
+          - not_null
+          - unique
+      - name: fonte
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: id_fonte
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: nome_parlamentar
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: nome_civil
+        data_type: varchar
+        description: "Nulo no Incremento 1 (ver docs/spikes/s0-api-deputados.md)."
+      - name: casa
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["camara_deputados", "senado", "camara_municipal"]
+      - name: esfera
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["federal", "municipal"]
+      - name: uf
+        data_type: varchar
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"]
+      - name: municipio
+        data_type: varchar
+      - name: partido_atual
+        data_type: varchar
+      - name: url_foto
+        data_type: varchar
+      - name: em_exercicio
+        data_type: boolean
+        data_tests:
+          - not_null
+      - name: _carregado_em
+        data_type: timestamp with time zone
+      - name: _versao_contrato
+        data_type: varchar
