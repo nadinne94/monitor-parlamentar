@@ -60,3 +60,27 @@ models:
         data_type: timestamp with time zone
       - name: _versao_contrato
         data_type: varchar
+  - name: dim_mes
+    description: "Um mês de referência por linha. Contrato canônico (ADR-003)."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: mes_ref
+        data_type: date
+        description: "Primeiro dia do mês."
+        data_tests:
+          - not_null
+          - unique
+      - name: ano
+        data_type: integer
+      - name: mes
+        data_type: integer
+      - name: legislatura
+        data_type: integer
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [57, 58]
+      - name: _versao_contrato
+        data_type: varchar
