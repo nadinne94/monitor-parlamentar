@@ -3,6 +3,27 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 As versões seguem o [roadmap](docs/roadmap.md).
 
+## [0.1.0] - Incremento 1: deputados de MG
+
+### Adicionado
+- Spike da API de deputados da Câmara (`docs/spikes/s0-api-deputados.md`).
+- ADR-005: a persistência dos dados brutos foi adiada para antes do Incremento 4.
+- Cliente HTTP genérico, com novas tentativas em falhas temporárias e de rede, e paginação pelo link `next`.
+- Modelo Pydantic do deputado, com validação dos campos essenciais e descarte de campos desconhecidos.
+- Ingestão dos deputados de MG para Parquet, com esquema explícito e proteções contra lista vazia e UF errada.
+- Testes contra a API real gravados em cassetes, que não guardam respostas de erro do servidor.
+- Registro de ingestões por fonte e parâmetros das fontes no `sources.yaml`.
+- `monitor ingest` coleta os dados reais da API da Câmara.
+- Camadas do dbt (staging, intermediate e marts) e as primeiras tabelas do contrato canônico, `dim_parlamentar` e `dim_mes`, com contratos e testes de dados.
+- Job do dbt no CI com um Parquet de teste, sem acesso à API.
+- Site lista a bancada de MG em ordem alfabética e gera uma página por deputado.
+
+### Alterado
+- O deploy passa a coletar os dados reais da API a cada publicação.
+
+### Removido
+- Modelo de exemplo do dbt (`exemplo_meses`), substituído pela `dim_mes`.
+
 ## [0.0.1] - Incremento 0: esqueleto andante
 
 ### Adicionado

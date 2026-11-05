@@ -5,14 +5,15 @@ proposições apresentadas, presença em plenário, votos nominais e gastos da c
 
 **Site:** https://nadinne94.github.io/monitor-parlamentar/
 
-> **Status:** Incremento 0 concluído (esqueleto do projeto). Ainda sem dados reais.
+> **Status:** Incremento 1 concluído. O site mostra a bancada de MG com dados reais da API
+> da Câmara, atualizados a cada publicação. Os relatórios mensais começam em fevereiro de 2027.
 > Veja o [roadmap](docs/roadmap.md).
 
 ## Como funciona
 
-    sources.yaml  →  ingestão (Python)  →  dbt + DuckDB  →  site estático  →  GitHub Pages
+    API da Câmara → ingestão (Python + Pydantic) → Parquet → dbt (staging → intermediate → marts) → site → GitHub Pages
 
-As decisões de arquitetura estão registradas em [`docs/adr/`](docs/adr/).
+As decisões de arquitetura estão registradas em [`docs/adr/`](docs/adr/), e as investigações que as embasaram, em [`docs/spikes/`](docs/spikes/).
 
 ## Como executar
 
