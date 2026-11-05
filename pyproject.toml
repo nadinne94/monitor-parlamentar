@@ -1,6 +1,6 @@
 [project]
 name = "monitor-parlamentar"
-version = "0.0.1"
+version = "0.1.0"
 description = "Acompanhamento mensal da atuação de parlamentares a partir de dados abertos."
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
