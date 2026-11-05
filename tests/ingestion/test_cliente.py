@@ -1,9 +1,29 @@
 import httpx
 import pytest
 
-from monitor.ingestion.core.cliente import USER_AGENT, ClienteApi
+from monitor.ingestion.core.cliente import USER_AGENT, ClienteApi, segundos_pedidos_pela_api
 
 BASE = "https://api.exemplo.gov.br/v2"
+
+
+@pytest.mark.parametrize(
+    ("cabecalhos", "esperado"),
+    [
+        ({"Retry-After": "30"}, 30.0),
+        ({"Retry-After": "Wed, 21 Oct 2026 07:28:00 GMT"}, 0.0),
+        ({}, 0.0),
+    ],
+)
+def test_segundos_pedidos_pela_api(cabecalhos, esperado):
+    requisicao = httpx.Request("GET", f"{BASE}/deputados")
+    resposta = httpx.Response(503, headers=cabecalhos, request=requisicao)
+    erro = httpx.HTTPStatusError("503", request=requisicao, response=resposta)
+
+    assert segundos_pedidos_pela_api(erro) == esperado
+
+
+def test_segundos_pedidos_pela_api_ignora_erros_de_rede():
+    assert segundos_pedidos_pela_api(httpx.ConnectError("sem rede")) == 0.0
 
 
 def cliente_com(handler, **kwargs) -> ClienteApi:

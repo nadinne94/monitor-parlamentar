@@ -24,6 +24,14 @@ def eh_falha_temporaria(erro: BaseException) -> bool:
     return isinstance(erro, httpx.TransportError)
 
 
+def segundos_pedidos_pela_api(erro: BaseException | None) -> float:
+    """Valor do cabeçalho Retry-After, em segundos. Zero se não houver ou não for um número."""
+    if not isinstance(erro, httpx.HTTPStatusError):
+        return 0.0
+    valor = erro.response.headers.get("retry-after", "")
+    return float(valor) if valor.isdigit() else 0.0
+
+
 class ClienteApi:
     def __init__(
         self,
