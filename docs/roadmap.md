@@ -43,6 +43,9 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 ## Incrementos
 
 ### Incremento 0: Esqueleto andante · `v0.0.1`
+
+**Status:** concluído em 02/11/2026 (`v0.0.1`).
+
 **Estimativa:** 1 a 2 semanas · **Alvo:** meados de novembro/2026
 
 **Objetivo:** provar que o caminho completo funciona, ainda sem dados reais.
@@ -63,6 +66,16 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 ---
 
 ### Incremento 1: Deputados de MG · `v0.1.0`
+
+**Status:** concluído em 05/11/2026 (`v0.1.0`).
+
+**Desvios em relação ao plano:**
+- A persistência dos dados brutos no Hugging Face foi adiada para antes do Incremento 4 (ADR-005).
+- A ingestão usa só a lista de deputados: `nome_civil` fica nulo, e o detalhe de cada deputado entra no Incremento 6 (ver `docs/spikes/s0-api-deputados.md`).
+- A ingestão consulta os deputados em exercício, sem o parâmetro de legislatura, que entra no Incremento 6 junto com o histórico.
+- Não foi criado um `pipeline.yml` separado: o `deploy.yml` já executa o pipeline completo a cada merge e tem disparo manual (`workflow_dispatch`).
+- A instabilidade da API (respostas 504) apareceu já neste incremento e foi tratada com novas tentativas no cliente e mensagens claras na CLI.
+
 **Estimativa:** 2 semanas · **Alvo:** fim de novembro/2026
 
 **Objetivo:** primeira fatia real, que valida a arquitetura inteira.
