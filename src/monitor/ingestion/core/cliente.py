@@ -72,9 +72,10 @@ class ClienteApi:
         raise AssertionError("inalcançável")  # pragma: no cover
 
     def _calcular_espera(self, estado: RetryCallState) -> float:
-        """Espera exponencial, com teto."""
+        """Espera exponencial, mas nunca menos do que a API pediu, e nunca mais que o teto."""
         exponencial = self._espera_inicial * 2 ** (estado.attempt_number - 1)
-        return min(exponencial, self._espera_maxima)
+        pedida = segundos_pedidos_pela_api(estado.outcome.exception())
+        return min(max(exponencial, pedida), self._espera_maxima)
 
     def paginar(self, caminho: str, params: dict[str, Any] | None = None) -> Iterator[dict]:
         """Percorre todas as páginas seguindo o link `next` e devolve cada item de `dados`."""

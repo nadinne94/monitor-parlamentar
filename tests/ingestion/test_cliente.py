@@ -174,3 +174,27 @@ def test_espera_cresce_exponencialmente():
         cliente.get_json("/deputados")
 
     assert esperas == [2.0, 4.0, 8.0]
+
+
+def test_respeita_o_retry_after_da_api():
+    esperas = []
+    respostas = iter(
+        [httpx.Response(503, headers={"Retry-After": "30"}), httpx.Response(200, json={})]
+    )
+
+    with cliente_que_anota_esperas(lambda request: next(respostas), esperas) as cliente:
+        cliente.get_json("/deputados")
+
+    assert esperas == [30.0]
+
+
+def test_espera_tem_teto():
+    esperas = []
+    respostas = iter(
+        [httpx.Response(503, headers={"Retry-After": "600"}), httpx.Response(200, json={})]
+    )
+
+    with cliente_que_anota_esperas(lambda request: next(respostas), esperas) as cliente:
+        cliente.get_json("/deputados")
+
+    assert esperas == [60.0]
