@@ -1,9 +1,29 @@
 import httpx
 import pytest
 
-from monitor.ingestion.core.cliente import USER_AGENT, ClienteApi
+from monitor.ingestion.core.cliente import USER_AGENT, ClienteApi, segundos_pedidos_pela_api
 
 BASE = "https://api.exemplo.gov.br/v2"
+
+
+@pytest.mark.parametrize(
+    ("cabecalhos", "esperado"),
+    [
+        ({"Retry-After": "30"}, 30.0),
+        ({"Retry-After": "Wed, 21 Oct 2026 07:28:00 GMT"}, 0.0),
+        ({}, 0.0),
+    ],
+)
+def test_segundos_pedidos_pela_api(cabecalhos, esperado):
+    requisicao = httpx.Request("GET", f"{BASE}/deputados")
+    resposta = httpx.Response(503, headers=cabecalhos, request=requisicao)
+    erro = httpx.HTTPStatusError("503", request=requisicao, response=resposta)
+
+    assert segundos_pedidos_pela_api(erro) == esperado
+
+
+def test_segundos_pedidos_pela_api_ignora_erros_de_rede():
+    assert segundos_pedidos_pela_api(httpx.ConnectError("sem rede")) == 0.0
 
 
 def cliente_com(handler, **kwargs) -> ClienteApi:
@@ -135,3 +155,59 @@ def test_paginar_resposta_vazia_nao_e_erro():
 
     with cliente_com(handler) as cliente:
         assert list(cliente.paginar("/deputados")) == []
+
+
+def cliente_que_anota_esperas(handler, esperas, **kwargs) -> ClienteApi:
+    return ClienteApi(BASE, transport=httpx.MockTransport(handler), dormir=esperas.append, **kwargs)
+
+
+def test_espera_cresce_exponencialmente():
+    esperas = []
+
+    def handler(request):
+        return httpx.Response(503)
+
+    with (
+        cliente_que_anota_esperas(handler, esperas, max_tentativas=4) as cliente,
+        pytest.raises(httpx.HTTPStatusError),
+    ):
+        cliente.get_json("/deputados")
+
+    assert esperas == [2.0, 4.0, 8.0]
+
+
+def test_respeita_o_retry_after_da_api():
+    esperas = []
+    respostas = iter(
+        [httpx.Response(503, headers={"Retry-After": "30"}), httpx.Response(200, json={})]
+    )
+
+    with cliente_que_anota_esperas(lambda request: next(respostas), esperas) as cliente:
+        cliente.get_json("/deputados")
+
+    assert esperas == [30.0]
+
+
+def test_espera_tem_teto():
+    esperas = []
+    respostas = iter(
+        [httpx.Response(503, headers={"Retry-After": "600"}), httpx.Response(200, json={})]
+    )
+
+    with cliente_que_anota_esperas(lambda request: next(respostas), esperas) as cliente:
+        cliente.get_json("/deputados")
+
+    assert esperas == [60.0]
+
+
+def test_padrao_faz_cinco_tentativas():
+    chamadas = []
+
+    def handler(request):
+        chamadas.append(request)
+        return httpx.Response(503)
+
+    with cliente_que_anota_esperas(handler, []) as cliente, pytest.raises(httpx.HTTPStatusError):
+        cliente.get_json("/deputados")
+
+    assert len(chamadas) == 5
