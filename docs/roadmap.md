@@ -95,7 +95,9 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 ### Incremento 2: Proposições · `v0.2.0`
 **Estimativa:** 2 semanas · **Alvo:** meados de dezembro/2026
 
-**Antes de começar:** ADR-006 definindo quais tipos de proposição contam (`tipo_categoria`) e como tratar autoria x coautoria.
+**Antes de começar:**
+- Decidir como lidar com a instabilidade da API da Câmara. Entre 03 e 05/11/2026, ela respondeu com erro 504 em quatro ocasiões, uma delas durante o deploy, que falhou e deixou o site sem atualização. Opções a avaliar, da mais simples à mais completa: (1) mais tentativas e esperas maiores no cliente, respeitando o cabeçalho `retry-after`; (2) reexecução automática do deploy quando a ingestão falhar; (3) antecipar o spike S2 e a persistência dos dados brutos, para gerar o site com a última coleta bem-sucedida. A opção (3) revê o ADR-005 e exige um ADR próprio.
+- ADR-006 definindo quais tipos de proposição contam (`tipo_categoria`) e como tratar autoria e coautoria.
 
 **Escopo**
 - Ingestão das proposições de autoria dos deputados de MG.
