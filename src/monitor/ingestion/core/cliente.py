@@ -38,7 +38,7 @@ class ClienteApi:
         base_url: str,
         *,
         timeout: float = 30.0,
-        max_tentativas: int = 3,
+        max_tentativas: int = 5,
         espera_inicial: float = 2.0,
         espera_maxima: float = 60.0,
         transport: httpx.BaseTransport | None = None,

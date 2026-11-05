@@ -198,3 +198,16 @@ def test_espera_tem_teto():
         cliente.get_json("/deputados")
 
     assert esperas == [60.0]
+
+
+def test_padrao_faz_cinco_tentativas():
+    chamadas = []
+
+    def handler(request):
+        chamadas.append(request)
+        return httpx.Response(503)
+
+    with cliente_que_anota_esperas(handler, []) as cliente, pytest.raises(httpx.HTTPStatusError):
+        cliente.get_json("/deputados")
+
+    assert len(chamadas) == 5
