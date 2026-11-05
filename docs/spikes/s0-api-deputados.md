@@ -169,7 +169,16 @@ O detalhe ainda oferece um dado que o contrato não tem e que será útil: `cond
    `dim_parlamentar` fica nula no Incremento 1. O detalhe de cada deputado entra no Incremento 6
    (virada de legislatura), junto com `situacao`, `condicaoEleitoral` e o descarte obrigatório do CPF.
 4. **Legislatura:** a consulta sem `idLegislatura` devolve sempre a bancada atual. A ingestão deve aceitar a legislatura como parâmetro (57 para testes com dados de 2026; 58 a partir de fevereiro de 2027), em vez de depender do comportamento padrão da API, que muda sozinho em 1º de fevereiro.
+
+**Revisto na implementação (passo 4):** passar `idLegislatura` muda o significado da consulta: a API devolve todos que exerceram mandato naquela legislatura, inclusive quem já saiu. Para o Incremento 1, que mostra a bancada atual, a consulta padrão é a correta. O parâmetro entra no Incremento 6, junto com o histórico.
+
 5. **CPF:** se o detalhe for usado (opção B), o descarte do CPF na ingestão é obrigatório e precisa de um teste próprio.
 6. **Tamanho da página:** o cliente pede sempre um valor explícito (`itens=100`) em vez de depender do padrão da API, que nesta consulta foi de 1000 itens e pode mudar.
 7. **Lista vazia:** o cliente HTTP genérico trata lista vazia como resposta válida, porque em outros endpoints ela é normal (um mês sem votações, por exemplo). Quem decide se o vazio é um problema é a ingestão de cada recurso: para os deputados de MG, uma lista vazia é sempre uma anomalia e deve falhar a execução.
 8. **Filtro ignorado:** como `siglaUf` vazio é ignorado sem erro, a ingestão valida que todos os registros recebidos têm a UF pedida. Um teste de dados no dbt (`accepted_values` em `uf`) reforça essa garantia na transformação.
+
+## Cabeçalhos da resposta (descobertos na cassete do passo 4)
+
+- `x-total-count`: total de registros da consulta. Pode ser usado para conferir se a paginação trouxe tudo.
+- `retry-after`: tempo de espera sugerido pela API antes de uma nova tentativa (30 segundos).
+- `cache-control: public, max-age=1800`: a resposta pode ser guardada em cache por 30 minutos.
