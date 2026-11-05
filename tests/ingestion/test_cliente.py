@@ -135,3 +135,22 @@ def test_paginar_resposta_vazia_nao_e_erro():
 
     with cliente_com(handler) as cliente:
         assert list(cliente.paginar("/deputados")) == []
+
+
+def cliente_que_anota_esperas(handler, esperas, **kwargs) -> ClienteApi:
+    return ClienteApi(BASE, transport=httpx.MockTransport(handler), dormir=esperas.append, **kwargs)
+
+
+def test_espera_cresce_exponencialmente():
+    esperas = []
+
+    def handler(request):
+        return httpx.Response(503)
+
+    with (
+        cliente_que_anota_esperas(handler, esperas, max_tentativas=4) as cliente,
+        pytest.raises(httpx.HTTPStatusError),
+    ):
+        cliente.get_json("/deputados")
+
+    assert esperas == [2.0, 4.0, 8.0]

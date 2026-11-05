@@ -4,11 +4,12 @@ Responsável por: requisições com novas tentativas em falhas temporárias e pa
 pelo link `next`. Não conhece nenhum recurso específico (deputados, votações etc.).
 """
 
-from collections.abc import Iterator
+import time
+from collections.abc import Callable, Iterator
 from typing import Any
 
 import httpx
-from tenacity import Retrying, retry_if_exception, stop_after_attempt, wait_exponential
+from tenacity import RetryCallState, Retrying, retry_if_exception, stop_after_attempt
 
 USER_AGENT = "monitor-parlamentar (+https://github.com/nadinne94/monitor-parlamentar)"
 
@@ -30,8 +31,10 @@ class ClienteApi:
         *,
         timeout: float = 30.0,
         max_tentativas: int = 3,
-        espera_inicial: float = 1.0,
+        espera_inicial: float = 2.0,
+        espera_maxima: float = 60.0,
         transport: httpx.BaseTransport | None = None,
+        dormir: Callable[[float], None] = time.sleep,
     ) -> None:
         self._http = httpx.Client(
             base_url=base_url,
@@ -41,12 +44,15 @@ class ClienteApi:
         )
         self._max_tentativas = max_tentativas
         self._espera_inicial = espera_inicial
+        self._espera_maxima = espera_maxima
+        self._dormir = dormir
 
     def get_json(self, caminho: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
         """GET com novas tentativas em falhas temporárias. Erros 4xx falham na hora."""
         tentativas = Retrying(
             stop=stop_after_attempt(self._max_tentativas),
-            wait=wait_exponential(multiplier=self._espera_inicial, max=30),
+            wait=self._calcular_espera,
+            sleep=self._dormir,
             retry=retry_if_exception(eh_falha_temporaria),
             reraise=True,
         )
@@ -56,6 +62,11 @@ class ClienteApi:
                 resposta.raise_for_status()
                 return resposta.json()
         raise AssertionError("inalcançável")  # pragma: no cover
+
+    def _calcular_espera(self, estado: RetryCallState) -> float:
+        """Espera exponencial, com teto."""
+        exponencial = self._espera_inicial * 2 ** (estado.attempt_number - 1)
+        return min(exponencial, self._espera_maxima)
 
     def paginar(self, caminho: str, params: dict[str, Any] | None = None) -> Iterator[dict]:
         """Percorre todas as páginas seguindo o link `next` e devolve cada item de `dados`."""
