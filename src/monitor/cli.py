@@ -1,12 +1,14 @@
 """CLI do projeto. O GitHub Actions chama exatamente estes comandos."""
 
 import subprocess
-from datetime import datetime
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Annotated
 
 import httpx
 import typer
 
+from monitor.armazenamento import ArmazenamentoError, guardar
 from monitor.config import (
     CAMINHO_DUCKDB,
     DIR_BRUTO,
@@ -41,16 +43,22 @@ OpcaoMes = Annotated[
     str | None, typer.Option(help="Mês de referência (AAAA-MM).", callback=validar_mes)
 ]
 
+OpcaoArmazenamento = Annotated[
+    bool,
+    typer.Option(
+        "--armazenamento",
+        help="Guarda cada coleta na release e, se a API falhar, usa a última guardada (ADR-006).",
+    ),
+]
+
 
 @app.command()
 def ingest(
     fonte: Annotated[
         str | None, typer.Option(help="Nome da fonte. Padrão: todas as ativas.")
     ] = None,
-    # mes: Annotated[
-    #     str | None, typer.Option(help="Mês de referência (AAAA-MM).", callback=validar_mes)
-    # ] = None,
     mes: OpcaoMes = None,
+    armazenamento: OpcaoArmazenamento = False,
 ) -> None:
     """Coleta os dados brutos das fontes ativas."""
     alvo = [f for f in fontes_ativas() if fonte is None or f.nome == fonte]
@@ -69,8 +77,20 @@ def ingest(
         except (ConfiguracaoError, IngestaoError, httpx.HTTPError) as erro:
             typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)
             raise typer.Exit(code=1) from None
+        else:
+            if armazenamento:
+                _guardar_ou_falhar(f.nome, arquivos)
         for arquivo in arquivos:
             typer.echo(f"[ingest] fonte={f.nome}: gravado {arquivo}")
+
+
+def _guardar_ou_falhar(fonte: str, arquivos: list[Path]) -> None:
+    try:
+        nomes = guardar(fonte, arquivos, datetime.now(UTC).date())
+    except ArmazenamentoError as erro:
+        typer.echo(f"[ingest] fonte={fonte}: {erro}", err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(f"[ingest] fonte={fonte}: guardado na release ({', '.join(nomes)})")
 
 
 @app.command()

@@ -5,6 +5,7 @@ import httpx
 import pytest
 from typer.testing import CliRunner
 
+from monitor.armazenamento import ArmazenamentoError
 from monitor.cli import app
 from monitor.config import DIR_TRANSFORM, Fonte
 from monitor.ingestion.core.erros import ConfiguracaoError, IngestaoError
@@ -186,3 +187,45 @@ def test_pipeline_executa_as_etapas_em_ordem(monkeypatch):
 
     assert resultado.exit_code == 0
     assert etapas == ["ingest", "transform", "site"]
+
+
+@pytest.fixture
+def armazenamento_falso(monkeypatch):
+    """Substitui guardar e recuperar por funções que só anotam as chamadas."""
+    chamadas = []
+
+    def guardar(fonte, arquivos, dia):
+        chamadas.append(("guardar", fonte, [a.name for a in arquivos]))
+        return [f"{fonte}__dados.parquet"]
+
+    monkeypatch.setattr("monitor.cli.guardar", guardar)
+    return chamadas
+
+
+def test_ingest_com_armazenamento_guarda_a_coleta(
+    duas_fontes, ingestores_falsos, armazenamento_falso
+):
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api", "--armazenamento"])
+
+    assert resultado.exit_code == 0
+    assert armazenamento_falso == [("guardar", "camara_api", ["dados.parquet"])]
+    assert "guardado na release" in resultado.output
+
+
+def test_ingest_sem_armazenamento_nao_guarda(duas_fontes, ingestores_falsos, armazenamento_falso):
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api"])
+
+    assert resultado.exit_code == 0
+    assert armazenamento_falso == []
+
+
+def test_ingest_falha_se_nao_consegue_guardar(duas_fontes, ingestores_falsos, monkeypatch):
+    def guardar_que_falha(fonte, arquivos, dia):
+        raise ArmazenamentoError("Falha ao enviar")
+
+    monkeypatch.setattr("monitor.cli.guardar", guardar_que_falha)
+
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api", "--armazenamento"])
+
+    assert resultado.exit_code == 1
+    assert "Falha ao enviar" in resultado.output
