@@ -19,3 +19,6 @@ def ingerir_camara_api(parametros: Mapping[str, Any], dir_bruto: Path) -> list[P
 
 
 INGESTORES: dict[str, Ingestor] = {"camara_api": ingerir_camara_api}
+
+# Tabelas que cada fonte grava, para recuperar a última coleta guardada (ADR-006).
+TABELAS: dict[str, list[str]] = {"camara_api": ["deputados"]}
