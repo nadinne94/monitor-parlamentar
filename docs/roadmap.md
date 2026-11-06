@@ -1,6 +1,6 @@
 # Roadmap do MVP
 
-Referências: [ADR-001 Escopo](adr/0001-escopo-do-mvp.md) · [ADR-002 Stack](adr/0002-stack-tecnologica.md) · [ADR-003 Contrato](adr/0003-contrato-canonico.md) · [ADR-004 Site](adr/0004-gerador-de-site-proprio.md) · [ADR-005 Persistência](adr/0005-adiar-persistencia-dados-brutos.md)
+Referências: [ADR-001 Escopo](adr/0001-escopo-do-mvp.md) · [ADR-002 Stack](adr/0002-stack-tecnologica.md) · [ADR-003 Contrato](adr/0003-contrato-canonico.md) · [ADR-004 Site](adr/0004-gerador-de-site-proprio.md) · [ADR-006 Persistência](adr/0006-persistencia-em-release-do-github.md)
 
 ## Meta
 
@@ -37,7 +37,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 | Spike | Pergunta a responder | Antes de |
 |---|---|---|
 | **S1: Presença na API** | Qual endpoint da API da Câmara representa melhor a presença em sessões deliberativas do plenário? Como aparecem ausências justificadas? | Incremento 5 (mas fazer cedo, durante o Incremento 1) |
-| **S2: Persistência no Hugging Face** | É possível ler e gravar Parquet num dataset do Hugging Face a partir do GitHub Actions, com token em Secrets? Há limites que afetem o projeto? | Incremento 4 |
+| **S2: Persistência no Hugging Face** | É possível ler e gravar Parquet num dataset do Hugging Face a partir do GitHub Actions, com token em Secrets? Há limites que afetem o projeto? | Concluído em 05/11/2026 (ver docs/spikes/s2-persistencia.md) |
 | **S3: Câmara municipal** | A câmara da cidade usa SAPL? Há API ou exportação em formato aberto? O que a prefeitura oferece? | Pós-MVP (pode ser feito a qualquer momento, como pausa) |
 
 ## Incrementos
@@ -96,8 +96,8 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 **Estimativa:** 2 semanas · **Alvo:** meados de dezembro/2026
 
 **Antes de começar:**
-- Decidir como lidar com a instabilidade da API da Câmara. Entre 03 e 05/11/2026, ela respondeu com erro 504 em quatro ocasiões, uma delas durante o deploy, que falhou e deixou o site sem atualização. Opções a avaliar, da mais simples à mais completa: (1) mais tentativas e esperas maiores no cliente, respeitando o cabeçalho `retry-after`; (2) reexecução automática do deploy quando a ingestão falhar; (3) antecipar o spike S2 e a persistência dos dados brutos, para gerar o site com a última coleta bem-sucedida. A opção (3) revê o ADR-005 e exige um ADR próprio.
-- ADR-006 definindo quais tipos de proposição contam (`tipo_categoria`) e como tratar autoria e coautoria.
+- **Resolvido:** instabilidade da API. O cliente HTTP passou a fazer mais tentativas e a respeitar o `retry-after` (passo 1), e os dados brutos passam a ser guardados numa release do GitHub, com contingência no deploy (ADR-006).; (2) reexecução automática do deploy quando a ingestão falhar; (3) antecipar o spike S2 e a persistência dos dados brutos, para gerar o site com a última coleta bem-sucedida. A opção (3) revê o ADR-005 e exige um ADR próprio.
+- ADR-007 definindo quais tipos de proposição contam (`tipo_categoria`) e como tratar autoria e coautoria.
 
 **Escopo**
 - Ingestão das proposições de autoria dos deputados de MG.
@@ -125,10 +125,9 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 
 ### Incremento 4: Despesas da cota parlamentar · `v0.4.0`
 **Estimativa:** 2 semanas · **Alvo:** meados de janeiro/2027
-**Depende de:** S2 (persistência dos dados brutos, ver ADR-005)
+
 
 **Escopo**
-- Persistência dos dados brutos no Hugging Face.
 - Ingestão das despesas da CEAP.
 - `fato_despesa` com contrato e testes (ex.: `valor_liquido >= 0`).
 - Mascaramento de CPF de fornecedor pessoa física (teste unitário obrigatório).
@@ -146,10 +145,10 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 
 **Por que por último:** é a métrica com maior risco de interpretação (ausências justificadas, tipos de sessão). O spike S1 resolve a dúvida técnica cedo; a implementação vem quando o restante já está estável.
 
-**Antes de começar:** ADR-007 definindo o que conta como sessão, como presença e como ausência justificada.
+**Antes de começar:** ADR-008 definindo o que conta como sessão, como presença e como ausência justificada.
 
 **Escopo**
-- Ingestão de presença conforme definido no ADR-007.
+- Ingestão de presença conforme definido no ADR-008.
 - `fato_presenca` com contrato e testes.
 - Resumo: colunas de sessões, presença e ausências justificadas.
 - Site: bloco "Presença", sempre separando ausência justificada de ausência.
@@ -189,6 +188,9 @@ Cada item vira um novo incremento, com spike e ADR quando necessário:
 - Votações em comissões.
 - Busca por nome de parlamentar no site.
 - Publicação dos marts como dataset aberto documentado.
+- Votações explicadas em linguagem simples: o que significava votar Sim ou Não em cada votação, distinguindo votações procedimentais (urgência, destaques) das de mérito, com neutralidade e link para a fonte oficial.
+- Cruzamento das despesas da cota parlamentar com os dados abertos de CNPJ da Receita Federal (contexto sobre os fornecedores), com cuidado com LGPD e com a apresentação de fatos, não de acusações.
+- Publicação dos dados tratados (marts) como dataset aberto no Hugging Face (ver ADR-006).
 
 ## Revisão do roadmap
 
