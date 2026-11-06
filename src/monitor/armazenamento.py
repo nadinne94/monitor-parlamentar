@@ -11,6 +11,10 @@ REPOSITORIO = "nadinne94/monitor-parlamentar"
 RELEASE = "dados-brutos"
 
 
+class ArmazenamentoError(Exception):
+    """Não foi possível guardar ou recuperar os dados brutos."""
+
+
 def nome_no_armazenamento(fonte: str, tabela: str, dia: date | None = None) -> str:
     """camara_api + deputados -> camara_api__deputados.parquet (com __AAAA-MM-DD se houver dia)."""
     sufixo = f"__{dia.isoformat()}" if dia else ""
@@ -37,5 +41,10 @@ def guardar(
                 copias.append(str(copia))
                 nomes.append(nome)
         comando = ["gh", "release", "upload", RELEASE, *copias, "--clobber", "--repo", REPOSITORIO]
-        executar(comando, check=True)
+        try:
+            executar(comando, check=True)
+        except subprocess.CalledProcessError as erro:
+            raise ArmazenamentoError(
+                f"Falha ao enviar os dados de {fonte} para a release."
+            ) from erro
     return nomes

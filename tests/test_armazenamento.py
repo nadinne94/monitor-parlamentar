@@ -1,9 +1,16 @@
+import subprocess
 from datetime import date
 from pathlib import Path
 
 import pytest
 
-from monitor.armazenamento import RELEASE, REPOSITORIO, guardar, nome_no_armazenamento
+from monitor.armazenamento import (
+    RELEASE,
+    REPOSITORIO,
+    ArmazenamentoError,
+    guardar,
+    nome_no_armazenamento,
+)
 
 
 @pytest.mark.parametrize(
@@ -41,3 +48,11 @@ def test_guardar_envia_a_copia_mais_recente_e_a_do_dia(arquivo_bruto):
     assert kwargs["check"] is True
     assert nomes == ["camara_api__deputados.parquet", "camara_api__deputados__2026-11-06.parquet"]
     assert conteudos == [b"conteudo do parquet", b"conteudo do parquet"]
+
+
+def test_guardar_falha_vira_erro_de_armazenamento(arquivo_bruto):
+    def executar_que_falha(comando, **kwargs):
+        raise subprocess.CalledProcessError(returncode=1, cmd=comando)
+
+    with pytest.raises(ArmazenamentoError, match="camara_api"):
+        guardar("camara_api", [arquivo_bruto], date(2026, 11, 6), executar=executar_que_falha)
