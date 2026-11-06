@@ -198,7 +198,13 @@ def armazenamento_falso(monkeypatch):
         chamadas.append(("guardar", fonte, [a.name for a in arquivos]))
         return [f"{fonte}__dados.parquet"]
 
+    def recuperar(fonte, tabelas, dir_bruto):
+        chamadas.append(("recuperar", fonte, tabelas))
+        return [dir_bruto / fonte / f"{tabela}.parquet" for tabela in tabelas]
+
     monkeypatch.setattr("monitor.cli.guardar", guardar)
+    monkeypatch.setattr("monitor.cli.recuperar", recuperar)
+    monkeypatch.setattr("monitor.cli.TABELAS", {"camara_api": ["deputados"]})
     return chamadas
 
 
@@ -229,3 +235,49 @@ def test_ingest_falha_se_nao_consegue_guardar(duas_fontes, ingestores_falsos, mo
 
     assert resultado.exit_code == 1
     assert "Falha ao enviar" in resultado.output
+
+
+@pytest.mark.parametrize("erro", [IngestaoError("lista vazia"), httpx.ConnectError("sem rede")])
+def test_ingest_usa_a_ultima_coleta_quando_a_api_falha(
+    duas_fontes, monkeypatch, armazenamento_falso, erro
+):
+    def ingerir_que_falha(parametros, dir_bruto):
+        raise erro
+
+    monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir_que_falha})
+
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api", "--armazenamento"])
+
+    assert resultado.exit_code == 0
+    assert armazenamento_falso == [("recuperar", "camara_api", ["deputados"])]
+    assert "Usando a última coleta guardada" in resultado.output
+
+
+def test_ingest_erro_de_configuracao_nao_usa_coleta_guardada(
+    duas_fontes, monkeypatch, armazenamento_falso
+):
+    def ingerir_mal_configurado(parametros, dir_bruto):
+        raise ConfiguracaoError("falta a uf")
+
+    monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir_mal_configurado})
+
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api", "--armazenamento"])
+
+    assert resultado.exit_code == 1
+    assert armazenamento_falso == []
+
+
+def test_ingest_falha_se_nao_ha_coleta_guardada(duas_fontes, monkeypatch, armazenamento_falso):
+    def ingerir_que_falha(parametros, dir_bruto):
+        raise IngestaoError("lista vazia")
+
+    def recuperar_sem_coleta(fonte, tabelas, dir_bruto):
+        raise ArmazenamentoError("Não há coleta guardada")
+
+    monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir_que_falha})
+    monkeypatch.setattr("monitor.cli.recuperar", recuperar_sem_coleta)
+
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api", "--armazenamento"])
+
+    assert resultado.exit_code == 1
+    assert "Não há coleta guardada" in resultado.output

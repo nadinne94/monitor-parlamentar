@@ -8,7 +8,7 @@ from typing import Annotated
 import httpx
 import typer
 
-from monitor.armazenamento import ArmazenamentoError, guardar
+from monitor.armazenamento import ArmazenamentoError, guardar, recuperar
 from monitor.config import (
     CAMINHO_DUCKDB,
     DIR_BRUTO,
@@ -17,7 +17,7 @@ from monitor.config import (
     fontes_ativas,
 )
 from monitor.ingestion.core.erros import ConfiguracaoError, IngestaoError
-from monitor.ingestion.fontes import INGESTORES
+from monitor.ingestion.fontes import INGESTORES, TABELAS
 from monitor.site.gerador import carregar_dados, renderizar
 
 app = typer.Typer(no_args_is_help=True)
@@ -74,7 +74,15 @@ def ingest(
             raise typer.Exit(code=1)
         try:
             arquivos = ingestor(f.parametros, DIR_BRUTO)
-        except (ConfiguracaoError, IngestaoError, httpx.HTTPError) as erro:
+        except (IngestaoError, httpx.HTTPError) as erro:
+            if not armazenamento:
+                typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)
+                raise typer.Exit(code=1) from None
+            typer.echo(
+                f"[ingest] fonte={f.nome}: falhou. Usando a última coleta guardada.", err=True
+            )
+            arquivos = _recuperar_ou_falhar(f.nome)
+        except ConfiguracaoError as erro:
             typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)
             raise typer.Exit(code=1) from None
         else:
@@ -91,6 +99,14 @@ def _guardar_ou_falhar(fonte: str, arquivos: list[Path]) -> None:
         typer.echo(f"[ingest] fonte={fonte}: {erro}", err=True)
         raise typer.Exit(code=1) from None
     typer.echo(f"[ingest] fonte={fonte}: guardado na release ({', '.join(nomes)})")
+
+
+def _recuperar_ou_falhar(fonte: str) -> list[Path]:
+    try:
+        return recuperar(fonte, TABELAS[fonte], DIR_BRUTO)
+    except (ArmazenamentoError, httpx.HTTPError) as erro:
+        typer.echo(f"[ingest] fonte={fonte}: sem coleta para usar no lugar. {erro}", err=True)
+        raise typer.Exit(code=1) from None
 
 
 @app.command()
