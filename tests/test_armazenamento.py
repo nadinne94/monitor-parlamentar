@@ -2,6 +2,7 @@ import subprocess
 from datetime import date
 from pathlib import Path
 
+import httpx
 import pytest
 
 from monitor.armazenamento import (
@@ -10,6 +11,7 @@ from monitor.armazenamento import (
     ArmazenamentoError,
     guardar,
     nome_no_armazenamento,
+    recuperar,
 )
 
 
@@ -56,3 +58,30 @@ def test_guardar_falha_vira_erro_de_armazenamento(arquivo_bruto):
 
     with pytest.raises(ArmazenamentoError, match="camara_api"):
         guardar("camara_api", [arquivo_bruto], date(2026, 11, 6), executar=executar_que_falha)
+
+
+def test_recuperar_baixa_a_coleta_mais_recente(tmp_path):
+    pedidas = []
+
+    def handler(request):
+        pedidas.append(str(request.url))
+        return httpx.Response(200, content=b"parquet guardado")
+
+    caminhos = recuperar(
+        "camara_api", ["deputados"], tmp_path, transport=httpx.MockTransport(handler)
+    )
+
+    destino = tmp_path / "camara_api" / "deputados.parquet"
+    assert caminhos == [destino]
+    assert destino.read_bytes() == b"parquet guardado"
+    assert pedidas == [
+        f"https://github.com/{REPOSITORIO}/releases/download/{RELEASE}/camara_api__deputados.parquet"
+    ]
+
+
+def test_recuperar_sem_coleta_guardada_e_erro(tmp_path):
+    def handler(request):
+        return httpx.Response(404)
+
+    with pytest.raises(ArmazenamentoError, match="Não há coleta guardada"):
+        recuperar("camara_api", ["deputados"], tmp_path, transport=httpx.MockTransport(handler))
