@@ -18,17 +18,17 @@ jobs:
   build:
     name: Gerar o site
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
       - run: uv sync --locked
-      - run: uv run monitor pipeline
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: build/site
+      - run: uv run monitor pipeline --armazenamento
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   deploy:
     name: Publicar
