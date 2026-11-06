@@ -1,6 +1,6 @@
 # ADR-006: Persistência dos dados brutos em release do GitHub
 
-- **Status:** Proposto
+- **Status:** Aceito
 - **Data:** 2026-11-06
 - **Decisora:** Nadinne
 - **Substitui:** o [ADR-005](0005-adiar-persistencia-dados-brutos.md)
