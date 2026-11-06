@@ -18,9 +18,11 @@
         {% block conteudo %}{% endblock %}
     </main>
     <footer class="rodape">
-        <p>Dados: <a href="https://dadosabertos.camara.leg.br/">Dados Abertos da Câmara dos Deputados</a>.
-            Atualizado em {{ dados.gerado_em | data_hora }}. Versão {{ dados.versao }}.</p>
-    </footer>
+        <p>Dados: <a href="https://dadosabertos.camara.leg.br/">Dados Abertos da Câmara dos Deputados</a>{% if
+            dados.coletado_em %},
+            coletados em {{ dados.coletado_em | data_hora }}{% endif %}.
+            Site gerado em {{ dados.gerado_em | data_hora }}. Versão {{ dados.versao }}.
+        </p>
 </body>
 
 </html>

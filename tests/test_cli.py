@@ -29,23 +29,6 @@ def duas_fontes(monkeypatch):
     monkeypatch.setattr("monitor.cli.fontes_ativas", lambda: fontes)
 
 
-"""def test_ingest_sem_filtro_processa_todas_as_ativas(duas_fontes):
-    resultado = runner.invoke(app, ["ingest"])
-
-    assert resultado.exit_code == 0
-    assert "fonte=camara_api" in resultado.output
-    assert "fonte=senado_api" in resultado.output
-
-
-def test_ingest_com_filtro_processa_so_a_fonte_pedida(duas_fontes):
-    resultado = runner.invoke(app, ["ingest", "--fonte", "senado_api", "--mes", "2026-09"])
-
-    assert resultado.exit_code == 0
-    assert "fonte=senado_api mes=2026-09" in resultado.output
-    assert "camara_api" not in resultado.output
-"""
-
-
 @pytest.fixture
 def ingestores_falsos(monkeypatch):
     """Substitui as ingestões reais por funções que só anotam a chamada."""
@@ -165,7 +148,8 @@ def test_site_gera_paginas_a_partir_do_banco(tmp_path, monkeypatch):
         conexao.execute(
             "create table dim_parlamentar as select '74646' as id_fonte,"
             " 'Aécio Neves' as nome_parlamentar, 'PSDB' as partido_atual, 'MG' as uf,"
-            " null::varchar as url_foto, true as em_exercicio"
+            " null::varchar as url_foto, true as em_exercicio,"
+            " now() as _carregado_em"
         )
     saida = tmp_path / "site"
     monkeypatch.setattr("monitor.cli.CAMINHO_DUCKDB", banco)

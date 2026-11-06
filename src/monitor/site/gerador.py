@@ -18,7 +18,6 @@ from monitor import __version__
 DIR_STATIC = Path(__file__).parent / "static"
 FUSO = ZoneInfo("America/Sao_Paulo")
 PRIMEIRO_MES = date(2027, 2, 1)
-
 MESES = (
     "janeiro",
     "fevereiro",
@@ -71,6 +70,7 @@ class DadosSite:
     gerado_em: datetime = field(default_factory=lambda: datetime.now(FUSO))
     versao: str = __version__
     primeiro_mes: date = PRIMEIRO_MES
+    coletado_em: datetime | None = None
 
 
 def criar_ambiente() -> Environment:
@@ -122,7 +122,13 @@ def carregar_dados(caminho_duckdb: Path) -> DadosSite:
     """
     with duckdb.connect(str(caminho_duckdb), read_only=True) as conexao:
         linhas = conexao.execute(consulta).fetchall()
+        (coletado_em,) = conexao.execute(
+            "select max(_carregado_em) from dim_parlamentar"
+        ).fetchone()
     parlamentares = sorted(
         (Parlamentar(*linha) for linha in linhas), key=lambda p: chave_ordenacao(p.nome)
     )
-    return DadosSite(parlamentares=parlamentares)
+    return DadosSite(
+        parlamentares=parlamentares,
+        coletado_em=coletado_em.astimezone(FUSO) if coletado_em else None,
+    )
