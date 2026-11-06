@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 
 import duckdb
 import pytest
@@ -51,6 +51,7 @@ def dados():
         ],
         gerado_em=datetime(2027, 3, 5, 9, 30),
         versao="9.9.9",
+        coletado_em=datetime(2027, 3, 4, 22, 15),
     )
 
 
@@ -61,7 +62,8 @@ def test_index_lista_a_bancada_com_links(tmp_path, dados):
     assert "2 deputados em exercício" in html
     assert 'href="deputados/74646.html"' in html
     assert html.index("Aécio Neves") < html.index("Ana Paula Leão")
-    assert "05/03/2027 às 09:30" in html
+    assert "coletados em 04/03/2027 às 22:15" in html
+    assert "Site gerado em 05/03/2027 às 09:30" in html
     assert "9.9.9" in html
 
 
@@ -107,13 +109,17 @@ def test_apaga_build_anterior(tmp_path, dados):
     assert not (tmp_path / "antigo.html").exists()
 
 
+COLETA = datetime(2026, 11, 6, 13, 30, tzinfo=UTC)
+
+
 def criar_dim_parlamentar(caminho, linhas):
     with duckdb.connect(str(caminho)) as conexao:
         conexao.execute(
             "create table dim_parlamentar (id_fonte varchar, nome_parlamentar varchar,"
-            " partido_atual varchar, uf varchar, url_foto varchar, em_exercicio boolean)"
+            " partido_atual varchar, uf varchar, url_foto varchar, em_exercicio boolean,"
+            " _carregado_em timestamptz)"
         )
-        conexao.executemany("insert into dim_parlamentar values (?, ?, ?, ?, ?, ?)", linhas)
+        conexao.executemany("insert into dim_parlamentar values (?, ?, ?, ?, ?, ?, ?)", linhas)
 
 
 def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
@@ -121,9 +127,9 @@ def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
     criar_dim_parlamentar(
         caminho,
         [
-            ("3", "Zé Vitor", "PL", "MG", None, True),
-            ("2", "Álvaro", "PT", "MG", None, True),
-            ("1", "Ana", "PP", "MG", None, False),
+            ("3", "Zé Vitor", "PL", "MG", None, True, COLETA),
+            ("2", "Álvaro", "PT", "MG", None, True, COLETA),
+            ("1", "Ana", "PP", "MG", None, False, COLETA),
         ],
     )
 
@@ -131,6 +137,7 @@ def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
 
     assert [p.nome for p in dados.parlamentares] == ["Álvaro", "Zé Vitor"]
     assert dados.parlamentares[0] == Parlamentar("2", "Álvaro", "PT", "MG", None)
+    assert formatar_data_hora(dados.coletado_em) == "06/11/2026 às 10:30"
 
 
 def test_textos_da_api_sao_escapados(tmp_path):

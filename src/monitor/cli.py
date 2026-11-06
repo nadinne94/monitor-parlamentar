@@ -1,12 +1,14 @@
 """CLI do projeto. O GitHub Actions chama exatamente estes comandos."""
 
 import subprocess
-from datetime import datetime
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Annotated
 
 import httpx
 import typer
 
+from monitor.armazenamento import ArmazenamentoError, guardar, recuperar
 from monitor.config import (
     CAMINHO_DUCKDB,
     DIR_BRUTO,
@@ -15,7 +17,7 @@ from monitor.config import (
     fontes_ativas,
 )
 from monitor.ingestion.core.erros import ConfiguracaoError, IngestaoError
-from monitor.ingestion.fontes import INGESTORES
+from monitor.ingestion.fontes import INGESTORES, TABELAS
 from monitor.site.gerador import carregar_dados, renderizar
 
 app = typer.Typer(no_args_is_help=True)
@@ -41,16 +43,22 @@ OpcaoMes = Annotated[
     str | None, typer.Option(help="Mês de referência (AAAA-MM).", callback=validar_mes)
 ]
 
+OpcaoArmazenamento = Annotated[
+    bool,
+    typer.Option(
+        "--armazenamento",
+        help="Guarda cada coleta na release e, se a API falhar, usa a última guardada (ADR-006).",
+    ),
+]
+
 
 @app.command()
 def ingest(
     fonte: Annotated[
         str | None, typer.Option(help="Nome da fonte. Padrão: todas as ativas.")
     ] = None,
-    # mes: Annotated[
-    #     str | None, typer.Option(help="Mês de referência (AAAA-MM).", callback=validar_mes)
-    # ] = None,
     mes: OpcaoMes = None,
+    armazenamento: OpcaoArmazenamento = False,
 ) -> None:
     """Coleta os dados brutos das fontes ativas."""
     alvo = [f for f in fontes_ativas() if fonte is None or f.nome == fonte]
@@ -66,11 +74,39 @@ def ingest(
             raise typer.Exit(code=1)
         try:
             arquivos = ingestor(f.parametros, DIR_BRUTO)
-        except (ConfiguracaoError, IngestaoError, httpx.HTTPError) as erro:
+        except (IngestaoError, httpx.HTTPError) as erro:
+            if not armazenamento:
+                typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)
+                raise typer.Exit(code=1) from None
+            typer.echo(
+                f"[ingest] fonte={f.nome}: falhou. Usando a última coleta guardada.", err=True
+            )
+            arquivos = _recuperar_ou_falhar(f.nome)
+        except ConfiguracaoError as erro:
             typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)
             raise typer.Exit(code=1) from None
+        else:
+            if armazenamento:
+                _guardar_ou_falhar(f.nome, arquivos)
         for arquivo in arquivos:
             typer.echo(f"[ingest] fonte={f.nome}: gravado {arquivo}")
+
+
+def _guardar_ou_falhar(fonte: str, arquivos: list[Path]) -> None:
+    try:
+        nomes = guardar(fonte, arquivos, datetime.now(UTC).date())
+    except ArmazenamentoError as erro:
+        typer.echo(f"[ingest] fonte={fonte}: {erro}", err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(f"[ingest] fonte={fonte}: guardado na release ({', '.join(nomes)})")
+
+
+def _recuperar_ou_falhar(fonte: str) -> list[Path]:
+    try:
+        return recuperar(fonte, TABELAS[fonte], DIR_BRUTO)
+    except (ArmazenamentoError, httpx.HTTPError) as erro:
+        typer.echo(f"[ingest] fonte={fonte}: sem coleta para usar no lugar. {erro}", err=True)
+        raise typer.Exit(code=1) from None
 
 
 @app.command()
@@ -98,8 +134,8 @@ def site() -> None:
 
 
 @app.command()
-def pipeline(mes: OpcaoMes = None) -> None:
+def pipeline(mes: OpcaoMes = None, armazenamento: OpcaoArmazenamento = False) -> None:
     """Executa ingestão, transformação e geração do site, em sequência."""
-    ingest(fonte=None, mes=mes)
+    ingest(fonte=None, mes=mes, armazenamento=armazenamento)
     transform()
     site()
