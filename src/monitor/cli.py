@@ -134,8 +134,8 @@ def site() -> None:
 
 
 @app.command()
-def pipeline(mes: OpcaoMes = None) -> None:
+def pipeline(mes: OpcaoMes = None, armazenamento: OpcaoArmazenamento = False) -> None:
     """Executa ingestão, transformação e geração do site, em sequência."""
-    ingest(fonte=None, mes=mes)
+    ingest(fonte=None, mes=mes, armazenamento=armazenamento)
     transform()
     site()

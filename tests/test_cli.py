@@ -179,14 +179,18 @@ def test_site_gera_paginas_a_partir_do_banco(tmp_path, monkeypatch):
 
 def test_pipeline_executa_as_etapas_em_ordem(monkeypatch):
     etapas = []
-    monkeypatch.setattr("monitor.cli.ingest", lambda **kwargs: etapas.append("ingest"))
+    monkeypatch.setattr("monitor.cli.ingest", lambda **kwargs: etapas.append(("ingest", kwargs)))
     monkeypatch.setattr("monitor.cli.transform", lambda: etapas.append("transform"))
     monkeypatch.setattr("monitor.cli.site", lambda: etapas.append("site"))
 
-    resultado = runner.invoke(app, ["pipeline", "--mes", "2026-09"])
+    resultado = runner.invoke(app, ["pipeline", "--mes", "2026-09", "--armazenamento"])
 
     assert resultado.exit_code == 0
-    assert etapas == ["ingest", "transform", "site"]
+    assert etapas == [
+        ("ingest", {"fonte": None, "mes": "2026-09", "armazenamento": True}),
+        "transform",
+        "site",
+    ]
 
 
 @pytest.fixture
