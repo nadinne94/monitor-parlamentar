@@ -154,3 +154,14 @@ def test_ingerir_proposicoes_grava_os_dois_arquivos_do_mes(tmp_path):
 
     assert [a.name for a in arquivos] == ["proposicoes_2026-10.parquet", "autores_2026-10.parquet"]
     assert all(a.is_file() for a in arquivos)
+
+
+@pytest.mark.vcr
+def test_api_real_proposicoes_de_mg_em_outubro():
+    with ClienteApi(URL_API_CAMARA) as cliente:
+        proposicoes = buscar_proposicoes(cliente, "MG", "2026-10")
+        autores = buscar_autores(cliente, proposicoes[:3])
+
+    assert len(proposicoes) == 88
+    assert {p.data_apresentacao.month for p in proposicoes} == {10}
+    assert len(autores) >= 3
