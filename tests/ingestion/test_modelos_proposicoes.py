@@ -28,3 +28,11 @@ def test_converte_item_da_lista(item_proposicao):
     assert proposicao.cod_tipo == 139
     assert (proposicao.numero, proposicao.ano) == (5620, 2026)
     assert proposicao.data_apresentacao == datetime(2026, 10, 20, 16, 12)
+
+
+def test_documento_acessorio_tem_ano_zero(item_proposicao):
+    item_proposicao.update(siglaTipo="PRL", codTipo=190, numero=1, ano=0)
+
+    proposicao = ProposicaoApi.model_validate(item_proposicao)
+
+    assert proposicao.ano == 0

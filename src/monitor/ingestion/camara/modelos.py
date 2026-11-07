@@ -31,7 +31,7 @@ class ProposicaoApi(BaseModel):
     id: int = Field(gt=0)
     sigla_tipo: str = Field(alias="siglaTipo")
     cod_tipo: int = Field(alias="codTipo", gt=0)
-    numero: int = Field(gt=0)
-    ano: int = Field(gt=0)
+    numero: int = Field(ge=0)
+    ano: int = Field(ge=0)
     ementa: str = ""
     data_apresentacao: datetime = Field(alias="dataApresentacao")
