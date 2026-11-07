@@ -1,0 +1,493 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - dadosabertos.camara.leg.br
+      user-agent:
+      - monitor-parlamentar (+https://github.com/nadinne94/monitor-parlamentar)
+    method: GET
+    uri: https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaUfAutor=MG&dataApresentacaoInicio=2026-10-01&dataApresentacaoFim=2026-10-31&ordem=ASC&ordenarPor=id&itens=100
+  response:
+    body:
+      string: "{\"dados\":[{\"id\":2647275,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647275\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5504,\"ano\":2026,\"ementa\":\"Disp\xF5e
+        sobre o incentivo e a regulamenta\xE7\xE3o da Minera\xE7\xE3o Urbana; institui
+        a prioridade de aproveitamento de recursos de fontes secund\xE1rias; estabelece
+        a obrigatoriedade de se considerar a disponibilidade de minerais a partir
+        de fontes secund\xE1rias; e, estabelece a restri\xE7\xE3o de concess\xE3o
+        de lavra e de licen\xE7a ambiental para a extra\xE7\xE3o de minerais dispon\xEDveis
+        no passivo urbano.\",\"dataApresentacao\":\"2026-10-01T12:27\"},{\"id\":2647291,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647291\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5514,\"ano\":2026,\"ementa\":\"Altera
+        o Decreto-Lei n\xBA 5452, de 1\xBA maio de 1943, a Lei n\xBA 8.112, de 11
+        de dezembro de 1990, a Lei n\xBA 8.213, de 24 de julho de 1991 e a Lei n\xBA
+        11.770, de 9 de setembro de 2008, para instituir a licen\xE7a parentalidade
+        compartilhada.\",\"dataApresentacao\":\"2026-10-02T14:30\"},{\"id\":2647292,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647292\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5515,\"ano\":2026,\"ementa\":\"Denomina
+        \u201CAeroporto Internacional de S\xE3o Paulo/Guarulhos \u2013 Lito Sousa\u201D
+        o aeroporto internacional localizado no Munic\xEDpio de Guarulhos, Estado
+        de S\xE3o Paulo.\",\"dataApresentacao\":\"2026-10-02T15:27\"},{\"id\":2647384,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647384\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5537,\"ano\":2026,\"ementa\":\"Altera
+        o \xA71\xB0 do art. 2\xB0 da Lei n\xB0 11.738, de 16 de julho de 2008, para
+        reduzir para trinta horas semanais a jornada m\xE1xima de trabalho dos profissionais
+        do magist\xE9rio p\xFAblico da educa\xE7\xE3o b\xE1sica, revoga o art. 6\xB0
+        da referida Lei e altera a Lei n\xB0 8.429, de 2 de junho de 1992, para estabelecer
+        hip\xF3tese de ato de improbidade administrativa.\",\"dataApresentacao\":\"2026-10-08T17:21\"},{\"id\":2647401,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647401\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":3,\"ano\":0,\"ementa\":\"Parecer
+        do Relator, Dep. Lafayette de Andrada (PL-MG).\",\"dataApresentacao\":\"2026-10-08T13:17\"},{\"id\":2647406,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647406\",\"siglaTipo\":\"REQ\",\"codTipo\":355,\"numero\":4286,\"ano\":2026,\"ementa\":\"Requer
+        mo\xE7\xE3o de pesar pelo falecimento do Tenente-Coronel PM Luis Fernando
+        Silvestre e das Tenentes PM Gabriela Em\xEDlia Soares Lacerda Resende e Alice
+        dos Santos Almeida, integrantes do Comando de Avia\xE7\xE3o do Estado da Pol\xEDcia
+        Militar de Minas Gerais, v\xEDtimas de acidente a\xE9reo ocorrido em Santana
+        do Para\xEDso (MG), em 9 de outubro de 2026.\",\"dataApresentacao\":\"2026-10-13T10:29\"},{\"id\":2647435,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647435\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5543,\"ano\":2026,\"ementa\":\"Altera
+        o art. 21-A da Lei n\xBA 11.508, de 20 de julho de 2007, para disciplinar
+        a presta\xE7\xE3o de servi\xE7os vinculados \xE0 exporta\xE7\xE3o no \xE2mbito
+        das Zonas de Processamento de Exporta\xE7\xE3o.\",\"dataApresentacao\":\"2026-10-13T13:56\"},{\"id\":2647456,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647456\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":4,\"ano\":0,\"ementa\":\"Parecer
+        do Relator, Dep. Lafayette de Andrada (PL-MG), pela constitucionalidade, juridicidade,
+        t\xE9cnica legislativa e, no m\xE9rito, pela aprova\xE7\xE3o deste, na forma
+        do Substitutivo da Comiss\xE3o de Seguran\xE7a P\xFAblica e Combate ao Crime
+        Organizado, com subemenda substitutiva.\",\"dataApresentacao\":\"2026-10-13T15:14\"},{\"id\":2647458,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647458\",\"siglaTipo\":\"SBR\",\"codTipo\":709,\"numero\":1,\"ano\":0,\"ementa\":\"Disp\xF5e
+        sobre as a\xE7\xF5es de Intelig\xEAncia exercidas pelas institui\xE7\xF5es
+        previstas nos incisos II, V e VI, do caput do art. 144 da Constitui\xE7\xE3o
+        Federal, destinadas \xE0 busca, produ\xE7\xE3o e tratamento de informa\xE7\xF5es
+        necess\xE1rias \xE0 preven\xE7\xE3o da criminalidade e viol\xEAncia, a preserva\xE7\xE3o
+        da ordem p\xFAblica e a incolumidade das pessoas e do patrim\xF4nio.\",\"dataApresentacao\":\"2026-10-13T15:36\"},{\"id\":2647525,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647525\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5553,\"ano\":2026,\"ementa\":\"Institui
+        diretrizes nacionais para a preven\xE7\xE3o e a gest\xE3o de riscos psicossociais
+        no trabalho dos profissionais do Sistema \xDAnico de Assist\xEAncia Social
+        \u2013 SUAS.\",\"dataApresentacao\":\"2026-10-13T18:08\"},{\"id\":2647526,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647526\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5554,\"ano\":2026,\"ementa\":\"Altera
+        a Lei n\xBA 9.504, de 30 de setembro de 1997, que \u201CEstabelece normas
+        para as elei\xE7\xF5es\u201D, para proibir o uso de bandeiras, banners e windbanners
+        ao longo das vias p\xFAblicas em campanhas eleitorais.\",\"dataApresentacao\":\"2026-10-13T18:20\"},{\"id\":2647538,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647538\",\"siglaTipo\":\"RPD\",\"codTipo\":1019,\"numero\":1,\"ano\":0,\"ementa\":\"Requerimento
+        de Inclus\xE3o de Mat\xE9ria na Ordem do Dia para Aprecia\xE7\xE3o Imediata
+        - PL 1559/2021\",\"dataApresentacao\":\"2026-10-14T09:00\"},{\"id\":2647609,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647609\",\"siglaTipo\":\"REQ\",\"codTipo\":686,\"numero\":97,\"ano\":2026,\"ementa\":\"Requer
+        forma\xE7\xE3o de Comitiva para representa\xE7\xE3o da Comiss\xE3o da Amaz\xF4nia
+        e dos Povos Origin\xE1rios e Tradicionais (CPOVOS) na 31\xAA Confer\xEAncia
+        das Na\xE7\xF5es Unidas sobre Mudan\xE7as Clim\xE1ticas (COP 31), a ser realizada
+        de 9 a 20 de novembro de 2026, em Antalya, na Turquia.\",\"dataApresentacao\":\"2026-10-13T14:16\"},{\"id\":2647659,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647659\",\"siglaTipo\":\"EMP\",\"codTipo\":870,\"numero\":1,\"ano\":0,\"ementa\":\"Altera
+        a Lei Complementar n\xBA 123, de 14 de dezembro de 2006, para atualizar os
+        limites de enquadramento das microempresas e empresas de pequeno porte e recompor
+        monetariamente as faixas de tributa\xE7\xE3o do Simples Nacional.\",\"dataApresentacao\":\"2026-10-14T17:22\"},{\"id\":2647662,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647662\",\"siglaTipo\":\"EMP\",\"codTipo\":870,\"numero\":3,\"ano\":0,\"ementa\":\"Altera
+        a Lei Complementar n\xBA 123, de 14 de dezembro de 2006, para dispor sobre
+        o limite de receita bruta anual e o n\xFAmero de empregados do Microempreendedor
+        Individual.\",\"dataApresentacao\":\"2026-10-14T17:23\"},{\"id\":2647760,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647760\",\"siglaTipo\":\"INC\",\"codTipo\":133,\"numero\":1625,\"ano\":2026,\"ementa\":\"Sugere
+        ao Minist\xE9rio da Educa\xE7\xE3o provid\xEAncias para a divulga\xE7\xE3o
+        dos indicadores e das proje\xE7\xF5es do Plano Nacional de Educa\xE7\xE3o.\",\"dataApresentacao\":\"2026-10-15T10:19\"},{\"id\":2647787,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647787\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5581,\"ano\":2026,\"ementa\":\"Altera
+        o Decreto-Lei n\xBA 2.848, de 7 de dezembro de 1940 (C\xF3digo Penal), a Lei
+        n\xBA 8.069, de 13 de julho de 1990 (Estatuto da Crian\xE7a e do Adolescente),
+        e a Lei n\xBA 13.344, de 6 de outubro de 2016, para agravar a pena do tr\xE1fico
+        de pessoas praticado no contexto de organiza\xE7\xE3o criminosa, mil\xEDcia
+        privada ou grupo paramilitar, instituir presta\xE7\xE3o patrimonial especial
+        destinada \xE0 desarticula\xE7\xE3o econ\xF4mica da atividade criminosa quando
+        a v\xEDtima for crian\xE7a ou adolescente, estabelecer protocolo de resposta
+        r\xE1pida para casos com ind\xEDcios de transnacionalidade e dispor sobre
+        o monitoramento do embarque de crian\xE7as e adolescentes.\",\"dataApresentacao\":\"2026-10-15T13:47\"},{\"id\":2647789,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647789\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5582,\"ano\":2026,\"ementa\":\"Altera
+        a Lei n\xBA 9.504, de 30 de setembro de 1997, para instituir a garantia de
+        distribui\xE7\xE3o gratuita de propaganda eleitoral identificada em plataformas
+        digitais.\",\"dataApresentacao\":\"2026-10-15T14:04\"},{\"id\":2648274,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648274\",\"siglaTipo\":\"REQ\",\"codTipo\":294,\"numero\":43,\"ano\":2026,\"ementa\":\"Requer
+        a realiza\xE7\xE3o de audi\xEAncia p\xFAblica para discutir os efeitos da
+        redu\xE7\xE3o da maioridade penal sobre o sistema prisional, com \xEAnfase
+        na separa\xE7\xE3o, cust\xF3dia, seguran\xE7a e reintegra\xE7\xE3o de jovens
+        de 16 e 17 anos. Convidados: 1. representante do Departamento Penitenci\xE1rio
+        de Minas Gerais; 2. representante da Pol\xEDcia Penal do Estado de Minas Gerais;
+        3. representante de entidade sindical dos policiais penais de Minas Gerais;
+        4. representante da Secretaria Nacional de Pol\xEDticas Penais; 5. representante
+        do Conselho Nacional de Pol\xEDtica Criminal e Penitenci\xE1ria; 6. especialista
+        de institui\xE7\xE3o de ensino de Minas Gerais em execu\xE7\xE3o penal, arquitetura
+        prisional ou gest\xE3o penitenci\xE1ria.\",\"dataApresentacao\":\"2026-10-14T15:54\"},{\"id\":2648275,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648275\",\"siglaTipo\":\"REQ\",\"codTipo\":294,\"numero\":44,\"ano\":2026,\"ementa\":\"Requer
+        a realiza\xE7\xE3o de audi\xEAncia p\xFAblica para debater a responsabiliza\xE7\xE3o
+        por crimes hediondos e outros delitos violentos praticados por adolescentes,
+        sob a perspectiva das v\xEDtimas e de seus familiares. Convidados: 1. representante
+        de entidade mineira de apoio a v\xEDtimas de crimes violentos e seus familiares;
+        2. familiar de v\xEDtima de crime hediondo praticado por adolescente, preferencialmente
+        de Minas Gerais, mediante pr\xE9via concord\xE2ncia e preserva\xE7\xE3o de
+        sua dignidade e seguran\xE7a; 3. representante do Minist\xE9rio P\xFAblico
+        do Estado de Minas Gerais com atua\xE7\xE3o criminal ou na defesa das v\xEDtimas;
+        4. delegado da Pol\xEDcia Civil do Estado de Minas Gerais com experi\xEAncia
+        na investiga\xE7\xE3o de homic\xEDdios, latroc\xEDnios ou crimes sexuais;
+        5. representante do Conselho Nacional do Minist\xE9rio P\xFAblico com atua\xE7\xE3o
+        na Pol\xEDtica Institucional de Prote\xE7\xE3o Integral e de Promo\xE7\xE3o
+        de Direitos e Apoio \xE0s V\xEDtimas; 6. especialista em vitimologia, tutela
+        judicial da v\xEDtima ou justi\xE7a restaurativa, preferencialmente vinculado
+        a institui\xE7\xE3o de ensino de Minas Gerais.\",\"dataApresentacao\":\"2026-10-14T15:55\"},{\"id\":2648276,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648276\",\"siglaTipo\":\"REQ\",\"codTipo\":294,\"numero\":45,\"ano\":2026,\"ementa\":\"Requer
+        a realiza\xE7\xE3o de audi\xEAncia p\xFAblica para debater o recrutamento
+        e a utiliza\xE7\xE3o de adolescentes por organiza\xE7\xF5es criminosas e os
+        efeitos da redu\xE7\xE3o da maioridade penal sobre essa din\xE2mica. Convidados:
+        representante da Pol\xEDcia Civil do Estado de Minas Gerais, preferencialmente
+        com atua\xE7\xE3o em investiga\xE7\xE3o de homic\xEDdios ou organiza\xE7\xF5es
+        criminosas; 2. representante do Minist\xE9rio P\xFAblico do Estado de Minas
+        Gerais, preferencialmente do Centro de Apoio Operacional das Promotorias de
+        Justi\xE7a de Combate ao Crime Organizado e de Investiga\xE7\xE3o Criminal;
+        3. representante da Secretaria de Estado de Justi\xE7a e Seguran\xE7a P\xFAblica
+        de Minas Gerais, da \xE1rea de intelig\xEAncia ou enfrentamento ao crime organizado;
+        4. representante da Diretoria de Investiga\xE7\xE3o e Combate ao Crime Organizado
+        e \xE0 Corrup\xE7\xE3o da Pol\xEDcia Federal; 5. representante da Secretaria
+        Nacional de Pol\xEDticas Penais; 6. pesquisador de universidade p\xFAblica
+        de Minas Gerais com produ\xE7\xE3o acad\xEAmica sobre fac\xE7\xF5es, criminalidade
+        juvenil ou recrutamento de adolescentes.\",\"dataApresentacao\":\"2026-10-14T16:00\"},{\"id\":2648312,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648312\",\"siglaTipo\":\"PLP\",\"codTipo\":140,\"numero\":269,\"ano\":2026,\"ementa\":\"Institui
+        o Programa de Regulariza\xE7\xE3o Tribut\xE1ria para Micro, Pequenas e M\xE9dias
+        Empresas, disp\xF5e sobre a exclus\xE3o de juros, multas tribut\xE1rias e
+        encargos legais de cr\xE9ditos tribut\xE1rios federais administrados pela
+        Secretaria Especial da Receita Federal do Brasil ou inscritos em d\xEDvida
+        ativa da Uni\xE3o e administrados pela Procuradoria-Geral da Fazenda Nacional
+        e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-15T17:18\"},{\"id\":2648317,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648317\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5588,\"ano\":2026,\"ementa\":\"Altera
+        a Lei n\xBA 11.947, de 16 de junho de 2009, para ampliar o limite anual de
+        aquisi\xE7\xE3o de g\xEAneros aliment\xEDcios da agricultura familiar, por
+        Cadastro Nacional da Agricultura Familiar, no \xE2mbito do Programa Nacional
+        de Alimenta\xE7\xE3o Escolar.\",\"dataApresentacao\":\"2026-10-16T09:24\"},{\"id\":2648322,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648322\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5590,\"ano\":2026,\"ementa\":\"Altera
+        a Lei n\xBA 14.597, de 14 de junho de 2023 Lei Geral do Esporte, para incluir
+        o fomento do esporte universit\xE1rio entre os objetivos do Fundo Nacional
+        do Esporte.\",\"dataApresentacao\":\"2026-10-16T11:28\"},{\"id\":2648326,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648326\",\"siglaTipo\":\"REQ\",\"codTipo\":392,\"numero\":4306,\"ano\":2026,\"ementa\":\"Requer
+        urg\xEAncia urgent\xEDssima para a aprecia\xE7\xE3o do Projeto de Lei 5543/2026.\",\"dataApresentacao\":\"2026-10-16T17:09\"},{\"id\":2648334,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648334\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5592,\"ano\":2026,\"ementa\":\"Altera
+        a Lei n\xBA 8.213, de 24 de julho de 1991, para assegurar o pagamento em dobro
+        do abono anual a todos os aposentados do Regime Geral de Previd\xEAncia Social.\",\"dataApresentacao\":\"2026-10-18T11:48\"},{\"id\":2648396,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648396\",\"siglaTipo\":\"PRC\",\"codTipo\":141,\"numero\":45,\"ano\":2026,\"ementa\":\"Institui
+        a Comenda Deputado Professor Paulo Fernando, destinada a agraciar personalidades
+        e institui\xE7\xF5es que tenham se destacado na defesa e na promo\xE7\xE3o
+        da vida desde a concep\xE7\xE3o, e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-19T16:16\"},{\"id\":2648398,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648398\",\"siglaTipo\":\"PRC\",\"codTipo\":141,\"numero\":46,\"ano\":2026,\"ementa\":\"Disp\xF5e
+        sobre a cria\xE7\xE3o da Procuradoria de Prote\xE7\xE3o e Defesa Animal da
+        C\xE2mara dos Deputados e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-19T16:45\"},{\"id\":2648399,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648399\",\"siglaTipo\":\"PRC\",\"codTipo\":141,\"numero\":47,\"ano\":2026,\"ementa\":\"Disp\xF5e
+        sobre a cria\xE7\xE3o da Procuradoria da Pessoa Idosa da C\xE2mara dos Deputados
+        e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-19T16:53\"},{\"id\":2648400,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648400\",\"siglaTipo\":\"PRC\",\"codTipo\":141,\"numero\":48,\"ano\":2026,\"ementa\":\"Disp\xF5e
+        sobre a cria\xE7\xE3o da Procuradoria das Pessoas com Defici\xEAncia, Pessoas
+        com Doen\xE7as Raras e Pessoas com Altas Habilidades ou Superdota\xE7\xE3o
+        da C\xE2mara dos Deputados e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-19T17:01\"},{\"id\":2648412,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648412\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":1,\"ano\":0,\"ementa\":\"Parecer
+        da Relatora, Dep. Nely Aquino (PODE-MG), pela aprova\xE7\xE3o do PL 628/26,
+        e dos PLs 638/26, 643/26, 644/26, 645/26, 667/26, 668/26, 669/26, 670/26,
+        671/26, 711/26, 768/26, e 966/26, apensados, com substitutivo.\",\"dataApresentacao\":\"2026-10-20T10:20\"},{\"id\":2648413,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648413\",\"siglaTipo\":\"SBT\",\"codTipo\":255,\"numero\":1,\"ano\":0,\"ementa\":\"Altera
+        o Decreto-Lei n\xBA 2.848, de 7 de dezembro de 1940 (C\xF3digo Penal), para
+        explicitar a natureza absoluta da vulnerabilidade prevista no art. 217-A e
+        a irrelev\xE2ncia de circunst\xE2ncias relacionadas \xE0 consentimento, v\xEDnculo
+        afetivo ou constitui\xE7\xE3o de n\xFAcleo familiar.\",\"dataApresentacao\":\"2026-10-20T11:33\"},{\"id\":2648416,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648416\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":1,\"ano\":0,\"ementa\":\"Parecer
+        da Relatora, Dep. Nely Aquino (PODE-MG), pela aprova\xE7\xE3o, com substitutivo.\",\"dataApresentacao\":\"2026-10-20T10:22\"},{\"id\":2648417,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648417\",\"siglaTipo\":\"SBT\",\"codTipo\":255,\"numero\":1,\"ano\":0,\"ementa\":\"Modifica
+        o art. 5\xBA da Lei n\xBA 14.601, de 19 de junho de 2023, para incluir entre
+        os benefici\xE1rios do Programa Bolsa Fam\xEDlia os menores de idade atendidos
+        por programas de acolhimento institucional.\",\"dataApresentacao\":\"2026-10-20T12:03\"},{\"id\":2648421,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648421\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5614,\"ano\":2026,\"ementa\":\"Altera
+        a Lei n\xBA 6.830, de 22 de setembro de 1980 (Lei de Execu\xE7\xE3o Fiscal),
+        para dispor sobre a impenhorabilidade de proventos de aposentadoria e pens\xF5es
+        de pessoa idosa em situa\xE7\xE3o de vulnerabilidade econ\xF4mica.\",\"dataApresentacao\":\"2026-10-20T13:28\"},{\"id\":2648442,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648442\",\"siglaTipo\":\"INC\",\"codTipo\":133,\"numero\":1631,\"ano\":2026,\"ementa\":\"Sugere
+        ao Senhor Ministro da Sa\xFAde a ado\xE7\xE3o de uma estrat\xE9gia de incorpora\xE7\xE3o
+        gradual da tecnologia de monitoramento cont\xEDnuo de glicemia no Sistema
+        \xDAnico de Sa\xFAde \u2013 SUS.\",\"dataApresentacao\":\"2026-10-20T13:49\"},{\"id\":2648486,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648486\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":1,\"ano\":0,\"ementa\":\"Parecer
+        da Relatora, Dep. Nely Aquino (PODE-MG), pela aprova\xE7\xE3o, com substitutivo.\",\"dataApresentacao\":\"2026-10-20T10:20\"},{\"id\":2648487,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648487\",\"siglaTipo\":\"SBT\",\"codTipo\":255,\"numero\":1,\"ano\":0,\"ementa\":\"Institui
+        medidas de prote\xE7\xE3o contra a evas\xE3o acad\xEAmica feminina no \xE2mbito
+        das institui\xE7\xF5es de ensino superior e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-20T14:44\"},{\"id\":2648495,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648495\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":1,\"ano\":0,\"ementa\":\"Parecer
+        da Relatora, Dep. Nely Aquino (PODE-MG), pela aprova\xE7\xE3o, com substitutivo.\",\"dataApresentacao\":\"2026-10-20T10:20\"},{\"id\":2648496,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648496\",\"siglaTipo\":\"SBT\",\"codTipo\":255,\"numero\":1,\"ano\":0,\"ementa\":\"Altera
+        a Lei Brasileira de Inclus\xE3o da Pessoa com Defici\xEAncia para dispor sobre
+        a garantia de regime escolar especial, atividades pedag\xF3gicas domiciliares,
+        prote\xE7\xE3o da frequ\xEAncia escolar e continuidade do processo de aprendizagem
+        de estudantes com defici\xEAncia em situa\xE7\xF5es excepcionais que comprometam
+        a acessibilidade, a seguran\xE7a, a salubridade ou a perman\xEAncia nas institui\xE7\xF5es
+        de ensino\",\"dataApresentacao\":\"2026-10-20T14:59\"},{\"id\":2648525,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648525\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5616,\"ano\":2026,\"ementa\":\"Institui
+        o Sistema Nacional de Controle Inteligente e Preventivo de Velocidade para
+        ve\xEDculos de transporte de cargas e de passageiros de grande porte, estabelece
+        mecanismos tecnol\xF3gicos de advert\xEAncia, assist\xEAncia \xE0 condu\xE7\xE3o
+        e preven\xE7\xE3o de acidentes, e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-20T14:16\"},{\"id\":2648526,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648526\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5617,\"ano\":2026,\"ementa\":\"Institui
+        o Sistema Nacional de Preven\xE7\xE3o de Colis\xF5es por Restri\xE7\xE3o de
+        Gabarito, estabelece mecanismos de identifica\xE7\xE3o, sinaliza\xE7\xE3o
+        e alerta antecipado para ve\xEDculos que se aproximem de estruturas rodovi\xE1rias
+        com limita\xE7\xE3o de altura ou dimens\xF5es, e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-20T14:16\"},{\"id\":2648534,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648534\",\"siglaTipo\":\"PROC\",\"codTipo\":720,\"numero\":70,\"ano\":2026,\"ementa\":\"REPRESENTA\xC7\xC3O
+        POR QUEBRA DE DECORO PARLAMENTAR em face do Deputado Federal GENERAL GIR\xC3O
+        (PL/RN), por fatos relacionados \xE0 sua participa\xE7\xE3o em ato pol\xEDtico
+        realizado nas depend\xEAncias da Universidade Federal do Rio Grande do Norte
+        (UFRN), em Natal/RN, em 19 de outubro de 2026, que terminou em confronto f\xEDsico
+        entre participantes, com relatos de estudantes feridos e danos ao patrim\xF4nio
+        universit\xE1rio, bem como por sua poss\xEDvel contribui\xE7\xE3o para a escalada
+        dos conflitos, conforme os fatos e fundamentos a seguir expostos.\",\"dataApresentacao\":\"2026-10-20T14:48\"},{\"id\":2648590,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648590\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5620,\"ano\":2026,\"ementa\":\"Institui
+        o sistema eleitoral distrital misto nas elei\xE7\xF5es para a C\xE2mara dos
+        Deputados, as Assembleias Legislativas e a C\xE2mara Legislativa do Distrito
+        Federal, disp\xF5e sobre a delimita\xE7\xE3o dos distritos, a distribui\xE7\xE3o
+        e o preenchimento das vagas e a supl\xEAncia, e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-20T16:12\"},{\"id\":2648608,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648608\",\"siglaTipo\":\"REQ\",\"codTipo\":441,\"numero\":77,\"ano\":2026,\"ementa\":\"Requer
+        a aprova\xE7\xE3o de Mo\xE7\xE3o de Aplauso ao Coletivo M\xE3es pela Liberdade,
+        de Minas Gerais, pela celebra\xE7\xE3o de seus seis anos de atua\xE7\xE3o
+        no acolhimento de fam\xEDlias, na defesa dos direitos da popula\xE7\xE3o LGBTQIA+
+        e na promo\xE7\xE3o da diversidade por meio da participa\xE7\xE3o pol\xEDtica
+        e da cultura.\",\"dataApresentacao\":\"2026-10-20T15:22\"},{\"id\":2648642,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648642\",\"siglaTipo\":\"REQ\",\"codTipo\":313,\"numero\":4322,\"ano\":2026,\"ementa\":\"Requer,
+        nos termos regimentais, a inclus\xE3o de coautoria deputados subscritores
+        do presente requerimento ao Projeto de Lei n\xBA 2.976, de 2026.\",\"dataApresentacao\":\"2026-10-21T14:33\"},{\"id\":2648645,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648645\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5637,\"ano\":2026,\"ementa\":\"Altera
+        a Lei n\xBA 9.250, de 26 de dezembro de 1995, para assegurar prioridade na
+        restitui\xE7\xE3o do Imposto sobre a Renda das Pessoas F\xEDsicas aos contribuintes
+        que tenham como dependentes crian\xE7as ou adolescentes com transtorno do
+        espectro autista, defici\xEAncia ou doen\xE7a grave.\",\"dataApresentacao\":\"2026-10-21T15:21\"},{\"id\":2648690,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648690\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5640,\"ano\":2026,\"ementa\":\"Acrescenta
+        o art. 242-A ao Decreto-Lei n\xBA 2.848, de 7 de dezembro de 1940 (C\xF3digo
+        Penal), para tipificar o crime de manipula\xE7\xE3o fraudulenta da opini\xE3o
+        p\xFAblica mediante oculta\xE7\xE3o de patroc\xEDnio ou financiamento por
+        agentes econ\xF4micos ou organiza\xE7\xF5es criminosas, e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-21T16:33\"},{\"id\":2648705,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648705\",\"siglaTipo\":\"PLP\",\"codTipo\":140,\"numero\":273,\"ano\":2026,\"ementa\":\"Altera
+        a Lei Complementar n\xBA 64, de 18 de maio de 1990, para dispor sobre o abuso
+        do poder acad\xEAmico.\",\"dataApresentacao\":\"2026-10-21T20:42\"},{\"id\":2648708,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648708\",\"siglaTipo\":\"INC\",\"codTipo\":133,\"numero\":1644,\"ano\":2026,\"ementa\":\"Sugere
+        ao Minist\xE9rio da Sa\xFAde a ado\xE7\xE3o de provid\xEAncias administrativas
+        urgentes para efetivar a oferta, no SUS, dos medicamentos e procedimentos
+        previstos no Protocolo Cl\xEDnico e Diretrizes Terap\xEAuticas da Dermatite
+        At\xF3pica.\",\"dataApresentacao\":\"2026-10-22T09:46\"},{\"id\":2648709,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648709\",\"siglaTipo\":\"RIC\",\"codTipo\":148,\"numero\":2798,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio da Sa\xFAde acerca da n\xE3o disponibiliza\xE7\xE3o
+        efetiva, no \xE2mbito do SUS, dos medicamentos e procedimentos previstos no
+        Protocolo Cl\xEDnico e Diretrizes Terap\xEAuticas da Dermatite At\xF3pica
+        para crian\xE7as e adolescentes com a doen\xE7a.\",\"dataApresentacao\":\"2026-10-22T09:48\"},{\"id\":2648715,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648715\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5646,\"ano\":2026,\"ementa\":\"Institui
+        o Programa Nacional da Segunda Oportunidade \u2013 PRONASO e estabelece diretrizes
+        para a reinser\xE7\xE3o social e produtiva de pessoas em situa\xE7\xE3o de
+        vulnerabilidade decorrente de eventos cr\xEDticos da vida.\",\"dataApresentacao\":\"2026-10-22T10:17\"},{\"id\":2648717,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648717\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5647,\"ano\":2026,\"ementa\":\"Institui
+        a Pol\xEDtica Nacional Pronto para Crescer, de incentivo \xE0 formaliza\xE7\xE3o
+        e ao empreendedorismo de jovens estudantes e egressos da educa\xE7\xE3o profissional
+        t\xE9cnica de n\xEDvel m\xE9dio, para o ingresso no mercado de trabalho por
+        meio de suas atividades t\xE9cnicas.\",\"dataApresentacao\":\"2026-10-22T10:38\"},{\"id\":2648830,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648830\",\"siglaTipo\":\"RIC\",\"codTipo\":148,\"numero\":2804,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio do Planejamento e Or\xE7amento acerca dos
+        estudos t\xE9cnicos, impactos or\xE7ament\xE1rios e crit\xE9rios de financiamento
+        da proposta de emenda \xE0 Constitui\xE7\xE3o destinada \xE0 implementa\xE7\xE3o
+        da tarifa zero no transporte p\xFAblico coletivo.\",\"dataApresentacao\":\"2026-10-26T11:46\"},{\"id\":2648831,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648831\",\"siglaTipo\":\"RIC\",\"codTipo\":148,\"numero\":2805,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio da Fazenda acerca das medidas de perd\xE3o
+        de d\xEDvidas e concess\xE3o de benef\xEDcios a microempreendedores individuais
+        (MEIs) anunciadas em outubro de 2026, seus fundamentos t\xE9cnicos e crit\xE9rios
+        de implementa\xE7\xE3o.\",\"dataApresentacao\":\"2026-10-26T11:46\"},{\"id\":2648832,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648832\",\"siglaTipo\":\"RIC\",\"codTipo\":148,\"numero\":2806,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio da Fazenda acerca das medidas de desonera\xE7\xE3o
+        tribut\xE1ria e subven\xE7\xE3o econ\xF4mica aos combust\xEDveis adotadas
+        em outubro de 2026, seus custos e fundamentos t\xE9cnicos.\",\"dataApresentacao\":\"2026-10-26T11:46\"},{\"id\":2648833,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648833\",\"siglaTipo\":\"RIC\",\"codTipo\":148,\"numero\":2807,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio da Previd\xEAncia Social acerca do envio
+        de mensagens oficiais sobre a utiliza\xE7\xE3o do comparecimento eleitoral
+        como prova de vida do INSS, \xE0s v\xE9speras das elei\xE7\xF5es de 2026,
+        e de poss\xEDvel desvio de finalidade na utiliza\xE7\xE3o dos canais de comunica\xE7\xE3o
+        do Governo Federal.\",\"dataApresentacao\":\"2026-10-26T11:46\"},{\"id\":2648844,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2648844\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":8,\"ano\":0,\"ementa\":\"Em
+        face do exposto, voto pela compatibilidade e adequa\xE7\xE3o or\xE7ament\xE1ria
+        e financeira do\\nProjeto de Lei n\xBA 6.788, de 2017, com as emendas de adequa\xE7\xE3o
+        n\xBAs 1, 2 e 3, de 2026, pela\\nincompatibilidade e inadequa\xE7\xE3o or\xE7ament\xE1ria
+        e financeiras do Substitutivo adotado pela Comiss\xE3o\\nde Trabalho, de Administra\xE7\xE3o
+        e Servi\xE7o P\xFAblico - CTASP, das emendas de n\xBAs 1 a 5, 7 e 8, 13, 15
+        a 33,\\n36 a 42, 47, 49, 51 a 56 apresentadas na CTASP ao Projeto de Lei,
+        das emendas de n\xBAs 1 a 10\\noferecidas ao primeiro substitutivo, da subemenda
+        modificativa ao segundo substitutivo\\napresentados na CTASP, das emendas
+        n\xBAs 1 e 2, apresentadas nesta Comiss\xE3o e do substitutivo\\nadotado pela
+        CTASP; e pela n\xE3o implica\xE7\xE3o em aumento ou diminui\xE7\xE3o da receita
+        ou da despesa\\np\xFAblica das emendas de n\xBAs 34, 35, 43, 44, 45, 46, 48,
+        50 apresentadas na CTASP ao Projeto de Lei e\\nemendas de n\xBAs 11 e 12 oferecidas
+        ao primeiro substitutivo apresentado na CTASP, e prejudicadas as\\nemendas
+        de n\xBAs 6, 9, 10, 11, 12 e 14 ante a retirada destas pelos autores.\",\"dataApresentacao\":\"2026-10-23T14:20\"},{\"id\":2649030,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649030\",\"siglaTipo\":\"REC\",\"codTipo\":373,\"numero\":19,\"ano\":2026,\"ementa\":\"Recurso
+        contra a aprecia\xE7\xE3o conclusiva do Projeto de Lei n\xBA 3757/2020, que
+        disp\xF5e sobre a atividade de opera\xE7\xE3o log\xEDstica, sobre a emiss\xE3o
+        de t\xEDtulos por empresas de armaz\xE9ns gerais e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-27T16:04\"},{\"id\":2649052,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649052\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":1,\"ano\":0,\"ementa\":\"Parecer
+        do Relator, Dep. Gilberto Abramo (REPUBLIC-MG), pela aprova\xE7\xE3o, com
+        substitutivo.\",\"dataApresentacao\":\"2026-10-07T13:05\"},{\"id\":2649053,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649053\",\"siglaTipo\":\"SBT\",\"codTipo\":255,\"numero\":1,\"ano\":0,\"ementa\":\"Institui,
+        no \xE2mbito da Pol\xEDtica Nacional de Mobilidade Urbana, o Programa Transporte
+        Seguro para Elas, destinado \xE0 promo\xE7\xE3o de espa\xE7os seguros de preven\xE7\xE3o
+        \xE0 viol\xEAncia, ao ass\xE9dio e a outras formas de abuso contra mulheres
+        no servi\xE7o de transporte coletivo p\xFAblico de passageiros, e d\xE1 outras
+        provid\xEAncias.\",\"dataApresentacao\":\"2026-10-27T17:22\"},{\"id\":2649079,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649079\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":1,\"ano\":0,\"ementa\":\"Parecer
+        do Relator, Dep. Lafayette de Andrada (PL-MG).\",\"dataApresentacao\":\"2026-10-27T19:21\"},{\"id\":2649082,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649082\",\"siglaTipo\":\"PRL\",\"codTipo\":190,\"numero\":3,\"ano\":0,\"ementa\":\"Disp\xF5e
+        sobre a arbitragem em mat\xE9ria tribut\xE1ria e aduaneira.\",\"dataApresentacao\":\"2026-10-27T19:24\"},{\"id\":2649113,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649113\",\"siglaTipo\":\"RPD\",\"codTipo\":328,\"numero\":1,\"ano\":0,\"ementa\":\"Requerimento
+        de Retirada de Mat\xE9ria da Pauta - PL 1224/2025\",\"dataApresentacao\":\"2026-10-28T08:30\"},{\"id\":2649120,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649120\",\"siglaTipo\":\"RPD\",\"codTipo\":328,\"numero\":2,\"ano\":0,\"ementa\":\"Requerimento
+        de Retirada de Mat\xE9ria da Pauta - PLP 100/2026\",\"dataApresentacao\":\"2026-10-28T09:00\"},{\"id\":2649121,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649121\",\"siglaTipo\":\"RPD\",\"codTipo\":329,\"numero\":3,\"ano\":0,\"ementa\":\"Requerimento
+        de Adiamento da Discuss\xE3o - PLP 100/2026\",\"dataApresentacao\":\"2026-10-28T09:00\"},{\"id\":2649122,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649122\",\"siglaTipo\":\"RPD\",\"codTipo\":336,\"numero\":4,\"ano\":0,\"ementa\":\"Requerimento
+        de Adiamento da Vota\xE7\xE3o\",\"dataApresentacao\":\"2026-10-28T09:00\"},{\"id\":2649123,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649123\",\"siglaTipo\":\"RPD\",\"codTipo\":328,\"numero\":5,\"ano\":0,\"ementa\":\"Requerimento
+        de Retirada de Mat\xE9ria da Pauta - PL 2841/2022\",\"dataApresentacao\":\"2026-10-28T09:02\"},{\"id\":2649157,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649157\",\"siglaTipo\":\"RPD\",\"codTipo\":328,\"numero\":3,\"ano\":0,\"ementa\":\"Requerimento
+        de Retirada de Mat\xE9ria da Pauta - PL 1333/2026\",\"dataApresentacao\":\"2026-10-28T09:00\"},{\"id\":2649328,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649328\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5681,\"ano\":2026,\"ementa\":\"Disp\xF5e
+        sobre a proibi\xE7\xE3o de fixa\xE7\xE3o de material de campanha e rostos
+        de candidatos, bem como de propaganda pol\xEDtico-partid\xE1ria expl\xEDcita
+        nas depend\xEAncias de institui\xE7\xF5es de ensino, regulamentando o debate
+        pol\xEDtico e filos\xF3fico, e d\xE1 outras provid\xEAncias.\",\"dataApresentacao\":\"2026-10-28T14:32\"},{\"id\":2649499,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649499\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5689,\"ano\":2026,\"ementa\":\"Acrescenta
+        o art. 203-A ao Decreto-Lei n\xBA 2.848, de 7 de dezembro de 1940 (C\xF3digo
+        Penal), para tipificar a discrimina\xE7\xE3o por voto ou convic\xE7\xE3o pol\xEDtica
+        no trabalho e na atividade econ\xF4mica, e altera o art. 1\xBA da Lei n\xBA
+        9.029, de 13 de abril de 1995, para incluir o voto e a convic\xE7\xE3o pol\xEDtica
+        entre os motivos de discrimina\xE7\xE3o vedados nas rela\xE7\xF5es de trabalho.\",\"dataApresentacao\":\"2026-10-29T09:52\"},{\"id\":2649509,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649509\",\"siglaTipo\":\"RDF\",\"codTipo\":197,\"numero\":1,\"ano\":0,\"ementa\":\"Reda\xE7\xE3o
+        Final ao PL 3104/2024\",\"dataApresentacao\":\"2026-10-29T10:38\"},{\"id\":2649510,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649510\",\"siglaTipo\":\"RDF\",\"codTipo\":197,\"numero\":1,\"ano\":0,\"ementa\":\"Reda\xE7\xE3o
+        Final ao PL 1978/2023\",\"dataApresentacao\":\"2026-10-29T10:39\"},{\"id\":2649511,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649511\",\"siglaTipo\":\"RDF\",\"codTipo\":197,\"numero\":1,\"ano\":0,\"ementa\":\"Reda\xE7\xE3o
+        Final ao PL 2500/2023\",\"dataApresentacao\":\"2026-10-29T10:41\"},{\"id\":2649512,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649512\",\"siglaTipo\":\"RDF\",\"codTipo\":197,\"numero\":1,\"ano\":0,\"ementa\":\"Reda\xE7\xE3o
+        Final ao PL 3351/2023\",\"dataApresentacao\":\"2026-10-29T10:42\"},{\"id\":2649533,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649533\",\"siglaTipo\":\"REQ\",\"codTipo\":293,\"numero\":4368,\"ano\":2026,\"ementa\":\"Requer
+        a realiza\xE7\xE3o de Sess\xE3o Solene Conjunta pelo Congresso Nacional para
+        lan\xE7amento da Agenda Legislativa da Ind\xFAstria 2027 \u2013 32\xAA edi\xE7\xE3o.\",\"dataApresentacao\":\"2026-10-29T12:08\"},{\"id\":2649558,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649558\",\"siglaTipo\":\"PL\",\"codTipo\":139,\"numero\":5702,\"ano\":2026,\"ementa\":\"Altera
+        o Decreto-Lei n\xBA 3.689, de 3 de outubro de 1941 (C\xF3digo de Processo
+        Penal), a Lei n\xBA 7.210, de 11 de julho de 1984 (Lei de Execu\xE7\xE3o Penal),
+        e a Lei n\xBA 8.036, de 11 de maio de 1990, para aperfei\xE7oar a repara\xE7\xE3o
+        dos danos materiais causados por crimes contra o patrim\xF4nio e disciplinar
+        sua execu\xE7\xE3o.\",\"dataApresentacao\":\"2026-10-29T14:09\"},{\"id\":2649571,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649571\",\"siglaTipo\":\"REQ\",\"codTipo\":293,\"numero\":4369,\"ano\":2026,\"ementa\":\"Requer
+        a convoca\xE7\xE3o de sess\xE3o solene da C\xE2mara dos Deputados em homenagem
+        aos 75 anos da regulamenta\xE7\xE3o da profiss\xE3o de economista no Brasil.\",\"dataApresentacao\":\"2026-10-29T15:33\"},{\"id\":2649577,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649577\",\"siglaTipo\":\"RDF\",\"codTipo\":197,\"numero\":1,\"ano\":0,\"ementa\":\"Reda\xE7\xE3o
+        Final ao PL 6207/2013\",\"dataApresentacao\":\"2026-10-29T15:48\"},{\"id\":2649665,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649665\",\"siglaTipo\":\"RIC\",\"codTipo\":148,\"numero\":2851,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio da Sa\xFAde sobre as estrat\xE9gias de
+        preven\xE7\xE3o e enfrentamento da mpox, com foco no aumento recente de casos
+        no estado do Rio de Janeiro, incluindo vacina\xE7\xE3o, disponibilidade de
+        doses, aquisi\xE7\xE3o de novas remessas e crit\xE9rios de amplia\xE7\xE3o
+        do p\xFAblico-alvo.\",\"dataApresentacao\":\"2026-10-30T11:04\"},{\"id\":2649669,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2649669\",\"siglaTipo\":\"PDL\",\"codTipo\":557,\"numero\":1012,\"ano\":2026,\"ementa\":\"Susta
+        os efeitos da Recomenda\xE7\xE3o do Conselho Nacional de Justi\xE7a aprovada
+        em 27 de outubro de 2026, que \\\"Estabelece diretrizes para a preven\xE7\xE3o,
+        identifica\xE7\xE3o e enfrentamento da viol\xEAncia processual de g\xEAnero
+        no \xE2mbito do Poder Judici\xE1rio\u201D.\",\"dataApresentacao\":\"2026-10-31T14:32\"},{\"id\":2650200,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2650200\",\"siglaTipo\":\"REQ\",\"codTipo\":1017,\"numero\":197,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio da Sa\xFAde acerca dos estudos, custos
+        e procedimentos relacionados ao an\xFAncio de poss\xEDvel incorpora\xE7\xE3o
+        de medicamentos para tratamento da obesidade ao Sistema \xDAnico de Sa\xFAde
+        (SUS), em setembro de 2026.\",\"dataApresentacao\":\"2026-10-29T17:18\"},{\"id\":2650204,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2650204\",\"siglaTipo\":\"REQ\",\"codTipo\":1017,\"numero\":198,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio da Fazenda acerca dos fundamentos econ\xF4micos,
+        impactos fiscais e crit\xE9rios da redu\xE7\xE3o do Imposto de Importa\xE7\xE3o
+        incidente sobre remessas internacionais de pequeno valor em 2026.\",\"dataApresentacao\":\"2026-10-29T17:18\"},{\"id\":2650205,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2650205\",\"siglaTipo\":\"REQ\",\"codTipo\":1017,\"numero\":199,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio do Desenvolvimento, Ind\xFAstria, Com\xE9rcio
+        e Servi\xE7os acerca dos custos, crit\xE9rios e resultados do programa Move
+        Brasil, destinado ao financiamento de ve\xEDculos para profissionais de transporte.\",\"dataApresentacao\":\"2026-10-29T17:18\"},{\"id\":2650208,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2650208\",\"siglaTipo\":\"REQ\",\"codTipo\":1017,\"numero\":200,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es \xE0 Casa Civil da Presid\xEAncia da Rep\xFAblica acerca
+        da utiliza\xE7\xE3o de instala\xE7\xF5es, servidores, equipamentos e servi\xE7os
+        p\xFAblicos na produ\xE7\xE3o de conte\xFAdos de comunica\xE7\xE3o pol\xEDtico-eleitoral
+        durante as elei\xE7\xF5es de 2026.\",\"dataApresentacao\":\"2026-10-29T17:18\"},{\"id\":2650209,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2650209\",\"siglaTipo\":\"REQ\",\"codTipo\":1017,\"numero\":201,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es \xE0 Secretaria de Comunica\xE7\xE3o Social da Presid\xEAncia
+        da Rep\xFAblica acerca do planejamento, da divulga\xE7\xE3o e das an\xE1lises
+        jur\xEDdicas relacionadas ao an\xFAncio do reajuste de 15,04% do Programa
+        Bolsa Fam\xEDlia durante o per\xEDodo eleitoral de 2026.\",\"dataApresentacao\":\"2026-10-29T17:18\"},{\"id\":2650210,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2650210\",\"siglaTipo\":\"REQ\",\"codTipo\":523,\"numero\":202,\"ano\":2026,\"ementa\":\"Requer
+        a convoca\xE7\xE3o do Ministro de Estado da Fazenda, Dario Durigan, para prestar
+        esclarecimentos sobre o impacto or\xE7ament\xE1rio das medidas anunciadas
+        pelo Governo Federal durante o per\xEDodo eleitoral de 2026, bem como sobre
+        a capacidade financeira da Uni\xE3o para honr\xE1-las.\",\"dataApresentacao\":\"2026-10-29T20:39\"},{\"id\":2650211,\"uri\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2650211\",\"siglaTipo\":\"REQ\",\"codTipo\":1017,\"numero\":203,\"ano\":2026,\"ementa\":\"Requer
+        informa\xE7\xF5es ao Minist\xE9rio do Desenvolvimento e Assist\xEAncia Social,
+        Fam\xEDlia e Combate \xE0 Fome acerca da antecipa\xE7\xE3o nacional dos pagamentos
+        do Programa Bolsa Fam\xEDlia em outubro de 2026, \xE0s v\xE9speras do segundo
+        turno das elei\xE7\xF5es presidenciais.\",\"dataApresentacao\":\"2026-10-29T20:43\"}],\"links\":[{\"rel\":\"self\",\"href\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaUfAutor=MG&dataApresentacaoInicio=2026-10-01&dataApresentacaoFim=2026-10-31&ordem=ASC&ordenarPor=id&itens=100\"},{\"rel\":\"first\",\"href\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaUfAutor=MG&dataApresentacaoInicio=2026-10-01&dataApresentacaoFim=2026-10-31&ordem=ASC&ordenarPor=id&pagina=1&itens=100\"},{\"rel\":\"last\",\"href\":\"https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaUfAutor=MG&dataApresentacaoInicio=2026-10-01&dataApresentacaoFim=2026-10-31&ordem=ASC&ordenarPor=id&pagina=1&itens=100\"}]}"
+    headers:
+      access-control-expose-headers:
+      - Link, X-Total-Count, X-Validation-Error
+      cache-control:
+      - public, max-age=360
+      content-length:
+      - '38546'
+      content-type:
+      - application/json
+      date:
+      - Sat, 07 Nov 2026 23:51:02 GMT
+      link:
+      - <https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaUfAutor=MG&dataApresentacaoInicio=2026-10-01&dataApresentacaoFim=2026-10-31&ordem=ASC&ordenarPor=id&itens=100>;
+        rel="self",<https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaUfAutor=MG&dataApresentacaoInicio=2026-10-01&dataApresentacaoFim=2026-10-31&ordem=ASC&ordenarPor=id&pagina=1&itens=100>;
+        rel="first",<https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaUfAutor=MG&dataApresentacaoInicio=2026-10-01&dataApresentacaoFim=2026-10-31&ordem=ASC&ordenarPor=id&pagina=1&itens=100>;
+        rel="last",
+      retry-after:
+      - '30'
+      server:
+      - envoy
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Accept,
+        Accept-Encoding
+      x-envoy-upstream-service-time:
+      - '108'
+      x-total-count:
+      - '88'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - dadosabertos.camara.leg.br
+      user-agent:
+      - monitor-parlamentar (+https://github.com/nadinne94/monitor-parlamentar)
+    method: GET
+    uri: https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647275/autores
+  response:
+    body:
+      string: '{"dados":[{"uri":"https://dadosabertos.camara.leg.br/api/v2/deputados/220623","nome":"Duda
+        Salabert","codTipo":10000,"tipo":"Deputado(a)","ordemAssinatura":1,"proponente":1}],"links":[{"rel":"self","href":"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647275/autores"}]}'
+    headers:
+      access-control-expose-headers:
+      - Link, X-Total-Count, X-Validation-Error
+      content-length:
+      - '279'
+      content-type:
+      - application/json
+      date:
+      - Sat, 07 Nov 2026 23:51:02 GMT
+      retry-after:
+      - '30'
+      server:
+      - envoy
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin,Access-Control-Request-Method,Access-Control-Request-Headers, Accept-Encoding
+      x-envoy-upstream-service-time:
+      - '36'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - dadosabertos.camara.leg.br
+      user-agent:
+      - monitor-parlamentar (+https://github.com/nadinne94/monitor-parlamentar)
+    method: GET
+    uri: https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647291/autores
+  response:
+    body:
+      string: '{"dados":[{"uri":"https://dadosabertos.camara.leg.br/api/v2/deputados/220623","nome":"Duda
+        Salabert","codTipo":10000,"tipo":"Deputado(a)","ordemAssinatura":1,"proponente":1}],"links":[{"rel":"self","href":"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647291/autores"}]}'
+    headers:
+      access-control-expose-headers:
+      - Link, X-Total-Count, X-Validation-Error
+      content-length:
+      - '279'
+      content-type:
+      - application/json
+      date:
+      - Sat, 07 Nov 2026 23:51:02 GMT
+      retry-after:
+      - '30'
+      server:
+      - envoy
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin,Access-Control-Request-Method,Access-Control-Request-Headers, Accept-Encoding
+      x-envoy-upstream-service-time:
+      - '23'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - dadosabertos.camara.leg.br
+      user-agent:
+      - monitor-parlamentar (+https://github.com/nadinne94/monitor-parlamentar)
+    method: GET
+    uri: https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647292/autores
+  response:
+    body:
+      string: '{"dados":[{"uri":"https://dadosabertos.camara.leg.br/api/v2/deputados/220623","nome":"Duda
+        Salabert","codTipo":10000,"tipo":"Deputado(a)","ordemAssinatura":1,"proponente":1}],"links":[{"rel":"self","href":"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647292/autores"}]}'
+    headers:
+      access-control-expose-headers:
+      - Link, X-Total-Count, X-Validation-Error
+      content-length:
+      - '279'
+      content-type:
+      - application/json
+      date:
+      - Sat, 07 Nov 2026 23:51:02 GMT
+      retry-after:
+      - '30'
+      server:
+      - envoy
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin,Access-Control-Request-Method,Access-Control-Request-Headers, Accept-Encoding
+      x-envoy-upstream-service-time:
+      - '73'
+    status:
+      code: 200
+      message: OK
+version: 1
