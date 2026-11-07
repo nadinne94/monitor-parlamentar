@@ -35,3 +35,21 @@ class ProposicaoApi(BaseModel):
     ano: int = Field(ge=0)
     ementa: str = ""
     data_apresentacao: datetime = Field(alias="dataApresentacao")
+
+
+class AutorApi(BaseModel):
+    """Um item de `GET /proposicoes/{id}/autores`."""
+
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
+
+    nome: str = Field(min_length=1)
+    tipo: str
+    cod_tipo: int = Field(alias="codTipo")
+    ordem_assinatura: int = Field(alias="ordemAssinatura", ge=0)
+    proponente: bool
+    uri: str | None = None
+
+    @property
+    def id_deputado(self) -> int:
+        """O id do deputado, extraído da `uri`."""
+        return int(self.uri.rsplit("/", 1)[-1])

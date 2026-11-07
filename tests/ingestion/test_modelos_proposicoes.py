@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from pydantic import ValidationError
 
-from monitor.ingestion.camara.modelos import ProposicaoApi
+from monitor.ingestion.camara.modelos import AutorApi, ProposicaoApi
 
 
 @pytest.fixture
@@ -48,3 +48,25 @@ def test_rejeita_proposicao_invalida(item_proposicao, campo, valor):
 
     with pytest.raises(ValidationError):
         ProposicaoApi.model_validate(item_proposicao)
+
+
+@pytest.fixture
+def item_autor():
+    """Um autor real de proposição (ver docs/spikes/s3-api-proposicoes.md)."""
+    return {
+        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/204492",
+        "nome": "Paulo Guedes",
+        "codTipo": 10000,
+        "tipo": "Deputado(a)",
+        "ordemAssinatura": 1,
+        "proponente": 1,
+    }
+
+
+def test_converte_autor_deputado(item_autor):
+    autor = AutorApi.model_validate(item_autor)
+
+    assert autor.nome == "Paulo Guedes"
+    assert autor.ordem_assinatura == 1
+    assert autor.proponente is True
+    assert autor.id_deputado == 204492
