@@ -70,3 +70,13 @@ def test_converte_autor_deputado(item_autor):
     assert autor.ordem_assinatura == 1
     assert autor.proponente is True
     assert autor.id_deputado == 204492
+
+
+@pytest.mark.parametrize(
+    "uri",
+    [None, "https://dadosabertos.camara.leg.br/api/v2/orgaos/2003"],
+)
+def test_autor_que_nao_e_deputado_nao_tem_id_de_deputado(item_autor, uri):
+    item_autor.update(uri=uri, tipo="Comissão Permanente")
+
+    assert AutorApi.model_validate(item_autor).id_deputado is None

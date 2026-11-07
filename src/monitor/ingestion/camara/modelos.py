@@ -50,6 +50,8 @@ class AutorApi(BaseModel):
     uri: str | None = None
 
     @property
-    def id_deputado(self) -> int:
-        """O id do deputado, extraído da `uri`."""
+    def id_deputado(self) -> int | None:
+        """O id do deputado, extraído da `uri`. None se o autor não for um deputado."""
+        if self.uri is None or "/deputados/" not in self.uri:
+            return None
         return int(self.uri.rsplit("/", 1)[-1])
