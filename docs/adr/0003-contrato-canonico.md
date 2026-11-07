@@ -5,7 +5,7 @@
 - **Decisora:** Nadinne
 - **Relacionado:** [ADR-001](0001-escopo-do-mvp.md), [ADR-002](0002-stack-tecnologica.md)
 
-## O Contexto
+## Contexto
 
 O projeto deve crescer por módulos: hoje a Câmara dos Deputados; depois o Senado, câmaras municipais e outras fontes. Cada fonte tem identificadores, nomes de campos, vocabulários e granularidades próprios. Exemplos:
 

@@ -2,7 +2,7 @@
 
 Referências: [ADR-001 Escopo](adr/0001-escopo-do-mvp.md) · [ADR-002 Stack](adr/0002-stack-tecnologica.md) · [ADR-003 Contrato](adr/0003-contrato-canonico.md) · [ADR-004 Site](adr/0004-gerador-de-site-proprio.md) · [ADR-006 Persistência](adr/0006-persistencia-em-release-do-github.md)
 
-## Meta:
+## Meta
 
 Ter o site no ar, atualizando sozinho, a tempo da nova legislatura: **pipeline operando em fevereiro de 2027** e **primeiro relatório oficial (fevereiro/2027) publicado no início de março de 2027**.
 
