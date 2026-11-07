@@ -5,7 +5,7 @@ import pytest
 
 from monitor.ingestion.camara.deputados import URL_API_CAMARA
 from monitor.ingestion.camara.modelos import ProposicaoApi
-from monitor.ingestion.camara.proposicoes import buscar_proposicoes, limites_do_mes
+from monitor.ingestion.camara.proposicoes import buscar_autores, buscar_proposicoes, limites_do_mes
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
 
@@ -71,3 +71,31 @@ def test_proposicao_de_fora_do_mes_e_erro():
 
     with cliente_falso({"/proposicoes": dados}) as cliente, pytest.raises(IngestaoError, match="2"):
         buscar_proposicoes(cliente, "MG", "2026-10")
+
+
+def autor(id_deputado, nome, ordem=1):
+    return {
+        "uri": f"{URL_API_CAMARA}/deputados/{id_deputado}",
+        "nome": nome,
+        "codTipo": 10000,
+        "tipo": "Deputado(a)",
+        "ordemAssinatura": ordem,
+        "proponente": 1,
+    }
+
+
+def test_buscar_autores_de_cada_proposicao():
+    rotas = {
+        "/proposicoes/1/autores": [autor(10, "Ana")],
+        "/proposicoes/2/autores": [autor(10, "Ana"), autor(20, "Bruno", ordem=2)],
+    }
+    proposicoes = [ProposicaoApi.model_validate(proposicao(i)) for i in (1, 2)]
+
+    with cliente_falso(rotas) as cliente:
+        autores = buscar_autores(cliente, proposicoes)
+
+    assert [(id_proposicao, a.nome) for id_proposicao, a in autores] == [
+        (1, "Ana"),
+        (2, "Ana"),
+        (2, "Bruno"),
+    ]

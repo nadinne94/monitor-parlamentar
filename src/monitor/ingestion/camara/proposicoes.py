@@ -3,7 +3,7 @@
 import calendar
 from datetime import date
 
-from monitor.ingestion.camara.modelos import ProposicaoApi
+from monitor.ingestion.camara.modelos import AutorApi, ProposicaoApi
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
 
@@ -35,3 +35,14 @@ def buscar_proposicoes(cliente: ClienteApi, uf: str, mes: str) -> list[Proposica
             f"Pedido para {mes}, mas vieram proposições de outras datas: {fora_do_mes}."
         )
     return proposicoes
+
+
+def buscar_autores(
+    cliente: ClienteApi, proposicoes: list[ProposicaoApi]
+) -> list[tuple[int, AutorApi]]:
+    """Os autores de cada proposição, como pares (id da proposição, autor)."""
+    autores = []
+    for proposicao in proposicoes:
+        corpo = cliente.get_json(f"/proposicoes/{proposicao.id}/autores")
+        autores.extend((proposicao.id, AutorApi.model_validate(item)) for item in corpo["dados"])
+    return autores
