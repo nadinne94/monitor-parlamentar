@@ -96,7 +96,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 **Estimativa:** 2 semanas · **Alvo:** meados de dezembro/2026
 
 **Antes de começar:**
-- **Resolvido:** instabilidade da API. O cliente HTTP passou a fazer mais tentativas e a respeitar o `retry-after` (passo 1), e os dados brutos passam a ser guardados numa release do GitHub, com contingência no deploy (ADR-006).; (2) reexecução automática do deploy quando a ingestão falhar; (3) antecipar o spike S2 e a persistência dos dados brutos, para gerar o site com a última coleta bem-sucedida. A opção (3) revê o ADR-005 e exige um ADR próprio.
+- **Resolvido:** tipos de proposição e autoria definidos no ADR-007, a partir do spike S3.
 - ADR-007 definindo quais tipos de proposição contam (`tipo_categoria`) e como tratar autoria e coautoria.
 
 **Escopo**
