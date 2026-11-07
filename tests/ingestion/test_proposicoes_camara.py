@@ -1,11 +1,18 @@
 from datetime import date
 
+import duckdb
 import httpx
 import pytest
 
 from monitor.ingestion.camara.deputados import URL_API_CAMARA
-from monitor.ingestion.camara.modelos import ProposicaoApi
-from monitor.ingestion.camara.proposicoes import buscar_autores, buscar_proposicoes, limites_do_mes
+from monitor.ingestion.camara.modelos import AutorApi, ProposicaoApi
+from monitor.ingestion.camara.proposicoes import (
+    buscar_autores,
+    buscar_proposicoes,
+    gravar_autores,
+    gravar_proposicoes,
+    limites_do_mes,
+)
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
 
@@ -99,3 +106,40 @@ def test_buscar_autores_de_cada_proposicao():
         (2, "Ana"),
         (2, "Bruno"),
     ]
+
+
+def test_gravar_proposicoes_com_tipos_explicitos(tmp_path):
+    destino = tmp_path / "proposicoes_2026-10.parquet"
+    proposicoes = [ProposicaoApi.model_validate(proposicao(1))]
+
+    gravar_proposicoes(proposicoes, destino)
+
+    with duckdb.connect() as conexao:
+        tipos = dict(
+            conexao.execute(
+                "select column_name, column_type from (describe select * from read_parquet(?))",
+                [str(destino)],
+            ).fetchall()
+        )
+    assert tipos["id"] == "BIGINT"
+    assert tipos["data_apresentacao"] == "TIMESTAMP"
+    assert tipos["_carregado_em"] == "TIMESTAMP WITH TIME ZONE"
+
+
+def test_gravar_autores_mantem_quem_nao_e_deputado(tmp_path):
+    destino = tmp_path / "autores_2026-10.parquet"
+    comissao = {**autor(0, "Comissão de Educação"), "uri": None, "tipo": "Comissão Permanente"}
+    autores = [
+        (1, AutorApi.model_validate(autor(10, "Ana"))),
+        (1, AutorApi.model_validate(comissao)),
+    ]
+
+    gravar_autores(autores, destino)
+
+    with duckdb.connect() as conexao:
+        linhas = conexao.execute(
+            "select id_proposicao, id_deputado, nome, proponente"
+            " from read_parquet(?) order by nome",
+            [str(destino)],
+        ).fetchall()
+    assert linhas == [(1, 10, "Ana", True), (1, None, "Comissão de Educação", True)]
