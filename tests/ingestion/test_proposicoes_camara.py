@@ -11,6 +11,7 @@ from monitor.ingestion.camara.proposicoes import (
     buscar_proposicoes,
     gravar_autores,
     gravar_proposicoes,
+    ingerir_proposicoes,
     limites_do_mes,
 )
 from monitor.ingestion.core.cliente import ClienteApi
@@ -143,3 +144,13 @@ def test_gravar_autores_mantem_quem_nao_e_deputado(tmp_path):
             [str(destino)],
         ).fetchall()
     assert linhas == [(1, 10, "Ana", True), (1, None, "Comissão de Educação", True)]
+
+
+def test_ingerir_proposicoes_grava_os_dois_arquivos_do_mes(tmp_path):
+    rotas = {"/proposicoes": [proposicao(1)], "/proposicoes/1/autores": [autor(10, "Ana")]}
+
+    with cliente_falso(rotas) as cliente:
+        arquivos = ingerir_proposicoes(cliente, "MG", "2026-10", tmp_path)
+
+    assert [a.name for a in arquivos] == ["proposicoes_2026-10.parquet", "autores_2026-10.parquet"]
+    assert all(a.is_file() for a in arquivos)

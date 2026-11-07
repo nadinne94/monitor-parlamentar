@@ -105,3 +105,13 @@ def _gravar(linhas: list[dict], esquema: pa.Schema, destino: Path) -> Path:
     destino.parent.mkdir(parents=True, exist_ok=True)
     pq.write_table(tabela, destino)
     return destino
+
+
+def ingerir_proposicoes(cliente: ClienteApi, uf: str, mes: str, pasta: Path) -> list[Path]:
+    """Busca as proposições do mês e os seus autores, e grava os dois Parquets brutos."""
+    proposicoes = buscar_proposicoes(cliente, uf, mes)
+    autores = buscar_autores(cliente, proposicoes)
+    return [
+        gravar_proposicoes(proposicoes, pasta / f"proposicoes_{mes}.parquet"),
+        gravar_autores(autores, pasta / f"autores_{mes}.parquet"),
+    ]
