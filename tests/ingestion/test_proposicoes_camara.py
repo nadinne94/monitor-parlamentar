@@ -7,6 +7,7 @@ from monitor.ingestion.camara.deputados import URL_API_CAMARA
 from monitor.ingestion.camara.modelos import ProposicaoApi
 from monitor.ingestion.camara.proposicoes import buscar_proposicoes, limites_do_mes
 from monitor.ingestion.core.cliente import ClienteApi
+from monitor.ingestion.core.erros import IngestaoError
 
 
 @pytest.mark.parametrize(
@@ -63,3 +64,10 @@ def test_buscar_proposicoes_envia_os_filtros_do_mes():
 def test_mes_sem_proposicoes_nao_e_erro():
     with cliente_falso({"/proposicoes": []}) as cliente:
         assert buscar_proposicoes(cliente, "MG", "2026-10") == []
+
+
+def test_proposicao_de_fora_do_mes_e_erro():
+    dados = [proposicao(1), proposicao(2, data="2026-09-30T10:00")]
+
+    with cliente_falso({"/proposicoes": dados}) as cliente, pytest.raises(IngestaoError, match="2"):
+        buscar_proposicoes(cliente, "MG", "2026-10")
