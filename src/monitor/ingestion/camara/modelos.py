@@ -29,7 +29,7 @@ class ProposicaoApi(BaseModel):
     model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
 
     id: int = Field(gt=0)
-    sigla_tipo: str = Field(alias="siglaTipo")
+    sigla_tipo: str = Field(alias="siglaTipo", min_length=1)
     cod_tipo: int = Field(alias="codTipo", gt=0)
     numero: int = Field(ge=0)
     ano: int = Field(ge=0)

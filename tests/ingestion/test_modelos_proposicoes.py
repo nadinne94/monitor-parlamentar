@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+from pydantic import ValidationError
 
 from monitor.ingestion.camara.modelos import ProposicaoApi
 
@@ -36,3 +37,14 @@ def test_documento_acessorio_tem_ano_zero(item_proposicao):
     proposicao = ProposicaoApi.model_validate(item_proposicao)
 
     assert proposicao.ano == 0
+
+
+@pytest.mark.parametrize(
+    ("campo", "valor"),
+    [("id", 0), ("siglaTipo", ""), ("dataApresentacao", "ontem"), ("ano", -1)],
+)
+def test_rejeita_proposicao_invalida(item_proposicao, campo, valor):
+    item_proposicao[campo] = valor
+
+    with pytest.raises(ValidationError):
+        ProposicaoApi.model_validate(item_proposicao)
