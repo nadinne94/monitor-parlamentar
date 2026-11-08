@@ -192,7 +192,10 @@ def armazenamento_falso(monkeypatch):
 
     monkeypatch.setattr("monitor.cli.guardar", guardar)
     monkeypatch.setattr("monitor.cli.recuperar", recuperar)
-    monkeypatch.setattr("monitor.cli.TABELAS", {"camara_api": ["deputados"]})
+    monkeypatch.setattr(
+        "monitor.cli.tabelas_da_fonte",
+        lambda fonte, meses: ["deputados", *(f"proposicoes_{mes}" for mes in meses)],
+    )
     return chamadas
 
 
@@ -234,10 +237,14 @@ def test_ingest_usa_a_ultima_coleta_quando_a_api_falha(
 
     monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir_que_falha})
 
-    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api", "--armazenamento"])
+    resultado = runner.invoke(
+        app, ["ingest", "--fonte", "camara_api", "--mes", "2026-10", "--armazenamento"]
+    )
 
     assert resultado.exit_code == 0
-    assert armazenamento_falso == [("recuperar", "camara_api", ["deputados"])]
+    assert armazenamento_falso == [
+        ("recuperar", "camara_api", ["deputados", "proposicoes_2026-10"])
+    ]
     assert "Usando a última coleta guardada" in resultado.output
 
 
