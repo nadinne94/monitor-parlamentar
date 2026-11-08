@@ -6,6 +6,7 @@ import pytest
 from monitor.site.gerador import (
     DadosSite,
     Parlamentar,
+    Proposicao,
     carregar_dados,
     chave_ordenacao,
     formatar_data_hora,
@@ -148,3 +149,31 @@ def test_textos_da_api_sao_escapados(tmp_path):
     html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
     assert "<script>" not in html
     assert "&lt;script&gt;" in html
+
+
+OUTUBRO = date(2026, 10, 1)
+SETEMBRO = date(2026, 9, 1)
+
+
+def proposicao(numero, categoria="legislativa", papel="autor", mes=OUTUBRO, sigla="PL"):
+    return Proposicao(mes, sigla, numero, 2026, f"Ementa {numero}", categoria, papel)
+
+
+def test_do_mes_filtra_por_mes_categoria_e_papel():
+    p = Parlamentar(
+        "1",
+        "Ana",
+        "PT",
+        "MG",
+        None,
+        proposicoes=(
+            proposicao(1),
+            proposicao(2, papel="coautor"),
+            proposicao(3, categoria="requerimento", sigla="REQ"),
+            proposicao(4, mes=SETEMBRO),
+        ),
+    )
+
+    assert [x.numero for x in p.do_mes(OUTUBRO, "legislativa", "autor")] == [1]
+    assert [x.numero for x in p.do_mes(OUTUBRO, "legislativa", "coautor")] == [2]
+    assert [x.numero for x in p.do_mes(SETEMBRO, "legislativa", "autor")] == [4]

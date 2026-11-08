@@ -52,6 +52,24 @@ def chave_ordenacao(texto: str) -> str:
 
 
 @dataclass(frozen=True)
+class Proposicao:
+    """Uma linha do fato_proposicao, com o que o site exibe."""
+
+    mes_ref: date
+    sigla: str
+    numero: int
+    ano: int
+    ementa: str
+    categoria: str
+    papel: str
+
+    @property
+    def identificacao(self) -> str:
+        """'PL 5620/2026'."""
+        return f"{self.sigla} {self.numero}/{self.ano}"
+
+
+@dataclass(frozen=True)
 class Parlamentar:
     """Uma linha da dim_parlamentar, com o que o site exibe."""
 
@@ -60,6 +78,15 @@ class Parlamentar:
     partido: str | None
     uf: str
     url_foto: str | None
+    proposicoes: tuple[Proposicao, ...] = ()
+
+    def do_mes(self, mes: date, categoria: str, papel: str) -> list[Proposicao]:
+        """As proposições do mês, de uma categoria e de um papel de autoria."""
+        return [
+            p
+            for p in self.proposicoes
+            if p.mes_ref == mes and p.categoria == categoria and p.papel == papel
+        ]
 
 
 @dataclass
