@@ -141,3 +141,28 @@ h2 {
     color: var(--suave);
     font-size: 0.9rem;
 }
+
+.meses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 1rem 0;
+}
+
+.mes {
+    border-top: 1px solid var(--linha);
+    padding-top: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.mes h4 {
+    margin-bottom: 0.5rem;
+}
+
+.proposicoes {
+    padding-left: 1.25rem;
+}
+
+.proposicoes li {
+    margin: 0.4rem 0;
+}

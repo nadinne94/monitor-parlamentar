@@ -146,10 +146,15 @@ def test_site_gera_paginas_a_partir_do_banco(tmp_path, monkeypatch):
     banco = tmp_path / "teste.duckdb"
     with duckdb.connect(str(banco)) as conexao:
         conexao.execute(
-            "create table dim_parlamentar as select '74646' as id_fonte,"
-            " 'Aécio Neves' as nome_parlamentar, 'PSDB' as partido_atual, 'MG' as uf,"
-            " null::varchar as url_foto, true as em_exercicio,"
-            " now() as _carregado_em"
+            "create table dim_parlamentar as select 'sk' as parlamentar_sk,"
+            " '74646' as id_fonte, 'Aécio Neves' as nome_parlamentar,"
+            " 'PSDB' as partido_atual, 'MG' as uf, null::varchar as url_foto,"
+            " true as em_exercicio, now() as _carregado_em"
+        )
+        conexao.execute(
+            "create table fato_proposicao (parlamentar_sk varchar, mes_ref date,"
+            " tipo_sigla varchar, numero integer, ano integer, ementa varchar,"
+            " tipo_categoria varchar, papel_autoria varchar, data_apresentacao date)"
         )
     saida = tmp_path / "site"
     monkeypatch.setattr("monitor.cli.CAMINHO_DUCKDB", banco)
