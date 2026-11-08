@@ -17,7 +17,8 @@ from monitor.config import (
     fontes_ativas,
 )
 from monitor.ingestion.core.erros import ConfiguracaoError, IngestaoError
-from monitor.ingestion.fontes import INGESTORES, TABELAS
+from monitor.ingestion.fontes import INGESTORES, tabelas_da_fonte
+from monitor.periodos import meses_a_processar
 from monitor.site.gerador import carregar_dados, renderizar
 
 app = typer.Typer(no_args_is_help=True)
@@ -65,6 +66,7 @@ def ingest(
     if not alvo:
         typer.echo(f"Nenhuma fonte ativa com o nome '{fonte}'.", err=True)
         raise typer.Exit(code=1)
+    meses = [mes] if mes else meses_a_processar(datetime.now(UTC).date())
     for f in alvo:
         ingestor = INGESTORES.get(f.nome)
         if ingestor is None:
@@ -73,7 +75,7 @@ def ingest(
             )
             raise typer.Exit(code=1)
         try:
-            arquivos = ingestor(f.parametros, DIR_BRUTO)
+            arquivos = ingestor(f.parametros, DIR_BRUTO, meses)
         except (IngestaoError, httpx.HTTPError) as erro:
             if not armazenamento:
                 typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)
@@ -81,7 +83,7 @@ def ingest(
             typer.echo(
                 f"[ingest] fonte={f.nome}: falhou. Usando a última coleta guardada.", err=True
             )
-            arquivos = _recuperar_ou_falhar(f.nome)
+            arquivos = _recuperar_ou_falhar(f.nome, meses)
         except ConfiguracaoError as erro:
             typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)
             raise typer.Exit(code=1) from None
@@ -101,9 +103,9 @@ def _guardar_ou_falhar(fonte: str, arquivos: list[Path]) -> None:
     typer.echo(f"[ingest] fonte={fonte}: guardado na release ({', '.join(nomes)})")
 
 
-def _recuperar_ou_falhar(fonte: str) -> list[Path]:
+def _recuperar_ou_falhar(fonte: str, meses: list[str]) -> list[Path]:
     try:
-        return recuperar(fonte, TABELAS[fonte], DIR_BRUTO)
+        return recuperar(fonte, tabelas_da_fonte(fonte, meses), DIR_BRUTO)
     except (ArmazenamentoError, httpx.HTTPError) as erro:
         typer.echo(f"[ingest] fonte={fonte}: sem coleta para usar no lugar. {erro}", err=True)
         raise typer.Exit(code=1) from None

@@ -35,7 +35,7 @@ def ingestores_falsos(monkeypatch):
     chamadas = []
 
     def falso(nome):
-        def ingerir(parametros, dir_bruto):
+        def ingerir(parametros, dir_bruto, meses):
             chamadas.append(nome)
             return [dir_bruto / nome / "dados.parquet"]
 
@@ -79,7 +79,7 @@ def test_ingest_fonte_sem_ingestao_implementada_falha(duas_fontes, monkeypatch):
     ],
 )
 def test_ingest_falha_da_fonte_vira_falha_da_cli(duas_fontes, monkeypatch, erro):
-    def ingerir_que_falha(parametros, dir_bruto):
+    def ingerir_que_falha(parametros, dir_bruto, meses):
         raise erro
 
     monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir_que_falha})
@@ -192,7 +192,10 @@ def armazenamento_falso(monkeypatch):
 
     monkeypatch.setattr("monitor.cli.guardar", guardar)
     monkeypatch.setattr("monitor.cli.recuperar", recuperar)
-    monkeypatch.setattr("monitor.cli.TABELAS", {"camara_api": ["deputados"]})
+    monkeypatch.setattr(
+        "monitor.cli.tabelas_da_fonte",
+        lambda fonte, meses: ["deputados", *(f"proposicoes_{mes}" for mes in meses)],
+    )
     return chamadas
 
 
@@ -229,22 +232,26 @@ def test_ingest_falha_se_nao_consegue_guardar(duas_fontes, ingestores_falsos, mo
 def test_ingest_usa_a_ultima_coleta_quando_a_api_falha(
     duas_fontes, monkeypatch, armazenamento_falso, erro
 ):
-    def ingerir_que_falha(parametros, dir_bruto):
+    def ingerir_que_falha(parametros, dir_bruto, meses):
         raise erro
 
     monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir_que_falha})
 
-    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api", "--armazenamento"])
+    resultado = runner.invoke(
+        app, ["ingest", "--fonte", "camara_api", "--mes", "2026-10", "--armazenamento"]
+    )
 
     assert resultado.exit_code == 0
-    assert armazenamento_falso == [("recuperar", "camara_api", ["deputados"])]
+    assert armazenamento_falso == [
+        ("recuperar", "camara_api", ["deputados", "proposicoes_2026-10"])
+    ]
     assert "Usando a última coleta guardada" in resultado.output
 
 
 def test_ingest_erro_de_configuracao_nao_usa_coleta_guardada(
     duas_fontes, monkeypatch, armazenamento_falso
 ):
-    def ingerir_mal_configurado(parametros, dir_bruto):
+    def ingerir_mal_configurado(parametros, dir_bruto, meses):
         raise ConfiguracaoError("falta a uf")
 
     monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir_mal_configurado})
@@ -256,7 +263,7 @@ def test_ingest_erro_de_configuracao_nao_usa_coleta_guardada(
 
 
 def test_ingest_falha_se_nao_ha_coleta_guardada(duas_fontes, monkeypatch, armazenamento_falso):
-    def ingerir_que_falha(parametros, dir_bruto):
+    def ingerir_que_falha(parametros, dir_bruto, meses):
         raise IngestaoError("lista vazia")
 
     def recuperar_sem_coleta(fonte, tabelas, dir_bruto):
@@ -269,3 +276,31 @@ def test_ingest_falha_se_nao_ha_coleta_guardada(duas_fontes, monkeypatch, armaze
 
     assert resultado.exit_code == 1
     assert "Não há coleta guardada" in resultado.output
+
+
+@pytest.fixture
+def ingestor_que_anota_meses(duas_fontes, monkeypatch):
+    meses_recebidos = []
+
+    def ingerir(parametros, dir_bruto, meses):
+        meses_recebidos.append(meses)
+        return []
+
+    monkeypatch.setattr("monitor.cli.INGESTORES", {"camara_api": ingerir})
+    return meses_recebidos
+
+
+def test_ingest_sem_mes_processa_os_ultimos_meses(ingestor_que_anota_meses, monkeypatch):
+    monkeypatch.setattr("monitor.cli.meses_a_processar", lambda hoje: ["2026-09", "2026-10"])
+
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api"])
+
+    assert resultado.exit_code == 0
+    assert ingestor_que_anota_meses == [["2026-09", "2026-10"]]
+
+
+def test_ingest_com_mes_processa_so_o_mes_pedido(ingestor_que_anota_meses):
+    resultado = runner.invoke(app, ["ingest", "--fonte", "camara_api", "--mes", "2026-08"])
+
+    assert resultado.exit_code == 0
+    assert ingestor_que_anota_meses == [["2026-08"]]
