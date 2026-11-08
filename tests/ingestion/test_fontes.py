@@ -19,7 +19,7 @@ def test_camara_api_grava_na_pasta_da_fonte(tmp_path, monkeypatch):
 
     monkeypatch.setattr("monitor.ingestion.fontes.ingerir_deputados", ingerir_falso)
 
-    arquivos = ingerir_camara_api({"uf": "MG"}, tmp_path)
+    arquivos = ingerir_camara_api({"uf": "MG"}, tmp_path, [])
 
     destino_esperado = tmp_path / "camara_api" / "deputados.parquet"
     assert chamadas == [("MG", destino_esperado)]
@@ -29,7 +29,7 @@ def test_camara_api_grava_na_pasta_da_fonte(tmp_path, monkeypatch):
 
 def test_camara_api_sem_uf_e_erro_de_configuracao(tmp_path):
     with pytest.raises(ConfiguracaoError, match="uf"):
-        ingerir_camara_api({}, tmp_path)
+        ingerir_camara_api({}, tmp_path, [])
 
 
 def test_toda_fonte_registrada_declara_suas_tabelas():

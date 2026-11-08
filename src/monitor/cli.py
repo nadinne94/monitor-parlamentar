@@ -18,6 +18,7 @@ from monitor.config import (
 )
 from monitor.ingestion.core.erros import ConfiguracaoError, IngestaoError
 from monitor.ingestion.fontes import INGESTORES, TABELAS
+from monitor.periodos import meses_a_processar
 from monitor.site.gerador import carregar_dados, renderizar
 
 app = typer.Typer(no_args_is_help=True)
@@ -65,6 +66,7 @@ def ingest(
     if not alvo:
         typer.echo(f"Nenhuma fonte ativa com o nome '{fonte}'.", err=True)
         raise typer.Exit(code=1)
+    meses = [mes] if mes else meses_a_processar(datetime.now(UTC).date())
     for f in alvo:
         ingestor = INGESTORES.get(f.nome)
         if ingestor is None:
@@ -73,7 +75,7 @@ def ingest(
             )
             raise typer.Exit(code=1)
         try:
-            arquivos = ingestor(f.parametros, DIR_BRUTO)
+            arquivos = ingestor(f.parametros, DIR_BRUTO, meses)
         except (IngestaoError, httpx.HTTPError) as erro:
             if not armazenamento:
                 typer.echo(f"[ingest] fonte={f.nome}: falhou. {erro}", err=True)

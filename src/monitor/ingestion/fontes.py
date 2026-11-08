@@ -7,10 +7,12 @@ from typing import Any
 from monitor.ingestion.camara.deputados import ingerir_deputados
 from monitor.ingestion.core.erros import ConfiguracaoError
 
-Ingestor = Callable[[Mapping[str, Any], Path], list[Path]]
+Ingestor = Callable[[Mapping[str, Any], Path, list[str]], list[Path]]
 
 
-def ingerir_camara_api(parametros: Mapping[str, Any], dir_bruto: Path) -> list[Path]:
+def ingerir_camara_api(
+    parametros: Mapping[str, Any], dir_bruto: Path, meses: list[str]
+) -> list[Path]:
     uf = parametros.get("uf")
     if not uf:
         raise ConfiguracaoError("A fonte camara_api precisa do parâmetro 'uf' no sources.yaml.")
