@@ -5,13 +5,14 @@ proposições apresentadas, presença em plenário, votos nominais e gastos da c
 
 **Site:** https://nadinne94.github.io/monitor-parlamentar/
 
-> **Status:** Incremento 1 concluído. O site mostra a bancada de MG com dados reais da API
-> da Câmara, atualizados a cada publicação. Os relatórios mensais começam em fevereiro de 2027.
-> Veja o [roadmap](docs/roadmap.md).
+> **Status:** Incremento 2 concluído. O site mostra a bancada de MG e, para cada deputado,
+> as proposições de cada mês, com autoria e coautoria separadas. Os dados ficam guardados
+> numa release do GitHub, e o site é publicado mesmo quando a API da Câmara está fora do ar.
+> Os relatórios mensais começam oficialmente em fevereiro de 2027. Veja o [roadmap](docs/roadmap.md).
 
 ## Como funciona
 
-    API da Câmara → ingestão (Python + Pydantic) → Parquet → dbt (staging → intermediate → marts) → site → GitHub Pages
+    API da Câmara → ingestão (Python + Pydantic) → Parquet ⇄ release do GitHub → dbt (staging → intermediate → marts) → site → GitHub Pages
 
 As decisões de arquitetura estão registradas em [`docs/adr/`](docs/adr/), e as investigações que as embasaram, em [`docs/spikes/`](docs/spikes/).
 
