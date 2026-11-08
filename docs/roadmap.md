@@ -38,7 +38,8 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 |---|---|---|
 | **S1: Presença na API** | Qual endpoint da API da Câmara representa melhor a presença em sessões deliberativas do plenário? Como aparecem ausências justificadas? | Incremento 5 (mas fazer cedo, durante o Incremento 1) |
 | **S2: Persistência no Hugging Face** | É possível ler e gravar Parquet num dataset do Hugging Face a partir do GitHub Actions, com token em Secrets? Há limites que afetem o projeto? | Concluído em 05/11/2026 (ver docs/spikes/s2-persistencia.md) |
-| **S3: Câmara municipal** | A câmara da cidade usa SAPL? Há API ou exportação em formato aberto? O que a prefeitura oferece? | Pós-MVP (pode ser feito a qualquer momento, como pausa) |
+| **S3: API de proposições da Câmara** | Como a API de proposições representa tipos e autoria | Concluído em 07/11/2026 (ver docs/spikes/s3-api-proposicoes.md) |
+| **S4: Câmara municipal** | A câmara da cidade usa SAPL? Há API ou exportação em formato aberto? O que a prefeitura oferece? | Investigado informalmente em 11/2026: a câmara e a prefeitura da cidade não publicam dados abertos |
 
 ## Incrementos
 
@@ -93,7 +94,15 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 ---
 
 ### Incremento 2: Proposições · `v0.2.0`
-**Estimativa:** 2 semanas · **Alvo:** meados de dezembro/2026
+**Status:** concluído em 08/11/2026 (`v0.2.0`).
+
+**Desvios em relação ao plano:**
+- A instabilidade da API da Câmara (erros 504 de mais de meia hora) levou a duas mudanças antes das proposições: o cliente HTTP passou a respeitar o `retry-after`, e a persistência dos dados brutos, prevista para antes do Incremento 4, foi antecipada, com o destino trocado do Hugging Face para uma release do GitHub (spike S2, ADR-006, que substitui o ADR-005).
+- O ADR dos tipos de proposição passou a ser o ADR-007, por causa do ADR-006.
+- O spike S3 mostrou que um quarto dos itens da API são documentos de relatoria e que a coautoria é comum. O ADR-007 separou as categorias e os papéis de autoria.
+- A consulta por UF traz também as proposições em que um deputado de MG é só coautor. A alternativa de uma consulta por deputado não foi necessária.
+- Relatoria e requerimentos procedimentais são coletados e guardados, mas não exibidos no site.
+- O mês corrente aparece como os demais, embora ainda esteja em andamento (ver o backlog).
 
 **Antes de começar:**
 - **Resolvido:** tipos de proposição e autoria definidos no ADR-007, a partir do spike S3.
@@ -168,6 +177,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 - Detalhe de cada deputado (endpoint `/deputados/{id}`): preenche `nome_civil`, traz `situacao` e `condicaoEleitoral` (titular ou suplente) e descarta o CPF na ingestão, com teste próprio. Ver `docs/spikes/s0-api-deputados.md`.
 - Página de metodologia no site: o que cada métrica mede, de onde vem, limitações conhecidas e data da última atualização.
 - Tratamento da virada de legislatura: testes para deputados que saem, que entram, suplentes e mudança de partido.
+- Cargo com o gênero informado no detalhe de cada deputado ("Deputado federal" ou "Deputada federal").
 - README final do projeto, como no projeto anterior.
 
 **Pronto quando:** o pipeline roda por duas semanas seguidas sem intervenção, e a nova bancada de MG empossada em 1º de fevereiro aparece corretamente no site.
@@ -182,7 +192,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 Cada item vira um novo incremento, com spike e ADR quando necessário:
 
 - Senado Federal (exige ADR sobre identidade de pessoa entre fontes).
-- Câmara municipal e prefeitura (depende do spike S3).
+- Câmara municipal e prefeitura (depende do spike S4).
 - Emendas parlamentares via Portal da Transparência.
 - Ampliação para todos os estados.
 - Votações em comissões.
@@ -191,7 +201,7 @@ Cada item vira um novo incremento, com spike e ADR quando necessário:
 - Votações explicadas em linguagem simples: o que significava votar Sim ou Não em cada votação, distinguindo votações procedimentais (urgência, destaques) das de mérito, com neutralidade e link para a fonte oficial.
 - Cruzamento das despesas da cota parlamentar com os dados abertos de CNPJ da Receita Federal (contexto sobre os fornecedores), com cuidado com LGPD e com a apresentação de fatos, não de acusações.
 - Publicação dos dados tratados (marts) como dataset aberto no Hugging Face (ver ADR-006).
-
+- Marcar o mês corrente como parcial no site, enquanto ele estiver em andamento.
 ## Revisão do roadmap
 
 Revisar este documento ao fim de cada incremento: atualizar estimativas com o tempo real gasto e reordenar o backlog se necessário. Mudanças de escopo do MVP exigem atualização do ADR-001.

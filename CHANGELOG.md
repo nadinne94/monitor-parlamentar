@@ -3,6 +3,30 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 As versões seguem o [roadmap](docs/roadmap.md).
 
+## [0.2.0] - Incremento 2: proposições
+
+### Adicionado
+- Cliente HTTP mais paciente: cinco tentativas, espera exponencial com teto e respeito ao cabeçalho `retry-after`.
+- Spike S2 e ADR-006: os dados brutos passam a ser guardados numa release do GitHub.
+- Módulo de armazenamento: guarda cada coleta na release (cópia mais recente e cópia do dia) e recupera a mais recente por download público.
+- Contingência no pipeline: se a API da Câmara falhar, o site é gerado com a última coleta guardada.
+- Data da coleta no rodapé do site, separada da data de geração.
+- Spike S3 e ADR-007: quais tipos de proposição contam e como tratar autoria e coautoria.
+- Ingestão mensal das proposições apresentadas pela bancada e dos autores de cada uma.
+- O pipeline processa os últimos 3 meses por padrão; `--mes` processa um mês específico.
+- dbt: seed de classificação dos tipos de proposição, staging das proposições e dos autores e `fato_proposicao` com contrato (versão 1.1.0), testes de relacionamento e aviso para tipos não classificados.
+- Site: proposições do mês na página de cada deputado, com navegação por mês e com projetos, coautorias e requerimentos em blocos separados.
+
+### Alterado
+- O deploy guarda as coletas na release, com permissão de escrita restrita ao job que gera o site.
+- A página do deputado exibe o cargo sem gênero.
+
+### Corrigido
+- Restaurado o empacotamento do site no deploy, perdido na mudança de permissões.
+
+### Removido
+- ADR-005 (persistência adiada), substituído pelo ADR-006.
+
 ## [0.1.0] - Incremento 1: deputados de MG
 
 ### Adicionado
