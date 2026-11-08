@@ -1,0 +1,15 @@
+version: 2
+
+seeds:
+  - name: mapa_tipos_proposicao
+    description: "Categoria de cada tipo de proposição (ADR-007, seção 1)."
+    columns:
+      - name: sigla_tipo
+        data_tests:
+          - not_null
+          - unique
+      - name: categoria
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["legislativa", "requerimento", "relatoria", "procedimental", "outra"]
