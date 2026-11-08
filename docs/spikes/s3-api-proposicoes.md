@@ -77,3 +77,10 @@ Em todos, o autor tem `tipo` "Deputado(a)" (`codTipo` 10000).
 3. **Os itens precisam ser classificados em grupos**, pelo `siglaTipo` e, para os requerimentos, pelo `codTipo`. Os documentos de relatoria e os requerimentos procedimentais não são "proposições apresentadas" e não devem entrar nessa contagem.
 4. **A autoria pode mudar depois da apresentação** (coautoria incluída por requerimento). Reprocessar os meses recentes, como o ADR-002 já previa para as despesas, mantém a autoria atualizada.
 5. **Decisões em aberto para o ADR-007:** quais grupos contar e como exibi-los; se a coautoria conta junto com a autoria principal ou separada; se os projetos de resolução (PRC) entram no grupo dos projetos; e se vale investigar, na implementação, se o filtro por UF inclui os coautores.
+
+## Atualização com a primeira coleta completa (passo 8, outubro de 2026)
+
+- **Coautoria:** 253 autorias para 87 proposições; a maior teve 65 assinaturas. A coautoria é comum, o que confirma a separação entre autoria e coautoria do ADR-007.
+- **Proposição sem autores:** o PROC 2648534 (representação por quebra de decoro) veio sem nenhum autor na API. Nem toda proposição tem autor listado.
+- **Autores que não são deputados:** nenhum em outubro.
+- **O filtro por UF inclui coautorias:** 7 proposições têm o primeiro autor fora da bancada de MG e vieram na consulta por terem coautores de MG. A consulta por UF é suficiente, e a alternativa por deputado não é necessária.
