@@ -4,6 +4,7 @@ config-version: 2
 profile: monitor_parlamentar
 
 model-paths: ["models"]
+seed-paths: ["seeds"]
 test-paths: ["tests"]
 target-path: "target"
 clean-targets: ["target", "dbt_packages"]
@@ -20,3 +21,9 @@ models:
       +materialized: view
     marts:
       +materialized: table
+seeds:
+  monitor_parlamentar:
+    mapa_tipos_proposicao:
+      +column_types:
+        sigla_tipo: varchar
+        categoria: varchar

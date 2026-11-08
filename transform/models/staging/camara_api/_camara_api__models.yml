@@ -8,3 +8,24 @@ models:
         data_tests:
           - not_null
           - unique
+  - name: stg_camara_api__proposicoes
+    description: "Proposições apresentadas por deputados de MG, uma por linha."
+    columns:
+      - name: id
+        data_tests:
+          - not_null
+          - unique
+      - name: data_apresentacao
+        data_tests:
+          - not_null
+
+  - name: stg_camara_api__autores
+    description: "Autores das proposições, de qualquer UF. Uma proposição pode não ter autor listado."
+    columns:
+      - name: id_proposicao
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_camara_api__proposicoes')
+                field: id

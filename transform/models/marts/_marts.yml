@@ -84,3 +84,57 @@ models:
                 values: [57, 58]
       - name: _versao_contrato
         data_type: varchar
+  - name: fato_proposicao
+    description: "Uma linha por proposição e parlamentar da bancada. Contrato canônico (ADR-003, ADR-007)."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: proposicao_sk
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: parlamentar_sk
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_parlamentar')
+                field: parlamentar_sk
+      - name: mes_ref
+        data_type: date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mes')
+                field: mes_ref
+      - name: tipo_sigla
+        data_type: varchar
+      - name: tipo_categoria
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["legislativa", "requerimento", "relatoria", "procedimental", "outra"]
+      - name: numero
+        data_type: integer
+      - name: ano
+        data_type: integer
+      - name: ementa
+        data_type: varchar
+      - name: papel_autoria
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["autor", "coautor"]
+      - name: data_apresentacao
+        data_type: date
+      - name: fonte
+        data_type: varchar
+      - name: _carregado_em
+        data_type: timestamp with time zone
+      - name: _versao_contrato
+        data_type: varchar

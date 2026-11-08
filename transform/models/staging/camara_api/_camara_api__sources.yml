@@ -9,3 +9,13 @@ sources:
     tables:
       - name: deputados
         description: "Deputados em exercício, um por linha, validados pelo modelo DeputadoApi."
+      - name: proposicoes
+        description: "Proposições apresentadas, um arquivo por mês (proposicoes_AAAA-MM.parquet)."
+        config:
+          meta:
+            external_location: "{{ env_var('MONITOR_DIR_BRUTO', '../data/bruto') }}/camara_api/proposicoes_*.parquet"
+      - name: autores
+        description: "Autores de cada proposição, um arquivo por mês (autores_AAAA-MM.parquet)."
+        config:
+          meta:
+            external_location: "{{ env_var('MONITOR_DIR_BRUTO', '../data/bruto') }}/camara_api/autores_*.parquet"
