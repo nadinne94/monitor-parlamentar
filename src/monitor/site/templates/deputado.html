@@ -15,8 +15,53 @@
 </section>
 
 <section>
-    <h2>Relatório do mês</h2>
-    <p class="aviso">Os relatórios mensais começam em {{ dados.primeiro_mes | mes }}: proposições, presença, votos e
-        gastos.</p>
+    <h2>Proposições</h2>
+    <p class="aviso">Período de testes: os relatórios mensais começam oficialmente em {{ dados.primeiro_mes | mes }}.
+    </p>
+    {% if dados.meses %}
+    <nav class="meses" aria-label="Meses">
+        {% for mes in dados.meses %}
+        <a href="#mes-{{ mes.isoformat()[:7] }}">{{ mes | mes }}</a>
+        {% endfor %}
+    </nav>
+    {% for mes in dados.meses %}
+    <section id="mes-{{ mes.isoformat()[:7] }}" class="mes">
+        <h3>{{ mes | mes }}</h3>
+        {% set projetos = p.do_mes(mes, "legislativa", "autor") %}
+        {% set coautorias = p.do_mes(mes, "legislativa", "coautor") %}
+        {% set requerimentos = p.do_mes(mes, "requerimento", "autor") %}
+        <h4>Projetos apresentados ({{ projetos | length }})</h4>
+        {% if projetos %}
+        <ul class="proposicoes">
+            {% for item in projetos %}
+            <li><strong>{{ item.identificacao }}</strong> {{ item.ementa }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="suave">Nenhum projeto apresentado neste mês.</p>
+        {% endif %}
+        {% if coautorias %}
+        <h4>Projetos de outros deputados que assinou como coautor ({{ coautorias | length }})</h4>
+        <ul class="proposicoes">
+            {% for item in coautorias %}
+            <li><strong>{{ item.identificacao }}</strong> {{ item.ementa }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <h4>Requerimentos e indicações ({{ requerimentos | length }})</h4>
+        {% if requerimentos %}
+        <ul class="proposicoes">
+            {% for item in requerimentos %}
+            <li><strong>{{ item.identificacao }}</strong> {{ item.ementa }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="suave">Nenhum requerimento ou indicação neste mês.</p>
+        {% endif %}
+    </section>
+    {% endfor %}
+    {% else %}
+    <p>Nenhuma proposição coletada ainda.</p>
+    {% endif %}
 </section>
 {% endblock %}

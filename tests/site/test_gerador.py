@@ -211,3 +211,47 @@ def test_do_mes_filtra_por_mes_categoria_e_papel():
     assert [x.numero for x in p.do_mes(OUTUBRO, "legislativa", "autor")] == [1]
     assert [x.numero for x in p.do_mes(OUTUBRO, "legislativa", "coautor")] == [2]
     assert [x.numero for x in p.do_mes(SETEMBRO, "legislativa", "autor")] == [4]
+
+
+@pytest.fixture
+def dados_com_proposicoes():
+    ana = Parlamentar(
+        "1",
+        "Ana",
+        "PT",
+        "MG",
+        None,
+        proposicoes=(
+            proposicao(10),
+            proposicao(11, papel="coautor"),
+            proposicao(12, categoria="requerimento", sigla="REQ"),
+        ),
+    )
+    return DadosSite(parlamentares=[ana], meses=[OUTUBRO, SETEMBRO])
+
+
+def test_pagina_mostra_as_proposicoes_do_mes_separadas(tmp_path, dados_com_proposicoes):
+    renderizar(dados_com_proposicoes, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert "Projetos apresentados (1)" in html
+    assert "<strong>PL 10/2026</strong> Ementa 10" in html
+    assert "assinou como coautor (1)" in html
+    assert "<strong>REQ 12/2026</strong>" in html
+
+
+def test_pagina_tem_navegacao_por_mes(tmp_path, dados_com_proposicoes):
+    renderizar(dados_com_proposicoes, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert 'href="#mes-2026-10"' in html
+    assert 'id="mes-2026-09"' in html
+    assert html.index("outubro de 2026</h3>") < html.index("setembro de 2026</h3>")
+
+
+def test_mes_sem_proposicoes_diz_que_nao_houve(tmp_path, dados_com_proposicoes):
+    renderizar(dados_com_proposicoes, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    setembro = html[html.index('id="mes-2026-09"') :]
+    assert "Nenhum projeto apresentado neste mês." in setembro
