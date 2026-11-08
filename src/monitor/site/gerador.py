@@ -5,6 +5,7 @@ Lê apenas tabelas do contrato canônico no DuckDB e renderiza HTML com Jinja2.
 
 import shutil
 import unicodedata
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from pathlib import Path
@@ -98,6 +99,7 @@ class DadosSite:
     versao: str = __version__
     primeiro_mes: date = PRIMEIRO_MES
     coletado_em: datetime | None = None
+    meses: list[date] = field(default_factory=list)
 
 
 def criar_ambiente() -> Environment:
@@ -141,21 +143,42 @@ def _gravar(ambiente: Environment, template: str, arquivo: Path, **contexto) -> 
 
 
 def carregar_dados(caminho_duckdb: Path) -> DadosSite:
-    """Lê os parlamentares em exercício da dim_parlamentar, em ordem alfabética."""
-    consulta = """
-        select id_fonte, nome_parlamentar, partido_atual, uf, url_foto
+    """Lê os parlamentares em exercício, em ordem alfabética, com as suas proposições."""
+    consulta_parlamentares = """
+        select parlamentar_sk, id_fonte, nome_parlamentar, partido_atual, uf, url_foto
         from dim_parlamentar
         where em_exercicio
     """
+    consulta_proposicoes = """
+        select parlamentar_sk, mes_ref, tipo_sigla, numero, ano, ementa,
+               tipo_categoria, papel_autoria
+        from fato_proposicao
+        where tipo_categoria in ('legislativa', 'requerimento')
+        order by data_apresentacao desc, numero desc
+    """
     with duckdb.connect(str(caminho_duckdb), read_only=True) as conexao:
-        linhas = conexao.execute(consulta).fetchall()
+        linhas = conexao.execute(consulta_parlamentares).fetchall()
+        linhas_proposicoes = conexao.execute(consulta_proposicoes).fetchall()
+        meses = [
+            mes
+            for (mes,) in conexao.execute(
+                "select distinct mes_ref from fato_proposicao order by mes_ref desc"
+            ).fetchall()
+        ]
         (coletado_em,) = conexao.execute(
             "select max(_carregado_em) from dim_parlamentar"
         ).fetchone()
+
+    por_parlamentar = defaultdict(list)
+    for sk, *campos in linhas_proposicoes:
+        por_parlamentar[sk].append(Proposicao(*campos))
+
     parlamentares = sorted(
-        (Parlamentar(*linha) for linha in linhas), key=lambda p: chave_ordenacao(p.nome)
+        (Parlamentar(*campos, proposicoes=tuple(por_parlamentar[sk])) for sk, *campos in linhas),
+        key=lambda p: chave_ordenacao(p.nome),
     )
     return DadosSite(
         parlamentares=parlamentares,
         coletado_em=coletado_em.astimezone(FUSO) if coletado_em else None,
+        meses=meses,
     )

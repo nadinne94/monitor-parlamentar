@@ -113,24 +113,36 @@ def test_apaga_build_anterior(tmp_path, dados):
 COLETA = datetime(2026, 11, 6, 13, 30, tzinfo=UTC)
 
 
-def criar_dim_parlamentar(caminho, linhas):
+def criar_banco(caminho, parlamentares, proposicoes=()):
+    """Um banco mínimo, só com as colunas que o site lê da dim_parlamentar e do fato."""
     with duckdb.connect(str(caminho)) as conexao:
         conexao.execute(
-            "create table dim_parlamentar (id_fonte varchar, nome_parlamentar varchar,"
-            " partido_atual varchar, uf varchar, url_foto varchar, em_exercicio boolean,"
-            " _carregado_em timestamptz)"
+            "create table dim_parlamentar (parlamentar_sk varchar, id_fonte varchar,"
+            " nome_parlamentar varchar, partido_atual varchar, uf varchar, url_foto varchar,"
+            " em_exercicio boolean, _carregado_em timestamptz)"
         )
-        conexao.executemany("insert into dim_parlamentar values (?, ?, ?, ?, ?, ?, ?)", linhas)
+        conexao.execute(
+            "create table fato_proposicao (parlamentar_sk varchar, mes_ref date,"
+            " tipo_sigla varchar, numero integer, ano integer, ementa varchar,"
+            " tipo_categoria varchar, papel_autoria varchar, data_apresentacao date)"
+        )
+        conexao.executemany(
+            "insert into dim_parlamentar values (?, ?, ?, ?, ?, ?, ?, ?)", parlamentares
+        )
+        if proposicoes:
+            conexao.executemany(
+                "insert into fato_proposicao values (?, ?, ?, ?, ?, ?, ?, ?, ?)", proposicoes
+            )
 
 
 def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
     caminho = tmp_path / "teste.duckdb"
-    criar_dim_parlamentar(
+    criar_banco(
         caminho,
         [
-            ("3", "Zé Vitor", "PL", "MG", None, True, COLETA),
-            ("2", "Álvaro", "PT", "MG", None, True, COLETA),
-            ("1", "Ana", "PP", "MG", None, False, COLETA),
+            ("sk3", "3", "Zé Vitor", "PL", "MG", None, True, COLETA),
+            ("sk2", "2", "Álvaro", "PT", "MG", None, True, COLETA),
+            ("sk1", "1", "Ana", "PP", "MG", None, False, COLETA),
         ],
     )
 
@@ -139,6 +151,28 @@ def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
     assert [p.nome for p in dados.parlamentares] == ["Álvaro", "Zé Vitor"]
     assert dados.parlamentares[0] == Parlamentar("2", "Álvaro", "PT", "MG", None)
     assert formatar_data_hora(dados.coletado_em) == "06/11/2026 às 10:30"
+
+
+def test_carregar_dados_le_as_proposicoes_e_os_meses(tmp_path):
+    caminho = tmp_path / "teste.duckdb"
+    outubro, setembro = date(2026, 10, 1), date(2026, 9, 1)
+    criar_banco(
+        caminho,
+        [("sk1", "1", "Ana", "PT", "MG", None, True, COLETA)],
+        [
+            ("sk1", setembro, "PL", 10, 2026, "Antigo", "legislativa", "autor", date(2026, 9, 3)),
+            ("sk1", outubro, "PL", 20, 2026, "Novo", "legislativa", "autor", date(2026, 10, 9)),
+            ("sk1", outubro, "PRL", 1, 0, "Parecer", "relatoria", "autor", date(2026, 10, 9)),
+        ],
+    )
+
+    dados = carregar_dados(caminho)
+
+    assert dados.meses == [outubro, setembro]
+    assert [p.identificacao for p in dados.parlamentares[0].proposicoes] == [
+        "PL 20/2026",
+        "PL 10/2026",
+    ]
 
 
 def test_textos_da_api_sao_escapados(tmp_path):
