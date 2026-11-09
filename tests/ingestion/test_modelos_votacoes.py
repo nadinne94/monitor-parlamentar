@@ -69,3 +69,16 @@ def test_converte_voto_com_o_deputado(item_voto):
     assert voto.tipo_voto == "Sim"
     assert voto.deputado.id == 209787
     assert voto.deputado.sigla_uf == "MG"
+
+
+def test_voto_artigo_17_e_aceito(item_voto):
+    item_voto["tipoVoto"] = "Artigo 17"
+
+    assert VotoApi.model_validate(item_voto).tipo_voto == "Artigo 17"
+
+
+def test_rejeita_voto_sem_uf(item_voto):
+    del item_voto["deputado_"]["siglaUf"]
+
+    with pytest.raises(ValidationError):
+        VotoApi.model_validate(item_voto)
