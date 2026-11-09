@@ -55,3 +55,37 @@ class AutorApi(BaseModel):
         if self.uri is None or "/deputados/" not in self.uri:
             return None
         return int(self.uri.rsplit("/", 1)[-1])
+
+
+class VotacaoApi(BaseModel):
+    """Um item da lista `GET /votacoes` (ver docs/spikes/s5-api-votacoes.md)."""
+
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
+
+    id: str = Field(pattern=r"^\d+-\d+$")
+    data_hora_registro: datetime = Field(alias="dataHoraRegistro")
+    sigla_orgao: str = Field(alias="siglaOrgao", min_length=1)
+    descricao: str = ""
+    aprovacao: bool | None = None
+    proposicao_objeto: str | None = Field(default=None, alias="proposicaoObjeto")
+
+
+class DeputadoDoVotoApi(BaseModel):
+    """O deputado que aparece em cada voto."""
+
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
+
+    id: int = Field(gt=0)
+    nome: str = Field(min_length=1)
+    sigla_partido: str | None = Field(default=None, alias="siglaPartido")
+    sigla_uf: str = Field(alias="siglaUf", pattern=r"^[A-Z]{2}$")
+
+
+class VotoApi(BaseModel):
+    """Um item de `GET /votacoes/{id}/votos`."""
+
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
+
+    tipo_voto: str = Field(alias="tipoVoto", min_length=1)
+    data_registro_voto: datetime = Field(alias="dataRegistroVoto")
+    deputado: DeputadoDoVotoApi = Field(alias="deputado_")
