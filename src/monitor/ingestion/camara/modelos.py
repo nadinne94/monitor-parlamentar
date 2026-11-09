@@ -55,3 +55,16 @@ class AutorApi(BaseModel):
         if self.uri is None or "/deputados/" not in self.uri:
             return None
         return int(self.uri.rsplit("/", 1)[-1])
+
+
+class VotacaoApi(BaseModel):
+    """Um item da lista `GET /votacoes` (ver docs/spikes/s5-api-votacoes.md)."""
+
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
+
+    id: str
+    data_hora_registro: datetime = Field(alias="dataHoraRegistro")
+    sigla_orgao: str = Field(alias="siglaOrgao", min_length=1)
+    descricao: str = ""
+    aprovacao: bool
+    proposicao_objeto: str | None = Field(default=None, alias="proposicaoObjeto")
