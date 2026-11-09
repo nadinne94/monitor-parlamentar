@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+from pydantic import ValidationError
 
 from monitor.ingestion.camara.modelos import VotacaoApi
 
@@ -28,3 +29,18 @@ def test_converte_item_da_lista(item_votacao):
     assert votacao.sigla_orgao == "PLEN"
     assert votacao.aprovacao is False
     assert votacao.proposicao_objeto is None
+
+
+def test_votacao_sem_aprovacao(item_votacao):
+    del item_votacao["aprovacao"]
+    item_votacao["descricao"] = "Mantido o texto."
+
+    assert VotacaoApi.model_validate(item_votacao).aprovacao is None
+
+
+@pytest.mark.parametrize("id_invalido", ["", "2236186", "abc-60"])
+def test_rejeita_id_fora_do_formato(item_votacao, id_invalido):
+    item_votacao["id"] = id_invalido
+
+    with pytest.raises(ValidationError):
+        VotacaoApi.model_validate(item_votacao)

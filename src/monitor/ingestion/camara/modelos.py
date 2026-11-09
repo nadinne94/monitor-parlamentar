@@ -62,9 +62,9 @@ class VotacaoApi(BaseModel):
 
     model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
 
-    id: str
+    id: str = Field(pattern=r"^\d+-\d+$")
     data_hora_registro: datetime = Field(alias="dataHoraRegistro")
     sigla_orgao: str = Field(alias="siglaOrgao", min_length=1)
     descricao: str = ""
-    aprovacao: bool
+    aprovacao: bool | None = None
     proposicao_objeto: str | None = Field(default=None, alias="proposicaoObjeto")
