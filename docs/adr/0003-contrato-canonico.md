@@ -1,6 +1,6 @@
 # ADR-003: Contrato canônico de dados
 
-- **Status:** Aceito. O vocabulário de `tipo_categoria` foi ampliado pelo [ADR-007](0007-tipos-de-proposicao-e-autoria.md) (contrato 1.1.0)
+- **Status:** Aceito. O vocabulário de `tipo_categoria` foi ampliado pelo [ADR-007](0007-tipos-de-proposicao-e-autoria.md) (contrato 1.1.0); dim_votacao e fato_voto acrescentados pelo [ADR-008](0008-votacoes-nominais.md) (contrato 1.2.0)
 - **Data:** 2026-10-30
 - **Decisora:** Nadinne
 - **Relacionado:** [ADR-001](0001-escopo-do-mvp.md), [ADR-002](0002-stack-tecnologica.md)

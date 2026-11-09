@@ -119,7 +119,6 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 ---
 
 ### Incremento 3: Votos nominais · `v0.3.0`
-**Estimativa:** 2 semanas · **Alvo:** fim de dezembro/2026
 
 **Escopo**
 - Ingestão das votações nominais do plenário e dos votos individuais.
@@ -127,6 +126,8 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 - `fato_voto` com contrato e testes.
 - Resumo: coluna `votos_registrados`.
 - Site: bloco "Como votou", listando cada votação do mês e o voto do deputado.
+
+**Resolvido:** votações nominais definidas no ADR-008, a partir do spike S5
 
 **Pronto quando:** a página mostra os votos do mês com descrição legível de cada votação.
 
