@@ -68,3 +68,24 @@ class VotacaoApi(BaseModel):
     descricao: str = ""
     aprovacao: bool | None = None
     proposicao_objeto: str | None = Field(default=None, alias="proposicaoObjeto")
+
+
+class DeputadoDoVotoApi(BaseModel):
+    """O deputado que aparece em cada voto."""
+
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
+
+    id: int = Field(gt=0)
+    nome: str = Field(min_length=1)
+    sigla_partido: str | None = Field(default=None, alias="siglaPartido")
+    sigla_uf: str = Field(alias="siglaUf", pattern=r"^[A-Z]{2}$")
+
+
+class VotoApi(BaseModel):
+    """Um item de `GET /votacoes/{id}/votos`."""
+
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
+
+    tipo_voto: str = Field(alias="tipoVoto", min_length=1)
+    data_registro_voto: datetime = Field(alias="dataRegistroVoto")
+    deputado: DeputadoDoVotoApi = Field(alias="deputado_")

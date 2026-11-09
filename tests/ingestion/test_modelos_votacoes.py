@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from pydantic import ValidationError
 
-from monitor.ingestion.camara.modelos import VotacaoApi
+from monitor.ingestion.camara.modelos import VotacaoApi, VotoApi
 
 
 @pytest.fixture
@@ -44,3 +44,28 @@ def test_rejeita_id_fora_do_formato(item_votacao, id_invalido):
 
     with pytest.raises(ValidationError):
         VotacaoApi.model_validate(item_votacao)
+
+
+@pytest.fixture
+def item_voto():
+    """Um item real da lista de votos (ver docs/spikes/s5-api-votacoes.md)."""
+    return {
+        "tipoVoto": "Sim",
+        "dataRegistroVoto": "2026-10-14T20:31:15",
+        "deputado_": {
+            "id": 209787,
+            "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/209787",
+            "nome": "Nikolas Ferreira",
+            "siglaPartido": "PL",
+            "siglaUf": "MG",
+            "idLegislatura": 57,
+        },
+    }
+
+
+def test_converte_voto_com_o_deputado(item_voto):
+    voto = VotoApi.model_validate(item_voto)
+
+    assert voto.tipo_voto == "Sim"
+    assert voto.deputado.id == 209787
+    assert voto.deputado.sigla_uf == "MG"
