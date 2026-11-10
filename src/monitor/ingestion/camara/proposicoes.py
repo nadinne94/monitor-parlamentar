@@ -1,15 +1,15 @@
 """Ingestão das proposições do mês (ver ADR-007 e docs/spikes/s3-api-proposicoes.md)."""
 
-import calendar
-from datetime import UTC, date, datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pyarrow as pa
-import pyarrow.parquet as pq
 
 from monitor.ingestion.camara.modelos import AutorApi, ProposicaoApi
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
+from monitor.ingestion.core.parquet import gravar_tabela
+from monitor.periodos import limites_do_mes
 
 ESQUEMA_PROPOSICOES = pa.schema(
     [
@@ -36,13 +36,6 @@ ESQUEMA_AUTORES = pa.schema(
         ("_carregado_em", pa.timestamp("us", tz="UTC")),
     ]
 )
-
-
-def limites_do_mes(mes: str) -> tuple[date, date]:
-    """'2026-10' -> (date(2026, 10, 1), date(2026, 10, 31))."""
-    ano, numero = (int(parte) for parte in mes.split("-"))
-    ultimo_dia = calendar.monthrange(ano, numero)[1]
-    return date(ano, numero, 1), date(ano, numero, ultimo_dia)
 
 
 def buscar_proposicoes(cliente: ClienteApi, uf: str, mes: str) -> list[ProposicaoApi]:
@@ -82,7 +75,7 @@ def gravar_proposicoes(proposicoes: list[ProposicaoApi], destino: Path) -> Path:
     """Grava as proposições em Parquet, com esquema explícito e horário da carga."""
     carregado_em = datetime.now(UTC)
     linhas = [{**p.model_dump(), "_carregado_em": carregado_em} for p in proposicoes]
-    return _gravar(linhas, ESQUEMA_PROPOSICOES, destino)
+    return gravar_tabela(linhas, ESQUEMA_PROPOSICOES, destino)
 
 
 def gravar_autores(autores: list[tuple[int, AutorApi]], destino: Path) -> Path:
@@ -97,14 +90,7 @@ def gravar_autores(autores: list[tuple[int, AutorApi]], destino: Path) -> Path:
         }
         for id_proposicao, autor in autores
     ]
-    return _gravar(linhas, ESQUEMA_AUTORES, destino)
-
-
-def _gravar(linhas: list[dict], esquema: pa.Schema, destino: Path) -> Path:
-    tabela = pa.Table.from_pylist(linhas, schema=esquema)
-    destino.parent.mkdir(parents=True, exist_ok=True)
-    pq.write_table(tabela, destino)
-    return destino
+    return gravar_tabela(linhas, ESQUEMA_AUTORES, destino)
 
 
 def ingerir_proposicoes(cliente: ClienteApi, uf: str, mes: str, pasta: Path) -> list[Path]:
