@@ -128,6 +128,7 @@ class Parlamentar:
     uf: str
     url_foto: str | None
     proposicoes: tuple[Proposicao, ...] = ()
+    votos: tuple[Voto, ...] = ()
 
     def do_mes(self, mes: date, categoria: str, papel: str) -> list[Proposicao]:
         """As proposições do mês, de uma categoria e de um papel de autoria."""
@@ -136,6 +137,10 @@ class Parlamentar:
             for p in self.proposicoes
             if p.mes_ref == mes and p.categoria == categoria and p.papel == papel
         ]
+
+    def votos_do_mes(self, mes: date) -> list[Voto]:
+        """Os votos do parlamentar nas votações nominais do mês."""
+        return [v for v in self.votos if v.mes_ref == mes]
 
 
 @dataclass

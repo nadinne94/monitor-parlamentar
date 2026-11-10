@@ -276,3 +276,16 @@ def test_resultado_da_votacao(aprovacao, esperado):
 )
 def test_rotulo_do_voto(voto, esperado):
     assert Voto(OUTUBRO, votacao_exemplo(), voto).rotulo.startswith(esperado)
+
+
+def test_votos_do_mes():
+    p = Parlamentar(
+        "1",
+        "Ana",
+        "PT",
+        "MG",
+        None,
+        votos=(Voto(OUTUBRO, votacao_exemplo(), "sim"), Voto(SETEMBRO, votacao_exemplo(), "nao")),
+    )
+
+    assert [v.voto for v in p.votos_do_mes(OUTUBRO)] == ["sim"]
