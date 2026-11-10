@@ -52,6 +52,54 @@ def chave_ordenacao(texto: str) -> str:
     return sem_acento.casefold()
 
 
+ROTULOS_VOTO = {
+    "sim": "Sim",
+    "nao": "Não",
+    "abstencao": "Abstenção",
+    "obstrucao": "Obstrução",
+    "artigo_17": "Presidiu a sessão (art. 17 do Regimento)",
+    "sem_registro": "Sem voto registrado",
+}
+
+
+@dataclass(frozen=True)
+class Votacao:
+    """Uma linha da dim_votacao, com o que o site exibe."""
+
+    id_fonte: str
+    data: date
+    descricao: str
+    aprovacao: bool | None
+
+    @property
+    def resultado(self) -> str | None:
+        """'Aprovada', 'Rejeitada' ou None, quando a fonte não informa (ADR-008)."""
+        if self.aprovacao is None:
+            return None
+        return "Aprovada" if self.aprovacao else "Rejeitada"
+
+
+@dataclass(frozen=True)
+class Voto:
+    """Uma linha do fato_voto, com a votação a que pertence."""
+
+    mes_ref: date
+    votacao: Votacao
+    voto: str
+
+    @property
+    def rotulo(self) -> str:
+        return ROTULOS_VOTO[self.voto]
+
+
+@dataclass(frozen=True)
+class ResumoVotacoes:
+    """Quantas votações o Plenário fez no mês, e quantas foram nominais."""
+
+    plenario: int
+    nominais: int
+
+
 @dataclass(frozen=True)
 class Proposicao:
     """Uma linha do fato_proposicao, com o que o site exibe."""

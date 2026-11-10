@@ -7,6 +7,8 @@ from monitor.site.gerador import (
     DadosSite,
     Parlamentar,
     Proposicao,
+    Votacao,
+    Voto,
     carregar_dados,
     chave_ordenacao,
     formatar_data_hora,
@@ -255,3 +257,22 @@ def test_mes_sem_proposicoes_diz_que_nao_houve(tmp_path, dados_com_proposicoes):
     html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
     setembro = html[html.index('id="mes-2026-09"') :]
     assert "Nenhum projeto apresentado neste mês." in setembro
+
+
+def votacao_exemplo(aprovacao=True):
+    return Votacao("1-1", date(2026, 10, 14), "Aprovada a subemenda.", aprovacao)
+
+
+@pytest.mark.parametrize(
+    ("aprovacao", "esperado"), [(True, "Aprovada"), (False, "Rejeitada"), (None, None)]
+)
+def test_resultado_da_votacao(aprovacao, esperado):
+    assert votacao_exemplo(aprovacao).resultado == esperado
+
+
+@pytest.mark.parametrize(
+    ("voto", "esperado"),
+    [("sim", "Sim"), ("sem_registro", "Sem voto registrado"), ("artigo_17", "Presidiu a sessão")],
+)
+def test_rotulo_do_voto(voto, esperado):
+    assert Voto(OUTUBRO, votacao_exemplo(), voto).rotulo.startswith(esperado)
