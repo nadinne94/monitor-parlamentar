@@ -18,7 +18,6 @@ models:
       - name: data_apresentacao
         data_tests:
           - not_null
-
   - name: stg_camara_api__autores
     description: "Autores das proposições, de qualquer UF. Uma proposição pode não ter autor listado."
     columns:
@@ -28,4 +27,21 @@ models:
           - relationships:
               arguments:
                 to: ref('stg_camara_api__proposicoes')
+                field: id
+  - name: stg_camara_api__votacoes
+    description: "Votações do Plenário, nominais e simbólicas, uma por linha."
+    columns:
+      - name: id
+        data_tests:
+          - not_null
+          - unique
+  - name: stg_camara_api__votos
+    description: "Votos registrados nas votações nominais, de todas as UFs."
+    columns:
+      - name: id_votacao
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_camara_api__votacoes')
                 field: id

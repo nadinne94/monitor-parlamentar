@@ -19,3 +19,13 @@ sources:
         config:
           meta:
             external_location: "{{ env_var('MONITOR_DIR_BRUTO', '../data/bruto') }}/camara_api/autores_*.parquet"
+      - name: votacoes
+        description: "Votações do Plenário, um arquivo por mês (votacoes_AAAA-MM.parquet)."
+        config:
+          meta:
+            external_location: "{{ env_var('MONITOR_DIR_BRUTO', '../data/bruto') }}/camara_api/votacoes_*.parquet"
+      - name: votos
+        description: "Votos de cada votação, de todas as UFs, um arquivo por mês (votos_AAAA-MM.parquet)."
+        config:
+          meta:
+            external_location: "{{ env_var('MONITOR_DIR_BRUTO', '../data/bruto') }}/camara_api/votos_*.parquet"
