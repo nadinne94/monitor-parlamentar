@@ -145,3 +145,16 @@ def gravar_proposicoes_afetadas(afetadas: list[tuple[str, ProposicaoApi]], desti
         for id_votacao, p in afetadas
     ]
     return gravar_tabela(linhas, ESQUEMA_AFETADAS, destino)
+
+
+def ingerir_votacoes(cliente: ClienteApi, mes: str, pasta: Path) -> list[Path]:
+    """Busca as votações do mês, os votos e as proposições afetadas das nominais."""
+    votacoes = buscar_votacoes(cliente, mes)
+    votos = buscar_votos(cliente, votacoes)
+    nominais = [id_votacao for id_votacao, lista in votos.items() if lista]
+    afetadas = buscar_proposicoes_afetadas(cliente, nominais)
+    return [
+        gravar_votacoes(votacoes, votos, pasta / f"votacoes_{mes}.parquet"),
+        gravar_votos(votos, pasta / f"votos_{mes}.parquet"),
+        gravar_proposicoes_afetadas(afetadas, pasta / f"afetadas_{mes}.parquet"),
+    ]

@@ -13,6 +13,7 @@ from monitor.ingestion.camara.votacoes import (
     gravar_proposicoes_afetadas,
     gravar_votacoes,
     gravar_votos,
+    ingerir_votacoes,
 )
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
@@ -143,3 +144,23 @@ def test_gravar_proposicoes_afetadas(tmp_path):
 
     linhas = duckdb.sql(f"select id_votacao, id_proposicao, sigla_tipo from '{destino}'").fetchall()
     assert linhas == [("1-1", 5, "PL")]
+
+
+def test_ingerir_votacoes_busca_o_detalhe_so_das_nominais(tmp_path):
+    recebidas = []
+    rotas = {
+        "/votacoes": [votacao("1-1"), votacao("2-1")],
+        "/votacoes/1-1/votos": [voto(10)],
+        "/votacoes/2-1/votos": [],
+        "/votacoes/1-1": {"id": "1-1", "proposicoesAfetadas": [proposicao(5)]},
+    }
+
+    with cliente_falso(rotas, recebidas) as cliente:
+        arquivos = ingerir_votacoes(cliente, "2026-10", tmp_path)
+
+    assert [a.name for a in arquivos] == [
+        "votacoes_2026-10.parquet",
+        "votos_2026-10.parquet",
+        "afetadas_2026-10.parquet",
+    ]
+    assert "/api/v2/votacoes/2-1" not in [r.url.path for r in recebidas]
