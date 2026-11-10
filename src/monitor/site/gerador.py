@@ -153,6 +153,7 @@ class DadosSite:
     primeiro_mes: date = PRIMEIRO_MES
     coletado_em: datetime | None = None
     meses: list[date] = field(default_factory=list)
+    resumo_votacoes: dict[date, ResumoVotacoes] = field(default_factory=dict)
 
 
 def criar_ambiente() -> Environment:
@@ -196,7 +197,7 @@ def _gravar(ambiente: Environment, template: str, arquivo: Path, **contexto) -> 
 
 
 def carregar_dados(caminho_duckdb: Path) -> DadosSite:
-    """Lê os parlamentares em exercício, em ordem alfabética, com as suas proposições."""
+    """Lê os parlamentares em exercício, em ordem alfabética, com proposições e votos."""
     consulta_parlamentares = """
         select parlamentar_sk, id_fonte, nome_parlamentar, partido_atual, uf, url_foto
         from dim_parlamentar
@@ -209,29 +210,52 @@ def carregar_dados(caminho_duckdb: Path) -> DadosSite:
         where tipo_categoria in ('legislativa', 'requerimento')
         order by data_apresentacao desc, numero desc
     """
+    consulta_votos = """
+        select f.parlamentar_sk, f.mes_ref, d.id_fonte, d.data_votacao, d.descricao,
+               d.aprovacao, f.voto
+        from fato_voto as f
+        inner join dim_votacao as d using (votacao_sk)
+        order by d.data_votacao desc, d.id_fonte desc
+    """
+    consulta_meses = """
+        select mes_ref from fato_proposicao
+        union
+        select mes_ref from resumo_votacoes_mes
+        order by mes_ref desc
+    """
     with duckdb.connect(str(caminho_duckdb), read_only=True) as conexao:
         linhas = conexao.execute(consulta_parlamentares).fetchall()
         linhas_proposicoes = conexao.execute(consulta_proposicoes).fetchall()
-        meses = [
-            mes
-            for (mes,) in conexao.execute(
-                "select distinct mes_ref from fato_proposicao order by mes_ref desc"
+        linhas_votos = conexao.execute(consulta_votos).fetchall()
+        meses = [mes for (mes,) in conexao.execute(consulta_meses).fetchall()]
+        resumo = {
+            mes: ResumoVotacoes(plenario, nominais)
+            for mes, plenario, nominais in conexao.execute(
+                "select mes_ref, votacoes_plenario, votacoes_nominais from resumo_votacoes_mes"
             ).fetchall()
-        ]
+        }
         (coletado_em,) = conexao.execute(
             "select max(_carregado_em) from dim_parlamentar"
         ).fetchone()
 
-    por_parlamentar = defaultdict(list)
+    proposicoes = defaultdict(list)
     for sk, *campos in linhas_proposicoes:
-        por_parlamentar[sk].append(Proposicao(*campos))
+        proposicoes[sk].append(Proposicao(*campos))
+
+    votos = defaultdict(list)
+    for sk, mes_ref, *campos_votacao, voto in linhas_votos:
+        votos[sk].append(Voto(mes_ref, Votacao(*campos_votacao), voto))
 
     parlamentares = sorted(
-        (Parlamentar(*campos, proposicoes=tuple(por_parlamentar[sk])) for sk, *campos in linhas),
+        (
+            Parlamentar(*campos, proposicoes=tuple(proposicoes[sk]), votos=tuple(votos[sk]))
+            for sk, *campos in linhas
+        ),
         key=lambda p: chave_ordenacao(p.nome),
     )
     return DadosSite(
         parlamentares=parlamentares,
         coletado_em=coletado_em.astimezone(FUSO) if coletado_em else None,
         meses=meses,
+        resumo_votacoes=resumo,
     )

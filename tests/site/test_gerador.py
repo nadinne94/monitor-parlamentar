@@ -7,6 +7,7 @@ from monitor.site.gerador import (
     DadosSite,
     Parlamentar,
     Proposicao,
+    ResumoVotacoes,
     Votacao,
     Voto,
     carregar_dados,
@@ -115,7 +116,7 @@ def test_apaga_build_anterior(tmp_path, dados):
 COLETA = datetime(2026, 11, 6, 13, 30, tzinfo=UTC)
 
 
-def criar_banco(caminho, parlamentares, proposicoes=()):
+def criar_banco(caminho, parlamentares, proposicoes=(), votacoes=(), votos=(), resumos=()):
     """Um banco mínimo, só com as colunas que o site lê da dim_parlamentar e do fato."""
     with duckdb.connect(str(caminho)) as conexao:
         conexao.execute(
@@ -128,6 +129,18 @@ def criar_banco(caminho, parlamentares, proposicoes=()):
             " tipo_sigla varchar, numero integer, ano integer, ementa varchar,"
             " tipo_categoria varchar, papel_autoria varchar, data_apresentacao date)"
         )
+        conexao.execute(
+            "create table dim_votacao (votacao_sk varchar, id_fonte varchar,"
+            " data_votacao date, descricao varchar, aprovacao boolean)"
+        )
+        conexao.execute(
+            "create table fato_voto (votacao_sk varchar, parlamentar_sk varchar,"
+            " mes_ref date, voto varchar)"
+        )
+        conexao.execute(
+            "create table resumo_votacoes_mes (mes_ref date, votacoes_plenario bigint,"
+            " votacoes_nominais bigint)"
+        )
         conexao.executemany(
             "insert into dim_parlamentar values (?, ?, ?, ?, ?, ?, ?, ?)", parlamentares
         )
@@ -135,6 +148,12 @@ def criar_banco(caminho, parlamentares, proposicoes=()):
             conexao.executemany(
                 "insert into fato_proposicao values (?, ?, ?, ?, ?, ?, ?, ?, ?)", proposicoes
             )
+        if votacoes:
+            conexao.executemany("insert into dim_votacao values (?, ?, ?, ?, ?)", votacoes)
+        if votos:
+            conexao.executemany("insert into fato_voto values (?, ?, ?, ?)", votos)
+        if resumos:
+            conexao.executemany("insert into resumo_votacoes_mes values (?, ?, ?)", resumos)
 
 
 def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
@@ -289,3 +308,22 @@ def test_votos_do_mes():
     )
 
     assert [v.voto for v in p.votos_do_mes(OUTUBRO)] == ["sim"]
+
+
+def test_carregar_dados_le_votos_resumo_e_meses_das_votacoes(tmp_path):
+    caminho = tmp_path / "teste.duckdb"
+    criar_banco(
+        caminho,
+        [("sk1", "1", "Ana", "PT", "MG", None, True, COLETA)],
+        votacoes=[("v1", "1-1", date(2026, 10, 14), "Votação 1-1", False)],
+        votos=[("v1", "sk1", OUTUBRO, "sem_registro")],
+        resumos=[(OUTUBRO, 39, 3)],
+    )
+
+    dados = carregar_dados(caminho)
+
+    assert dados.meses == [OUTUBRO]
+    assert dados.resumo_votacoes == {OUTUBRO: ResumoVotacoes(39, 3)}
+    [voto] = dados.parlamentares[0].votos
+    assert voto.rotulo == "Sem voto registrado"
+    assert voto.votacao.resultado == "Rejeitada"
