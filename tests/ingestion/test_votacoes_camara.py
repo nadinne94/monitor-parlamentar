@@ -1,12 +1,18 @@
+from datetime import datetime
+
+import duckdb
 import httpx
 import pytest
 
 from monitor.ingestion.camara.deputados import URL_API_CAMARA
-from monitor.ingestion.camara.modelos import VotacaoApi
+from monitor.ingestion.camara.modelos import ProposicaoApi, VotacaoApi, VotoApi
 from monitor.ingestion.camara.votacoes import (
     buscar_proposicoes_afetadas,
     buscar_votacoes,
     buscar_votos,
+    gravar_proposicoes_afetadas,
+    gravar_votacoes,
+    gravar_votos,
 )
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
@@ -100,3 +106,40 @@ def test_buscar_proposicoes_afetadas():
 def test_votacao_sem_proposicoes_afetadas():
     with cliente_falso({"/votacoes/1-1": {"id": "1-1"}}) as cliente:
         assert buscar_proposicoes_afetadas(cliente, ["1-1"]) == []
+
+
+def test_gravar_votacoes_marca_as_nominais(tmp_path):
+    votacoes = [VotacaoApi.model_validate(votacao(i)) for i in ("1-1", "2-1")]
+    votos = {"1-1": [VotoApi.model_validate(voto(10))], "2-1": []}
+
+    destino = gravar_votacoes(votacoes, votos, tmp_path / "votacoes.parquet")
+
+    linhas = duckdb.sql(f"select id, nominal, aprovacao from '{destino}' order by id").fetchall()
+    assert linhas == [("1-1", True, True), ("2-1", False, True)]
+
+
+def test_gravar_votos_uma_linha_por_votacao_e_deputado(tmp_path):
+    votos = {
+        "1-1": [VotoApi.model_validate(voto(10)), VotoApi.model_validate(voto(20, "Não", "SP"))],
+        "2-1": [],
+    }
+
+    destino = gravar_votos(votos, tmp_path / "votos.parquet")
+
+    linhas = duckdb.sql(
+        f"select id_votacao, id_deputado, sigla_uf, tipo_voto, data_registro_voto"
+        f" from '{destino}' order by id_deputado"
+    ).fetchall()
+    assert linhas == [
+        ("1-1", 10, "MG", "Sim", datetime(2026, 10, 14, 20, 31, 15)),
+        ("1-1", 20, "SP", "Não", datetime(2026, 10, 14, 20, 31, 15)),
+    ]
+
+
+def test_gravar_proposicoes_afetadas(tmp_path):
+    afetadas = [("1-1", ProposicaoApi.model_validate(proposicao(5)))]
+
+    destino = gravar_proposicoes_afetadas(afetadas, tmp_path / "afetadas.parquet")
+
+    linhas = duckdb.sql(f"select id_votacao, id_proposicao, sigla_tipo from '{destino}'").fetchall()
+    assert linhas == [("1-1", 5, "PL")]
