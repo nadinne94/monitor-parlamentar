@@ -3,7 +3,11 @@ import pytest
 
 from monitor.ingestion.camara.deputados import URL_API_CAMARA
 from monitor.ingestion.camara.modelos import VotacaoApi
-from monitor.ingestion.camara.votacoes import buscar_votacoes, buscar_votos
+from monitor.ingestion.camara.votacoes import (
+    buscar_proposicoes_afetadas,
+    buscar_votacoes,
+    buscar_votos,
+)
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
 
@@ -23,6 +27,18 @@ def voto(id_deputado, tipo="Sim", uf="MG"):
         "tipoVoto": tipo,
         "dataRegistroVoto": "2026-10-14T20:31:15",
         "deputado_": {"id": id_deputado, "nome": f"Dep {id_deputado}", "siglaUf": uf},
+    }
+
+
+def proposicao(id_, sigla="PL"):
+    return {
+        "id": id_,
+        "siglaTipo": sigla,
+        "codTipo": 139,
+        "numero": id_,
+        "ano": 2026,
+        "ementa": f"Ementa {id_}",
+        "dataApresentacao": "2026-03-25T08:24",
     }
 
 
@@ -70,3 +86,17 @@ def test_buscar_votos_separa_nominais_de_simbolicas():
 
     assert [v.deputado.id for v in votos["1-1"]] == [10, 20]
     assert votos["2-1"] == []
+
+
+def test_buscar_proposicoes_afetadas():
+    rotas = {"/votacoes/1-1": {"id": "1-1", "proposicoesAfetadas": [proposicao(5)]}}
+
+    with cliente_falso(rotas) as cliente:
+        afetadas = buscar_proposicoes_afetadas(cliente, ["1-1"])
+
+    assert [(id_votacao, p.id) for id_votacao, p in afetadas] == [("1-1", 5)]
+
+
+def test_votacao_sem_proposicoes_afetadas():
+    with cliente_falso({"/votacoes/1-1": {"id": "1-1"}}) as cliente:
+        assert buscar_proposicoes_afetadas(cliente, ["1-1"]) == []

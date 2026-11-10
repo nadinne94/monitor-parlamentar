@@ -1,6 +1,6 @@
 """Ingestão das votações do Plenário no mês (ver ADR-008 e docs/spikes/s5-api-votacoes.md)."""
 
-from monitor.ingestion.camara.modelos import VotacaoApi, VotoApi
+from monitor.ingestion.camara.modelos import ProposicaoApi, VotacaoApi, VotoApi
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
 from monitor.periodos import limites_do_mes
@@ -37,3 +37,17 @@ def buscar_votos(cliente: ClienteApi, votacoes: list[VotacaoApi]) -> dict[str, l
         ]
         for votacao in votacoes
     }
+
+
+def buscar_proposicoes_afetadas(
+    cliente: ClienteApi, ids_votacoes: list[str]
+) -> list[tuple[str, ProposicaoApi]]:
+    """As proposições afetadas por cada votação, como pares (id da votação, proposição)."""
+    afetadas = []
+    for id_votacao in ids_votacoes:
+        detalhe = cliente.get_json(f"/votacoes/{id_votacao}")["dados"]
+        afetadas.extend(
+            (id_votacao, ProposicaoApi.model_validate(item))
+            for item in detalhe.get("proposicoesAfetadas", [])
+        )
+    return afetadas
