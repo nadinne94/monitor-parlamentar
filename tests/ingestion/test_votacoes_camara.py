@@ -2,7 +2,8 @@ import httpx
 import pytest
 
 from monitor.ingestion.camara.deputados import URL_API_CAMARA
-from monitor.ingestion.camara.votacoes import buscar_votacoes
+from monitor.ingestion.camara.modelos import VotacaoApi
+from monitor.ingestion.camara.votacoes import buscar_votacoes, buscar_votos
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
 
@@ -14,6 +15,14 @@ def votacao(id_, data="2026-10-14T20:56:14", aprovacao=1):
         "siglaOrgao": "PLEN",
         "descricao": f"Votação {id_}",
         "aprovacao": aprovacao,
+    }
+
+
+def voto(id_deputado, tipo="Sim", uf="MG"):
+    return {
+        "tipoVoto": tipo,
+        "dataRegistroVoto": "2026-10-14T20:31:15",
+        "deputado_": {"id": id_deputado, "nome": f"Dep {id_deputado}", "siglaUf": uf},
     }
 
 
@@ -47,3 +56,17 @@ def test_votacao_de_fora_do_mes_e_erro():
 
     with cliente_falso({"/votacoes": dados}) as cliente, pytest.raises(IngestaoError, match="2-1"):
         buscar_votacoes(cliente, "2026-10")
+
+
+def test_buscar_votos_separa_nominais_de_simbolicas():
+    rotas = {
+        "/votacoes/1-1/votos": [voto(10), voto(20, "Não", "SP")],
+        "/votacoes/2-1/votos": [],
+    }
+    votacoes = [VotacaoApi.model_validate(votacao(i)) for i in ("1-1", "2-1")]
+
+    with cliente_falso(rotas) as cliente:
+        votos = buscar_votos(cliente, votacoes)
+
+    assert [v.deputado.id for v in votos["1-1"]] == [10, 20]
+    assert votos["2-1"] == []

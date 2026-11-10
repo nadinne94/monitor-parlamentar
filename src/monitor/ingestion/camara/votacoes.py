@@ -1,6 +1,6 @@
 """Ingestão das votações do Plenário no mês (ver ADR-008 e docs/spikes/s5-api-votacoes.md)."""
 
-from monitor.ingestion.camara.modelos import VotacaoApi
+from monitor.ingestion.camara.modelos import VotacaoApi, VotoApi
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
 from monitor.periodos import limites_do_mes
@@ -26,3 +26,14 @@ def buscar_votacoes(cliente: ClienteApi, mes: str) -> list[VotacaoApi]:
             f"Pedido para {mes}, mas vieram votações de outras datas: {fora_do_mes}."
         )
     return votacoes
+
+
+def buscar_votos(cliente: ClienteApi, votacoes: list[VotacaoApi]) -> dict[str, list[VotoApi]]:
+    """Os votos de cada votação. Uma lista vazia indica uma votação simbólica."""
+    return {
+        votacao.id: [
+            VotoApi.model_validate(item)
+            for item in cliente.get_json(f"/votacoes/{votacao.id}/votos")["dados"]
+        ]
+        for votacao in votacoes
+    }
