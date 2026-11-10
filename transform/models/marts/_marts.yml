@@ -138,3 +138,44 @@ models:
         data_type: timestamp with time zone
       - name: _versao_contrato
         data_type: varchar
+  - name: dim_votacao
+    description: "Uma linha por votação nominal do Plenário. Contrato canônico (ADR-003, ADR-008)."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: votacao_sk
+        data_type: varchar
+        data_tests:
+          - not_null
+          - unique
+      - name: id_fonte
+        data_type: varchar
+      - name: data_votacao
+        data_type: date
+      - name: mes_ref
+        data_type: date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mes')
+                field: mes_ref
+      - name: descricao
+        data_type: varchar
+      - name: aprovacao
+        data_type: boolean
+      - name: votos_sim
+        data_type: bigint
+      - name: votos_nao
+        data_type: bigint
+      - name: votos_abstencao
+        data_type: bigint
+      - name: total_votos
+        data_type: bigint
+      - name: fonte
+        data_type: varchar
+      - name: _carregado_em
+        data_type: timestamp with time zone
+      - name: _versao_contrato
+        data_type: varchar
