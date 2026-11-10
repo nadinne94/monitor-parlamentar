@@ -327,3 +327,53 @@ def test_carregar_dados_le_votos_resumo_e_meses_das_votacoes(tmp_path):
     [voto] = dados.parlamentares[0].votos
     assert voto.rotulo == "Sem voto registrado"
     assert voto.votacao.resultado == "Rejeitada"
+
+
+@pytest.fixture
+def dados_com_votos():
+    ana = Parlamentar(
+        "1",
+        "Ana",
+        "PT",
+        "MG",
+        None,
+        votos=(
+            Voto(OUTUBRO, votacao_exemplo(), "nao"),
+            Voto(
+                OUTUBRO,
+                Votacao("2-1", date(2026, 10, 15), "Mantido o texto.", None),
+                "sem_registro",
+            ),
+        ),
+    )
+    return DadosSite(
+        parlamentares=[ana],
+        meses=[OUTUBRO, SETEMBRO],
+        resumo_votacoes={OUTUBRO: ResumoVotacoes(39, 3)},
+    )
+
+
+def test_pagina_explica_quantas_votacoes_foram_nominais(tmp_path, dados_com_votos):
+    renderizar(dados_com_votos, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert "O Plenário fez 39 votações neste mês, e 3 foram nominais" in html
+
+
+def test_pagina_mostra_o_voto_e_o_resultado(tmp_path, dados_com_votos):
+    renderizar(dados_com_votos, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert "14/10/2026" in html
+    assert 'Aprovada a subemenda. <span class="suave">(Aprovada)</span>' in html
+    assert '<strong class="voto">Não</strong>' in html
+    assert '<strong class="voto">Sem voto registrado</strong>' in html
+    assert "Mantido o texto. <span" not in html
+
+
+def test_mes_sem_votacoes_no_plenario(tmp_path, dados_com_votos):
+    renderizar(dados_com_votos, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    setembro = html[html.index('id="mes-2026-09"') :]
+    assert "Nenhuma votação no Plenário neste mês." in setembro

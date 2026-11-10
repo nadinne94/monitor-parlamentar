@@ -166,3 +166,11 @@ h2 {
 .proposicoes li {
     margin: 0.4rem 0;
 }
+
+.votos {
+    padding-left: 1.25rem;
+}
+
+.votos li {
+    margin: 0.6rem 0;
+}
