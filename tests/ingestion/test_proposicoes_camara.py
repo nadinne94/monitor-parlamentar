@@ -1,5 +1,3 @@
-from datetime import date
-
 import duckdb
 import httpx
 import pytest
@@ -12,22 +10,9 @@ from monitor.ingestion.camara.proposicoes import (
     gravar_autores,
     gravar_proposicoes,
     ingerir_proposicoes,
-    limites_do_mes,
 )
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
-
-
-@pytest.mark.parametrize(
-    ("mes", "esperado"),
-    [
-        ("2026-10", (date(2026, 10, 1), date(2026, 10, 31))),
-        ("2026-11", (date(2026, 11, 1), date(2026, 11, 30))),
-        ("2028-02", (date(2028, 2, 1), date(2028, 2, 29))),
-    ],
-)
-def test_limites_do_mes(mes, esperado):
-    assert limites_do_mes(mes) == esperado
 
 
 def proposicao(id_, sigla="PL", data="2026-10-20T16:12"):

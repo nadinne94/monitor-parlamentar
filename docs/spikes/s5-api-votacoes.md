@@ -84,3 +84,11 @@ GET /votacoes/{id}/orientacoes
 5. **Exibir a descrição oficial e a proposição afetada**, com link para a fonte. Traduzir a votação para linguagem simples continua no backlog.
 6. **A comparação com a orientação partidária fica para depois do MVP**, por depender de blocos e federações.
 7. **Decisão em aberto:** como mostrar um número tão pequeno de votações nominais por mês (3 em outubro) sem que o visitante leia isso como pouca atividade.
+
+## Confirmação com a coleta real (outubro de 2026)
+
+- 39 votações no Plenário: 36 simbólicas e 3 nominais, como a amostra indicava.
+- Cada lista de votos tem um registro a mais que o placar oficial: o `Artigo 17` do presidente da sessão, que não entra no placar.
+- Valores de voto em outubro: `Sim`, `Não` e `Artigo 17`.
+- Deputados de MG com voto registrado: 41, 36 e 48 nas três votações nominais.
+- Cada votação nominal afetou exatamente uma proposição. O requerimento rejeitado (`2635476-23`) afeta o PLP 186/2026, o que permite explicar do que ele tratava.
