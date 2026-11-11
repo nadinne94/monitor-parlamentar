@@ -3,6 +3,7 @@
 from datetime import UTC, datetime
 from pathlib import Path
 
+import httpx
 import pyarrow as pa
 
 from monitor.ingestion.camara.modelos import ProposicaoApi, VotacaoApi, VotoApi
@@ -73,14 +74,19 @@ def buscar_votacoes(cliente: ClienteApi, mes: str) -> list[VotacaoApi]:
 
 
 def buscar_votos(cliente: ClienteApi, votacoes: list[VotacaoApi]) -> dict[str, list[VotoApi]]:
-    """Os votos de cada votação. Uma lista vazia indica uma votação simbólica."""
-    return {
-        votacao.id: [
-            VotoApi.model_validate(item)
-            for item in cliente.get_json(f"/votacoes/{votacao.id}/votos")["dados"]
-        ]
-        for votacao in votacoes
-    }
+    """Os votos de cada votação. Uma lista vazia indica que não há votos registrados."""
+    return {votacao.id: _votos_da_votacao(cliente, votacao.id) for votacao in votacoes}
+
+
+def _votos_da_votacao(cliente: ClienteApi, id_votacao: str) -> list[VotoApi]:
+    """Uma votação sem lista de votos (404) é tratada como sem votos registrados (ADR-008)."""
+    try:
+        dados = cliente.get_json(f"/votacoes/{id_votacao}/votos")["dados"]
+    except httpx.HTTPStatusError as erro:
+        if erro.response.status_code == 404:
+            return []
+        raise
+    return [VotoApi.model_validate(item) for item in dados]
 
 
 def buscar_proposicoes_afetadas(

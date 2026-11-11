@@ -50,13 +50,19 @@ def proposicao(id_, sigla="PL"):
 
 
 def cliente_falso(rotas, recebidas=None):
-    """Cliente que responde a cada caminho com os dados da rota correspondente."""
+    """Cliente que responde a cada caminho com os dados da rota correspondente.
+
+    Um caminho fora das rotas responde 404; uma rota com um número inteiro responde esse status.
+    """
 
     def handler(request):
         if recebidas is not None:
             recebidas.append(request)
         caminho = request.url.path.removeprefix("/api/v2")
-        return httpx.Response(200, json={"dados": rotas[caminho], "links": []})
+        resposta = rotas.get(caminho, 404)
+        if isinstance(resposta, int):
+            return httpx.Response(resposta)
+        return httpx.Response(200, json={"dados": resposta, "links": []})
 
     return ClienteApi(URL_API_CAMARA, transport=httpx.MockTransport(handler), espera_inicial=0)
 
@@ -164,3 +170,20 @@ def test_ingerir_votacoes_busca_o_detalhe_so_das_nominais(tmp_path):
         "afetadas_2026-10.parquet",
     ]
     assert "/api/v2/votacoes/2-1" not in [r.url.path for r in recebidas]
+
+
+def test_votacao_sem_lista_de_votos_e_tratada_como_sem_votos():
+    votacoes = [VotacaoApi.model_validate(votacao("1-1"))]
+
+    with cliente_falso({}) as cliente:
+        assert buscar_votos(cliente, votacoes) == {"1-1": []}
+
+
+def test_outros_erros_na_lista_de_votos_continuam_sendo_erros():
+    votacoes = [VotacaoApi.model_validate(votacao("1-1"))]
+
+    with (
+        cliente_falso({"/votacoes/1-1/votos": 400}) as cliente,
+        pytest.raises(httpx.HTTPStatusError),
+    ):
+        buscar_votos(cliente, votacoes)
