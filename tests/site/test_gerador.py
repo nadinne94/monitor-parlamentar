@@ -7,6 +7,9 @@ from monitor.site.gerador import (
     DadosSite,
     Parlamentar,
     Proposicao,
+    ResumoVotacoes,
+    Votacao,
+    Voto,
     carregar_dados,
     chave_ordenacao,
     formatar_data_hora,
@@ -113,7 +116,7 @@ def test_apaga_build_anterior(tmp_path, dados):
 COLETA = datetime(2026, 11, 6, 13, 30, tzinfo=UTC)
 
 
-def criar_banco(caminho, parlamentares, proposicoes=()):
+def criar_banco(caminho, parlamentares, proposicoes=(), votacoes=(), votos=(), resumos=()):
     """Um banco mínimo, só com as colunas que o site lê da dim_parlamentar e do fato."""
     with duckdb.connect(str(caminho)) as conexao:
         conexao.execute(
@@ -126,6 +129,18 @@ def criar_banco(caminho, parlamentares, proposicoes=()):
             " tipo_sigla varchar, numero integer, ano integer, ementa varchar,"
             " tipo_categoria varchar, papel_autoria varchar, data_apresentacao date)"
         )
+        conexao.execute(
+            "create table dim_votacao (votacao_sk varchar, id_fonte varchar,"
+            " data_votacao date, descricao varchar, aprovacao boolean)"
+        )
+        conexao.execute(
+            "create table fato_voto (votacao_sk varchar, parlamentar_sk varchar,"
+            " mes_ref date, voto varchar)"
+        )
+        conexao.execute(
+            "create table resumo_votacoes_mes (mes_ref date, votacoes_plenario bigint,"
+            " votacoes_nominais bigint)"
+        )
         conexao.executemany(
             "insert into dim_parlamentar values (?, ?, ?, ?, ?, ?, ?, ?)", parlamentares
         )
@@ -133,6 +148,12 @@ def criar_banco(caminho, parlamentares, proposicoes=()):
             conexao.executemany(
                 "insert into fato_proposicao values (?, ?, ?, ?, ?, ?, ?, ?, ?)", proposicoes
             )
+        if votacoes:
+            conexao.executemany("insert into dim_votacao values (?, ?, ?, ?, ?)", votacoes)
+        if votos:
+            conexao.executemany("insert into fato_voto values (?, ?, ?, ?)", votos)
+        if resumos:
+            conexao.executemany("insert into resumo_votacoes_mes values (?, ?, ?)", resumos)
 
 
 def test_carregar_dados_le_quem_esta_em_exercicio_em_ordem(tmp_path):
@@ -255,3 +276,104 @@ def test_mes_sem_proposicoes_diz_que_nao_houve(tmp_path, dados_com_proposicoes):
     html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
     setembro = html[html.index('id="mes-2026-09"') :]
     assert "Nenhum projeto apresentado neste mês." in setembro
+
+
+def votacao_exemplo(aprovacao=True):
+    return Votacao("1-1", date(2026, 10, 14), "Aprovada a subemenda.", aprovacao)
+
+
+@pytest.mark.parametrize(
+    ("aprovacao", "esperado"), [(True, "Aprovada"), (False, "Rejeitada"), (None, None)]
+)
+def test_resultado_da_votacao(aprovacao, esperado):
+    assert votacao_exemplo(aprovacao).resultado == esperado
+
+
+@pytest.mark.parametrize(
+    ("voto", "esperado"),
+    [("sim", "Sim"), ("sem_registro", "Sem voto registrado"), ("artigo_17", "Presidiu a sessão")],
+)
+def test_rotulo_do_voto(voto, esperado):
+    assert Voto(OUTUBRO, votacao_exemplo(), voto).rotulo.startswith(esperado)
+
+
+def test_votos_do_mes():
+    p = Parlamentar(
+        "1",
+        "Ana",
+        "PT",
+        "MG",
+        None,
+        votos=(Voto(OUTUBRO, votacao_exemplo(), "sim"), Voto(SETEMBRO, votacao_exemplo(), "nao")),
+    )
+
+    assert [v.voto for v in p.votos_do_mes(OUTUBRO)] == ["sim"]
+
+
+def test_carregar_dados_le_votos_resumo_e_meses_das_votacoes(tmp_path):
+    caminho = tmp_path / "teste.duckdb"
+    criar_banco(
+        caminho,
+        [("sk1", "1", "Ana", "PT", "MG", None, True, COLETA)],
+        votacoes=[("v1", "1-1", date(2026, 10, 14), "Votação 1-1", False)],
+        votos=[("v1", "sk1", OUTUBRO, "sem_registro")],
+        resumos=[(OUTUBRO, 39, 3)],
+    )
+
+    dados = carregar_dados(caminho)
+
+    assert dados.meses == [OUTUBRO]
+    assert dados.resumo_votacoes == {OUTUBRO: ResumoVotacoes(39, 3)}
+    [voto] = dados.parlamentares[0].votos
+    assert voto.rotulo == "Sem voto registrado"
+    assert voto.votacao.resultado == "Rejeitada"
+
+
+@pytest.fixture
+def dados_com_votos():
+    ana = Parlamentar(
+        "1",
+        "Ana",
+        "PT",
+        "MG",
+        None,
+        votos=(
+            Voto(OUTUBRO, votacao_exemplo(), "nao"),
+            Voto(
+                OUTUBRO,
+                Votacao("2-1", date(2026, 10, 15), "Mantido o texto.", None),
+                "sem_registro",
+            ),
+        ),
+    )
+    return DadosSite(
+        parlamentares=[ana],
+        meses=[OUTUBRO, SETEMBRO],
+        resumo_votacoes={OUTUBRO: ResumoVotacoes(39, 3)},
+    )
+
+
+def test_pagina_explica_quantas_votacoes_foram_nominais(tmp_path, dados_com_votos):
+    renderizar(dados_com_votos, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert "O Plenário fez 39 votações neste mês, e 3 foram nominais" in html
+
+
+def test_pagina_mostra_o_voto_e_o_resultado(tmp_path, dados_com_votos):
+    renderizar(dados_com_votos, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert "14/10/2026" in html
+    assert 'Aprovada a subemenda. <span class="suave">(Aprovada)</span>' in html
+    assert '<strong class="voto">Não</strong>' in html
+    assert '<strong class="voto">Sem voto registrado</strong>' in html
+    assert "Mantido o texto. <span" not in html
+
+
+def test_mes_sem_votacoes_no_plenario(tmp_path, dados_com_votos):
+    renderizar(dados_com_votos, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    setembro = html[html.index('id="mes-2026-09"') :]
+    assert "Nenhuma votação no Plenário neste mês." in setembro

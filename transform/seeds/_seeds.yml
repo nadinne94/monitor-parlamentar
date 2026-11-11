@@ -13,3 +13,15 @@ seeds:
           - accepted_values:
               arguments:
                 values: ["legislativa", "requerimento", "relatoria", "procedimental", "outra"]
+  - name: mapa_tipos_voto
+    description: "Valor do voto na API -> vocabulário do projeto (ADR-008, seção 3)."
+    columns:
+      - name: tipo_voto
+        data_tests:
+          - not_null
+          - unique
+      - name: voto
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["sim", "nao", "abstencao", "obstrucao", "artigo_17"]

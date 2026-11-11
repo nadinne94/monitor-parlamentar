@@ -156,6 +156,18 @@ def test_site_gera_paginas_a_partir_do_banco(tmp_path, monkeypatch):
             " tipo_sigla varchar, numero integer, ano integer, ementa varchar,"
             " tipo_categoria varchar, papel_autoria varchar, data_apresentacao date)"
         )
+        conexao.execute(
+            "create table dim_votacao (votacao_sk varchar, id_fonte varchar,"
+            " data_votacao date, descricao varchar, aprovacao boolean)"
+        )
+        conexao.execute(
+            "create table fato_voto (votacao_sk varchar, parlamentar_sk varchar,"
+            " mes_ref date, voto varchar)"
+        )
+        conexao.execute(
+            "create table resumo_votacoes_mes (mes_ref date, votacoes_plenario bigint,"
+            " votacoes_nominais bigint)"
+        )
     saida = tmp_path / "site"
     monkeypatch.setattr("monitor.cli.CAMINHO_DUCKDB", banco)
     monkeypatch.setattr("monitor.cli.DIR_SAIDA_SITE", saida)

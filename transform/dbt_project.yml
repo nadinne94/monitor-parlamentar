@@ -27,3 +27,7 @@ seeds:
       +column_types:
         sigla_tipo: varchar
         categoria: varchar
+    mapa_tipos_voto:
+      +column_types:
+        tipo_voto: varchar
+        voto: varchar

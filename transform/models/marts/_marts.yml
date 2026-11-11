@@ -138,3 +138,105 @@ models:
         data_type: timestamp with time zone
       - name: _versao_contrato
         data_type: varchar
+  - name: dim_votacao
+    description: "Uma linha por votação nominal do Plenário. Contrato canônico (ADR-003, ADR-008)."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: votacao_sk
+        data_type: varchar
+        data_tests:
+          - not_null
+          - unique
+      - name: id_fonte
+        data_type: varchar
+      - name: data_votacao
+        data_type: date
+      - name: mes_ref
+        data_type: date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mes')
+                field: mes_ref
+      - name: descricao
+        data_type: varchar
+      - name: aprovacao
+        data_type: boolean
+      - name: votos_sim
+        data_type: bigint
+      - name: votos_nao
+        data_type: bigint
+      - name: votos_abstencao
+        data_type: bigint
+      - name: total_votos
+        data_type: bigint
+      - name: fonte
+        data_type: varchar
+      - name: _carregado_em
+        data_type: timestamp with time zone
+      - name: _versao_contrato
+        data_type: varchar
+  - name: fato_voto
+    description: "Uma linha por votação nominal e parlamentar da bancada. Contrato canônico (ADR-003, ADR-008)."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: votacao_sk
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_votacao')
+                field: votacao_sk
+      - name: parlamentar_sk
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_parlamentar')
+                field: parlamentar_sk
+      - name: mes_ref
+        data_type: date
+        data_tests:
+          - not_null
+      - name: voto
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["sim", "nao", "abstencao", "obstrucao", "artigo_17", "sem_registro"]
+      - name: fonte
+        data_type: varchar
+      - name: _carregado_em
+        data_type: timestamp with time zone
+      - name: _versao_contrato
+        data_type: varchar
+  - name: resumo_votacoes_mes
+    description: "Quantas votações o Plenário fez em cada mês, e quantas foram nominais (ADR-008)."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: mes_ref
+        data_type: date
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('dim_mes')
+                field: mes_ref
+      - name: votacoes_plenario
+        data_type: bigint
+      - name: votacoes_nominais
+        data_type: bigint
+      - name: fonte
+        data_type: varchar
+      - name: _versao_contrato
+        data_type: varchar

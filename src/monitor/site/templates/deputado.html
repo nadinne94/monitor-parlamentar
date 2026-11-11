@@ -58,6 +58,29 @@
         {% else %}
         <p class="suave">Nenhum requerimento ou indicação neste mês.</p>
         {% endif %}
+        <h4>Votações nominais no Plenário</h4>
+        {% set resumo = dados.resumo_votacoes.get(mes) %}
+        {% if resumo %}
+        <p class="suave">
+            O Plenário fez {{ resumo.plenario }} votações neste mês, e {{ resumo.nominais }} foram nominais, com o
+            registro do voto de cada deputado. As demais foram simbólicas, sem esse registro.
+        </p>
+        {% set votos = p.votos_do_mes(mes) %}
+        {% if votos %}
+        <ul class="votos">
+            {% for v in votos %}
+            <li>
+                <span class="suave">{{ v.votacao.data.strftime("%d/%m/%Y") }}</span>
+                {{ v.votacao.descricao }}{% if v.votacao.resultado %} <span class="suave">({{ v.votacao.resultado
+                    }})</span>{% endif %}
+                <br><strong class="voto">{{ v.rotulo }}</strong>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% else %}
+        <p class="suave">Nenhuma votação no Plenário neste mês.</p>
+        {% endif %}
     </section>
     {% endfor %}
     {% else %}
