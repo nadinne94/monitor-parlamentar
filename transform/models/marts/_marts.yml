@@ -217,3 +217,26 @@ models:
         data_type: timestamp with time zone
       - name: _versao_contrato
         data_type: varchar
+  - name: resumo_votacoes_mes
+    description: "Quantas votações o Plenário fez em cada mês, e quantas foram nominais (ADR-008)."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: mes_ref
+        data_type: date
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('dim_mes')
+                field: mes_ref
+      - name: votacoes_plenario
+        data_type: bigint
+      - name: votacoes_nominais
+        data_type: bigint
+      - name: fonte
+        data_type: varchar
+      - name: _versao_contrato
+        data_type: varchar
