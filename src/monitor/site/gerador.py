@@ -58,6 +58,7 @@ ROTULOS_VOTO = {
     "abstencao": "Abstenção",
     "obstrucao": "Obstrução",
     "artigo_17": "Presidiu a sessão (art. 17 do Regimento)",
+    "secreto": "Votou (votação secreta)",
     "sem_registro": "Sem voto registrado",
 }
 

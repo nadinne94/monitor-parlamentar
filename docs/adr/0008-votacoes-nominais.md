@@ -91,3 +91,9 @@ Votações são o dado mais sensível do projeto: um voto mal apresentado pode s
 - `sem_registro` usa a bancada **atual**. Um deputado que entrou na bancada depois de uma votação apareceria como "sem voto registrado" nela. O histórico de mandatos do Incremento 6 resolve isso; até lá, o risco é baixo nos últimos 3 meses.
 - A descrição oficial continua na linguagem do processo legislativo.
 - Os votos de uma votação nominal são grandes (cerca de 460 registros), mas são poucas votações nominais por mês.
+## Atualização (novembro de 2026): casos encontrados na primeira coleta de três meses
+
+- **Votação secreta.** Na votação `2645346-18` (setembro), a API listou os 466 deputados que votaram, todos sem o tipo de voto. Uma votação com todos os votos sem tipo é tratada como secreta: o voto de cada deputado é `secreto`, exibido como "Votou (votação secreta)", e o placar fica em branco na `dim_votacao`. Uma votação com só alguns votos sem tipo para o build, por ser um caso ainda não visto.
+- **Votação sem lista de votos.** Em novembro, 29 votações responderam 404 na lista de votos. Elas são tratadas como sem votos registrados, como as simbólicas.
+- **Registros automáticos.** Quando o Plenário aprova uma urgência ou um requerimento, a Câmara registra o efeito em cada proposição afetada, e cada registro aparece na lista como uma votação, sem link de evento: mudanças de regime de tramitação de proposições apensadas e réplicas da aprovação de requerimentos (um mesmo requerimento chegou a aparecer 63 vezes). De setembro a novembro de 2026, foram 149 registros sem evento, nenhum com votos. Eles ficam fora da contagem da frase de contexto, e um teste de dados para o build se uma votação nominal aparecer sem evento.
+- O contrato continua na versão 1.2.0: ela ainda não foi publicada em nenhuma release.

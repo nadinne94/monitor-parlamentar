@@ -1,7 +1,9 @@
 -- Adaptador: votações nominais da Câmara no formato da dim_votacao (ADR-003, ADR-008).
+-- Uma votação com todos os votos sem tipo é secreta: a API registra quem votou, não como.
 with placar as (
     select
         id_votacao,
+        count(tipo_voto) = 0 as secreta,
         count(*) filter (where tipo_voto = 'Sim') as votos_sim,
         count(*) filter (where tipo_voto = 'Não') as votos_nao,
         count(*) filter (where tipo_voto = 'Abstenção') as votos_abstencao,
@@ -17,9 +19,10 @@ select
     cast(date_trunc('month', v.data_hora_registro) as date) as mes_ref,
     v.descricao,
     v.aprovacao,
-    p.votos_sim,
-    p.votos_nao,
-    p.votos_abstencao,
+    p.secreta,
+    case when p.secreta then null else p.votos_sim end as votos_sim,
+    case when p.secreta then null else p.votos_nao end as votos_nao,
+    case when p.secreta then null else p.votos_abstencao end as votos_abstencao,
     p.total_votos,
     'camara_api' as fonte,
     v._carregado_em
