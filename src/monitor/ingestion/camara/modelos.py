@@ -68,6 +68,7 @@ class VotacaoApi(BaseModel):
     descricao: str = ""
     aprovacao: bool | None = None
     proposicao_objeto: str | None = Field(default=None, alias="proposicaoObjeto")
+    uri_evento: str | None = Field(default=None, alias="uriEvento")
 
 
 class DeputadoDoVotoApi(BaseModel):

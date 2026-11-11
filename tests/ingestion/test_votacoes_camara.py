@@ -187,3 +187,16 @@ def test_outros_erros_na_lista_de_votos_continuam_sendo_erros():
         pytest.raises(httpx.HTTPStatusError),
     ):
         buscar_votos(cliente, votacoes)
+
+
+def test_gravar_votacoes_guarda_o_link_do_evento(tmp_path):
+    com_evento = {
+        **votacao("1-1"),
+        "uriEvento": "https://dadosabertos.camara.leg.br/api/v2/eventos/1",
+    }
+    votacoes = [VotacaoApi.model_validate(com_evento), VotacaoApi.model_validate(votacao("2-1"))]
+
+    destino = gravar_votacoes(votacoes, {}, tmp_path / "votacoes.parquet")
+
+    linhas = duckdb.sql(f"select id, uri_evento is null from '{destino}' order by id").fetchall()
+    assert linhas == [("1-1", False), ("2-1", True)]

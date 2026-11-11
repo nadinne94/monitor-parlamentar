@@ -22,6 +22,7 @@ ESQUEMA_VOTACOES = pa.schema(
         ("descricao", pa.string()),
         ("aprovacao", pa.bool_()),
         ("proposicao_objeto", pa.string()),
+        ("uri_evento", pa.string()),
         ("nominal", pa.bool_()),
         ("_carregado_em", pa.timestamp("us", tz="UTC")),
     ]
