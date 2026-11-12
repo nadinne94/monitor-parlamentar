@@ -79,3 +79,7 @@ Cada item recebe uma categoria a partir do `siglaTipo`:
 - Não se sabe ainda se o filtro por UF traz coautorias de proposições de autores de outros estados.
 - A classificação por sigla pode errar casos de fronteira (um REQ que, na prática, é procedimental). O seed permite corrigir sem mexer no código.
 - O reprocessamento de 3 meses multiplica as requisições por três a cada execução.
+
+## Atualização (novembro de 2026)
+
+A primeira coleta de setembro e novembro trouxe cinco tipos sem classificação, todos documentos de relatoria apresentados em Plenário: `PRLP`, `PPP`, `PEP`, `PRLE` e `SSP`. Foram classificados como `relatoria`, como os seus equivalentes de comissão. O teste de aviso funcionou como previsto: sinalizou os tipos novos sem interromper o deploy.
