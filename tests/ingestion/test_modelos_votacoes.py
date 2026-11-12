@@ -82,3 +82,9 @@ def test_rejeita_voto_sem_uf(item_voto):
 
     with pytest.raises(ValidationError):
         VotoApi.model_validate(item_voto)
+
+
+def test_voto_secreto_vem_sem_tipo(item_voto):
+    item_voto["tipoVoto"] = None
+
+    assert VotoApi.model_validate(item_voto).tipo_voto is None

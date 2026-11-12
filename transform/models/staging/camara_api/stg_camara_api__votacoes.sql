@@ -6,6 +6,7 @@ select
     descricao,
     aprovacao,
     proposicao_objeto,
+    uri_evento,
     nominal,
     _carregado_em
 from {{ source('camara_api', 'votacoes') }}

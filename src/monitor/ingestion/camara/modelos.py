@@ -68,6 +68,7 @@ class VotacaoApi(BaseModel):
     descricao: str = ""
     aprovacao: bool | None = None
     proposicao_objeto: str | None = Field(default=None, alias="proposicaoObjeto")
+    uri_evento: str | None = Field(default=None, alias="uriEvento")
 
 
 class DeputadoDoVotoApi(BaseModel):
@@ -86,6 +87,6 @@ class VotoApi(BaseModel):
 
     model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
 
-    tipo_voto: str = Field(alias="tipoVoto", min_length=1)
+    tipo_voto: str | None = Field(alias="tipoVoto", min_length=1)
     data_registro_voto: datetime = Field(alias="dataRegistroVoto")
     deputado: DeputadoDoVotoApi = Field(alias="deputado_")

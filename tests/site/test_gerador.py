@@ -291,7 +291,12 @@ def test_resultado_da_votacao(aprovacao, esperado):
 
 @pytest.mark.parametrize(
     ("voto", "esperado"),
-    [("sim", "Sim"), ("sem_registro", "Sem voto registrado"), ("artigo_17", "Presidiu a sessão")],
+    [
+        ("sim", "Sim"),
+        ("sem_registro", "Sem voto registrado"),
+        ("artigo_17", "Presidiu a sessão"),
+        ("secreto", "Votou (votação secreta)"),
+    ],
 )
 def test_rotulo_do_voto(voto, esperado):
     assert Voto(OUTUBRO, votacao_exemplo(), voto).rotulo.startswith(esperado)

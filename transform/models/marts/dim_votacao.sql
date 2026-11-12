@@ -13,6 +13,7 @@ select
     mes_ref,
     descricao,
     aprovacao,
+    secreta,
     votos_sim,
     votos_nao,
     votos_abstencao,

@@ -4,4 +4,5 @@ select distinct v.tipo_voto
 from {{ ref('stg_camara_api__votos') }} as v
 left join {{ ref('mapa_tipos_voto') }} as m
     on v.tipo_voto = m.tipo_voto
-where m.tipo_voto is null
+where v.tipo_voto is not null
+    and m.tipo_voto is null
