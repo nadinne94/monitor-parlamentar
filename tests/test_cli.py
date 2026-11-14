@@ -158,7 +158,8 @@ def test_site_gera_paginas_a_partir_do_banco(tmp_path, monkeypatch):
         )
         conexao.execute(
             "create table dim_votacao (votacao_sk varchar, id_fonte varchar,"
-            " data_votacao date, descricao varchar, aprovacao boolean)"
+            " data_votacao date, descricao varchar, aprovacao boolean, proposicao_sigla varchar,"
+            " proposicao_numero integer, proposicao_ano integer, proposicao_ementa varchar)"
         )
         conexao.execute(
             "create table fato_voto (votacao_sk varchar, parlamentar_sk varchar,"

@@ -45,3 +45,13 @@ models:
               arguments:
                 to: ref('stg_camara_api__votacoes')
                 field: id
+  - name: stg_camara_api__afetadas
+    description: "Proposições afetadas pelas votações nominais."
+    columns:
+      - name: id_votacao
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_camara_api__votacoes')
+                field: id
