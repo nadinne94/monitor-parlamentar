@@ -71,6 +71,8 @@ class Votacao:
     data: date
     descricao: str
     aprovacao: bool | None
+    proposicao: str | None = None
+    proposicao_ementa: str | None = None
 
     @property
     def resultado(self) -> str | None:
@@ -213,7 +215,10 @@ def carregar_dados(caminho_duckdb: Path) -> DadosSite:
     """
     consulta_votos = """
         select f.parlamentar_sk, f.mes_ref, d.id_fonte, d.data_votacao, d.descricao,
-               d.aprovacao, f.voto
+               d.aprovacao,
+               d.proposicao_sigla || ' ' || d.proposicao_numero || '/' || d.proposicao_ano,
+               d.proposicao_ementa,
+               f.voto
         from fato_voto as f
         inner join dim_votacao as d using (votacao_sk)
         order by d.data_votacao desc, d.id_fonte desc
