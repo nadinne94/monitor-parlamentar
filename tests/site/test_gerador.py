@@ -398,3 +398,23 @@ def test_mes_sem_votacoes_no_plenario(tmp_path, dados_com_votos):
     html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
     setembro = html[html.index('id="mes-2026-09"') :]
     assert "Nenhuma votação no Plenário neste mês." in setembro
+
+
+def test_pagina_mostra_a_proposicao_afetada(tmp_path):
+    votacao = Votacao(
+        "1-1",
+        date(2026, 10, 14),
+        "Rejeitado o Requerimento.",
+        False,
+        "PLP 186/2026",
+        "Altera a lei.",
+    )
+    ana = Parlamentar("1", "Ana", "PT", "MG", None, votos=(Voto(OUTUBRO, votacao, "nao"),))
+    dados = DadosSite(
+        parlamentares=[ana], meses=[OUTUBRO], resumo_votacoes={OUTUBRO: ResumoVotacoes(39, 3)}
+    )
+
+    renderizar(dados, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert "Sobre: PLP 186/2026, Altera a lei." in html
