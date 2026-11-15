@@ -131,7 +131,8 @@ def criar_banco(caminho, parlamentares, proposicoes=(), votacoes=(), votos=(), r
         )
         conexao.execute(
             "create table dim_votacao (votacao_sk varchar, id_fonte varchar,"
-            " data_votacao date, descricao varchar, aprovacao boolean)"
+            " data_votacao date, descricao varchar, aprovacao boolean, proposicao_sigla varchar,"
+            " proposicao_numero integer, proposicao_ano integer, proposicao_ementa varchar)"
         )
         conexao.execute(
             "create table fato_voto (votacao_sk varchar, parlamentar_sk varchar,"
@@ -149,7 +150,9 @@ def criar_banco(caminho, parlamentares, proposicoes=(), votacoes=(), votos=(), r
                 "insert into fato_proposicao values (?, ?, ?, ?, ?, ?, ?, ?, ?)", proposicoes
             )
         if votacoes:
-            conexao.executemany("insert into dim_votacao values (?, ?, ?, ?, ?)", votacoes)
+            conexao.executemany(
+                "insert into dim_votacao values (?, ?, ?, ?, ?, ?, ?, ?, ?)", votacoes
+            )
         if votos:
             conexao.executemany("insert into fato_voto values (?, ?, ?, ?)", votos)
         if resumos:
@@ -320,7 +323,19 @@ def test_carregar_dados_le_votos_resumo_e_meses_das_votacoes(tmp_path):
     criar_banco(
         caminho,
         [("sk1", "1", "Ana", "PT", "MG", None, True, COLETA)],
-        votacoes=[("v1", "1-1", date(2026, 10, 14), "Votação 1-1", False)],
+        votacoes=[
+            (
+                "v1",
+                "1-1",
+                date(2026, 10, 14),
+                "Votação 1-1",
+                False,
+                "PLP",
+                186,
+                2026,
+                "Altera a lei.",
+            )
+        ],
         votos=[("v1", "sk1", OUTUBRO, "sem_registro")],
         resumos=[(OUTUBRO, 39, 3)],
     )
@@ -332,6 +347,7 @@ def test_carregar_dados_le_votos_resumo_e_meses_das_votacoes(tmp_path):
     [voto] = dados.parlamentares[0].votos
     assert voto.rotulo == "Sem voto registrado"
     assert voto.votacao.resultado == "Rejeitada"
+    assert voto.votacao.proposicao == "PLP 186/2026"
 
 
 @pytest.fixture
@@ -382,3 +398,23 @@ def test_mes_sem_votacoes_no_plenario(tmp_path, dados_com_votos):
     html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
     setembro = html[html.index('id="mes-2026-09"') :]
     assert "Nenhuma votação no Plenário neste mês." in setembro
+
+
+def test_pagina_mostra_a_proposicao_afetada(tmp_path):
+    votacao = Votacao(
+        "1-1",
+        date(2026, 10, 14),
+        "Rejeitado o Requerimento.",
+        False,
+        "PLP 186/2026",
+        "Altera a lei.",
+    )
+    ana = Parlamentar("1", "Ana", "PT", "MG", None, votos=(Voto(OUTUBRO, votacao, "nao"),))
+    dados = DadosSite(
+        parlamentares=[ana], meses=[OUTUBRO], resumo_votacoes={OUTUBRO: ResumoVotacoes(39, 3)}
+    )
+
+    renderizar(dados, tmp_path)
+
+    html = (tmp_path / "deputados" / "1.html").read_text(encoding="utf-8")
+    assert "Sobre: PLP 186/2026, Altera a lei." in html

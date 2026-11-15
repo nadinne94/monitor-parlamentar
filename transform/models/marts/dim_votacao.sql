@@ -18,6 +18,10 @@ select
     votos_nao,
     votos_abstencao,
     total_votos,
+    proposicao_sigla,
+    proposicao_numero,
+    proposicao_ano,
+    proposicao_ementa,
     fonte,
     _carregado_em,
     '1.2.0' as _versao_contrato

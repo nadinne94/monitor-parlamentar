@@ -29,3 +29,8 @@ sources:
         config:
           meta:
             external_location: "{{ env_var('MONITOR_DIR_BRUTO', '../data/bruto') }}/camara_api/votos_*.parquet"
+      - name: afetadas
+        description: "Proposições afetadas pelas votações nominais, um arquivo por mês (afetadas_AAAA-MM.parquet)."
+        config:
+          meta:
+            external_location: "{{ env_var('MONITOR_DIR_BRUTO', '../data/bruto') }}/camara_api/afetadas_*.parquet"

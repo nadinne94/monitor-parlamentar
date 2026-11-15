@@ -73,6 +73,8 @@
                 <span class="suave">{{ v.votacao.data.strftime("%d/%m/%Y") }}</span>
                 {{ v.votacao.descricao }}{% if v.votacao.resultado %} <span class="suave">({{ v.votacao.resultado
                     }})</span>{% endif %}
+                {% if v.votacao.proposicao %}<br><span class="suave">Sobre: {{ v.votacao.proposicao }}, {{
+                    v.votacao.proposicao_ementa }}</span>{% endif %}
                 <br><strong class="voto">{{ v.rotulo }}</strong>
             </li>
             {% endfor %}

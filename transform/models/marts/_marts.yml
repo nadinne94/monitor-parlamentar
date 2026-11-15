@@ -175,6 +175,14 @@ models:
         data_type: bigint
       - name: total_votos
         data_type: bigint
+      - name: proposicao_sigla
+        data_type: varchar
+      - name: proposicao_numero
+        data_type: integer
+      - name: proposicao_ano
+        data_type: integer
+      - name: proposicao_ementa
+        data_type: varchar
       - name: fonte
         data_type: varchar
       - name: _carregado_em

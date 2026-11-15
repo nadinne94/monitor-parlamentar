@@ -24,9 +24,15 @@ select
     case when p.secreta then null else p.votos_nao end as votos_nao,
     case when p.secreta then null else p.votos_abstencao end as votos_abstencao,
     p.total_votos,
+    a.sigla_tipo as proposicao_sigla,
+    a.numero as proposicao_numero,
+    a.ano as proposicao_ano,
+    a.ementa as proposicao_ementa,
     'camara_api' as fonte,
     v._carregado_em
 from {{ ref('stg_camara_api__votacoes') }} as v
 inner join placar as p
     on v.id = p.id_votacao
+left join {{ ref('stg_camara_api__afetadas') }} as a
+    on v.id = a.id_votacao
 where v.nominal
