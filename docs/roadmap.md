@@ -144,6 +144,8 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 ---
 
 ### Incremento 4: Despesas da cota parlamentar · `v0.4.0`
+**Resolvido:** despesas da cota definidas no ADR-009, a partir do spike S6
+
 **Estimativa:** 2 semanas · **Alvo:** meados de janeiro/2027
 
 
@@ -165,10 +167,10 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 
 **Por que por último:** é a métrica com maior risco de interpretação (ausências justificadas, tipos de sessão). O spike S1 resolve a dúvida técnica cedo; a implementação vem quando o restante já está estável.
 
-**Antes de começar:** ADR-009 definindo o que conta como sessão, como presença e como ausência justificada.
+**Antes de começar:** ADR-010 definindo o que conta como sessão, como presença e como ausência justificada.
 
 **Escopo**
-- Ingestão de presença conforme definido no ADR-009.
+- Ingestão de presença conforme definido no ADR-010.
 - `fato_presenca` com contrato e testes.
 - Resumo: colunas de sessões, presença e ausências justificadas.
 - Site: bloco "Presença", sempre separando ausência justificada de ausência.
