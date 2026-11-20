@@ -41,6 +41,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 | **S3: API de proposições da Câmara** | Como a API de proposições representa tipos e autoria | Concluído em 07/11/2026 (ver docs/spikes/s3-api-proposicoes.md) |
 | **S4: Câmara municipal** | A câmara da cidade usa SAPL? Há API ou exportação em formato aberto? O que a prefeitura oferece? | Investigado informalmente em 11/2026: a câmara e a prefeitura da cidade não publicam dados abertos |
 | **S5: API de votações da Câmara** | Como a API representa votações nominais, votos e resultado? | Concluído em 08/11/2026 (ver docs/spikes/s5-api-votacoes.md) |
+| **S6: API de despesas da Câmara** | Endpoint por deputado ou arquivo anual? Qual a defasagem real dos lançamentos? Como aparecem glosas, valores negativos e o CPF de fornecedores pessoa física? | Concluído em 20/11/2026 (ver docs/spikes/s6-api-despesas.md) |
 
 ## Incrementos
 
