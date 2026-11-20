@@ -3,6 +3,24 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 As versões seguem o [roadmap](docs/roadmap.md).
 
+## [0.3.0] - Incremento 3: votos nominais
+
+### Adicionado
+- Spike S5 e ADR-008: quais votações entram, o vocabulário do voto e de onde vem o resultado.
+- Modelos Pydantic da votação e do voto.
+- Ingestão mensal das votações do Plenário, dos votos de cada votação nominal e das proposições afetadas.
+- As votações entram no pipeline mensal, com os mesmos últimos 3 meses de reprocessamento.
+- dbt: `dim_votacao`, `fato_voto` e `resumo_votacoes_mes` no contrato canônico (versão 1.2.0), com testes para tipos de voto não mapeados, votações nominais sem evento e votos vazios fora de votação secreta.
+- Site: votações nominais do mês na página de cada deputado, com a frase de contexto do mês, a descrição oficial, a proposição afetada, o resultado e o voto.
+
+### Corrigido
+- Votações secretas: o voto aparece como "Votou (votação secreta)", e o placar fica em branco.
+- Votações cuja lista de votos responde 404 são tratadas como sem votos registrados.
+- Registros automáticos (mudanças de regime e réplicas de requerimentos) ficam fora da contagem do mês.
+
+### Alterado
+- Tipos de proposição de Plenário (`PRLP`, `PPP`, `PEP`, `PRLE`, `SSP`) classificados como relatoria.
+
 ## [0.2.0] - Incremento 2: proposições
 
 ### Adicionado

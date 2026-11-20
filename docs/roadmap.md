@@ -40,7 +40,7 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 | **S2: Persistência no Hugging Face** | É possível ler e gravar Parquet num dataset do Hugging Face a partir do GitHub Actions, com token em Secrets? Há limites que afetem o projeto? | Concluído em 05/11/2026 (ver docs/spikes/s2-persistencia.md) |
 | **S3: API de proposições da Câmara** | Como a API de proposições representa tipos e autoria | Concluído em 07/11/2026 (ver docs/spikes/s3-api-proposicoes.md) |
 | **S4: Câmara municipal** | A câmara da cidade usa SAPL? Há API ou exportação em formato aberto? O que a prefeitura oferece? | Investigado informalmente em 11/2026: a câmara e a prefeitura da cidade não publicam dados abertos |
-
+| **S5: API de votações da Câmara** | Como a API representa votações nominais, votos e resultado? | Concluído em 08/11/2026 (ver docs/spikes/s5-api-votacoes.md) |
 ## Incrementos
 
 ### Incremento 0: Esqueleto andante · `v0.0.1`
@@ -119,6 +119,14 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 ---
 
 ### Incremento 3: Votos nominais · `v0.3.0`
+**Status:** concluído em 15/11/2026 (`v0.3.0`).
+
+**Desvios em relação ao plano:**
+- A coluna `votos_registrados` no resumo deu lugar ao `resumo_votacoes_mes`, que informa quantas votações o Plenário fez no mês e quantas foram nominais. Assim, um número pequeno de votações nominais não parece pouca atividade (ADR-008).
+- A primeira coleta de três meses revelou casos fora do spike: uma votação secreta, votações cuja lista de votos responde 404 e 149 registros automáticos sem evento. Os três foram tratados num PR de correção e registrados no ADR-008.
+- Cinco tipos de proposição de Plenário apareceram sem classificação e entraram no seed como relatoria (ADR-007).
+- A proposição afetada por cada votação entrou num passo próprio, depois do site. Um teste de dados garante a premissa de uma proposição por votação.
+- O contrato ficou na versão 1.2.0, publicada pela primeira vez nesta release.
 
 **Escopo**
 - Ingestão das votações nominais do plenário e dos votos individuais.
@@ -155,10 +163,10 @@ Cada spike tem duração máxima de 1 dia e termina com uma nota em `docs/spikes
 
 **Por que por último:** é a métrica com maior risco de interpretação (ausências justificadas, tipos de sessão). O spike S1 resolve a dúvida técnica cedo; a implementação vem quando o restante já está estável.
 
-**Antes de começar:** ADR-008 definindo o que conta como sessão, como presença e como ausência justificada.
+**Antes de começar:** ADR-009 definindo o que conta como sessão, como presença e como ausência justificada.
 
 **Escopo**
-- Ingestão de presença conforme definido no ADR-008.
+- Ingestão de presença conforme definido no ADR-009.
 - `fato_presenca` com contrato e testes.
 - Resumo: colunas de sessões, presença e ausências justificadas.
 - Site: bloco "Presença", sempre separando ausência justificada de ausência.

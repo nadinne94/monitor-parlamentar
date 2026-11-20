@@ -5,9 +5,10 @@ proposições apresentadas, presença em plenário, votos nominais e gastos da c
 
 **Site:** https://nadinne94.github.io/monitor-parlamentar/
 
-> **Status:** Incremento 2 concluído. O site mostra a bancada de MG e, para cada deputado,
-> as proposições de cada mês, com autoria e coautoria separadas. Os dados ficam guardados
-> numa release do GitHub, e o site é publicado mesmo quando a API da Câmara está fora do ar.
+> **Status:** Incremento 3 concluído. O site mostra a bancada de MG e, para cada deputado,
+> as proposições de cada mês e como votou nas votações nominais do Plenário, com a proposição
+> afetada por cada votação. Os dados ficam guardados numa release do GitHub, e o site é
+> publicado mesmo quando a API da Câmara está fora do ar.
 > Os relatórios mensais começam oficialmente em fevereiro de 2027. Veja o [roadmap](docs/roadmap.md).
 
 ## Como funciona
