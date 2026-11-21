@@ -6,8 +6,11 @@ snake_case. Campos que o projeto não usa são descartados (ver docs/spikes/s0-a
 
 from datetime import datetime
 from decimal import Decimal
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from monitor.ingestion.core.privacidade import eh_cpf, mascarar_cpf
 
 
 class DeputadoApi(BaseModel):
@@ -96,8 +99,9 @@ class VotoApi(BaseModel):
 class DespesaApi(BaseModel):
     """Um item de `GET /deputados/{id}/despesas` (ver docs/spikes/s6-api-despesas.md).
 
-    O sinal do valor líquido é o da API; a correção por categoria acontece no dbt
-    (ADR-009, seção 5).
+    O CPF de fornecedor pessoa física é mascarado já na validação, e o nome e o link do
+    comprovante dele são descartados (ADR-009, seção 6). O sinal do valor líquido é o da
+    API; a correção por categoria acontece no dbt (ADR-009, seção 5).
     """
 
     model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
@@ -117,3 +121,16 @@ class DespesaApi(BaseModel):
     documento_fornecedor: str | None = Field(default=None, alias="cnpjCpfFornecedor")
     fornecedor_pessoa_fisica: bool = False
     parcela: int | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _proteger_dados_pessoais(cls, dados: dict[str, Any]) -> dict[str, Any]:
+        """Roda antes de qualquer campo: o CPF completo nunca chega ao modelo."""
+        dados = dict(dados)
+        documento = dados.get("cnpjCpfFornecedor")
+        if eh_cpf(documento):
+            dados["cnpjCpfFornecedor"] = mascarar_cpf(documento)
+            dados["nomeFornecedor"] = None
+            dados["urlDocumento"] = None
+            dados["fornecedor_pessoa_fisica"] = True
+        return dados

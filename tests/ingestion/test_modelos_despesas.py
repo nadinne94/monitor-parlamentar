@@ -48,3 +48,16 @@ def test_converte_despesa_com_cnpj(item_despesa):
     assert despesa.documento_fornecedor == "12345678000199"
     assert despesa.nome_fornecedor == "GRAFICA EXEMPLO LTDA"
     assert despesa.fornecedor_pessoa_fisica is False
+
+
+def test_fornecedor_pessoa_fisica_sai_protegido(item_despesa):
+    item_despesa["cnpjCpfFornecedor"] = "12345678901"
+    item_despesa["nomeFornecedor"] = "JOAO DA SILVA"
+
+    despesa = DespesaApi.model_validate(item_despesa)
+
+    assert despesa.fornecedor_pessoa_fisica is True
+    assert despesa.documento_fornecedor == "***.456.789-**"
+    assert despesa.nome_fornecedor is None
+    assert despesa.url_documento is None
+    assert "12345678901" not in despesa.model_dump_json()
