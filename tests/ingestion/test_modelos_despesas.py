@@ -70,3 +70,31 @@ def test_cpf_no_nome_de_empresa_e_mascarado(item_despesa):
 
     assert despesa.nome_fornecedor == "JOAO DA SILVA ***.456.789-**"
     assert despesa.fornecedor_pessoa_fisica is False
+
+
+@pytest.mark.parametrize(
+    "mudancas",
+    [
+        # telefonia: sem data do documento (71 casos no spike)
+        {"tipoDespesa": "TELEFONIA", "dataDocumento": None},
+        # complementação do auxílio-moradia: sem data e sem valor do documento
+        {
+            "tipoDespesa": "COMPLEMENTAÇÃO DO AUXÍLIO-MORADIA",
+            "dataDocumento": None,
+            "valorDocumento": None,
+        },
+        # crédito de passagem SIGEPA: código GUID e valores negativos
+        {
+            "tipoDespesa": "PASSAGEM AÉREA - SIGEPA",
+            "codDocumento": "67E7EEC0-AC60-415D-B9F3-7A89690918A8",
+            "valorDocumento": -2194.65,
+            "valorLiquido": -2194.65,
+        },
+    ],
+)
+def test_aceita_os_casos_vistos_no_spike(item_despesa, mudancas):
+    item_despesa.update(mudancas)
+
+    despesa = DespesaApi.model_validate(item_despesa)
+
+    assert despesa.tipo_despesa == mudancas["tipoDespesa"]
