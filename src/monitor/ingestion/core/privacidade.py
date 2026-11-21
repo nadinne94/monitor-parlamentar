@@ -17,3 +17,8 @@ def mascarar_cpf(cpf: str) -> str:
     if len(digitos) != 11:
         raise ValueError(f"Um CPF tem 11 dígitos; o documento recebido tem {len(digitos)}.")
     return f"***.{digitos[3:6]}.{digitos[6:9]}-**"
+
+
+def eh_cpf(documento: str | None) -> bool:
+    """Um documento é CPF quando tem 11 dígitos (o CNPJ tem 14)."""
+    return len(_digitos(documento)) == 11
