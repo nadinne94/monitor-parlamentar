@@ -106,9 +106,9 @@ class DespesaApi(BaseModel):
 
     model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
 
-    ano: int
-    mes: int
-    tipo_despesa: str = Field(alias="tipoDespesa")
+    ano: int = Field(ge=2000)
+    mes: int = Field(ge=1, le=12)
+    tipo_despesa: str = Field(alias="tipoDespesa", min_length=1)
     cod_documento: str = Field(alias="codDocumento")
     tipo_documento: str | None = Field(default=None, alias="tipoDocumento")
     data_documento: datetime | None = Field(default=None, alias="dataDocumento")

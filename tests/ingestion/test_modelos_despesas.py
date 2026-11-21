@@ -2,6 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 
 import pytest
+from pydantic import ValidationError
 
 from monitor.ingestion.camara.modelos import DespesaApi
 
@@ -98,3 +99,14 @@ def test_aceita_os_casos_vistos_no_spike(item_despesa, mudancas):
     despesa = DespesaApi.model_validate(item_despesa)
 
     assert despesa.tipo_despesa == mudancas["tipoDespesa"]
+
+
+@pytest.mark.parametrize(
+    ("campo", "valor"),
+    [("mes", 0), ("mes", 13), ("tipoDespesa", "")],
+)
+def test_rejeita_competencia_ou_categoria_invalida(item_despesa, campo, valor):
+    item_despesa[campo] = valor
+
+    with pytest.raises(ValidationError):
+        DespesaApi.model_validate(item_despesa)
