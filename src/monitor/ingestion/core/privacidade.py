@@ -6,6 +6,8 @@ pode chegar ao Parquet sem máscara: a proteção acontece já na ingestão.
 
 import re
 
+CPF_NO_TEXTO = re.compile(r"(?<!\d)\d{3}\.?\d{3}\.?\d{3}-?\d{2}(?!\d)")
+
 
 def _digitos(texto: str | None) -> str:
     return re.sub(r"\D", "", texto or "")
@@ -22,3 +24,8 @@ def mascarar_cpf(cpf: str) -> str:
 def eh_cpf(documento: str | None) -> bool:
     """Um documento é CPF quando tem 11 dígitos (o CNPJ tem 14)."""
     return len(_digitos(documento)) == 11
+
+
+def mascarar_cpfs_no_texto(texto: str) -> str:
+    """Mascara cada CPF que aparece dentro de um texto, como no nome empresarial de um MEI."""
+    return CPF_NO_TEXTO.sub(lambda achado: mascarar_cpf(achado.group()), texto)

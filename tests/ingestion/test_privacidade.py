@@ -1,6 +1,6 @@
 import pytest
 
-from monitor.ingestion.core.privacidade import eh_cpf, mascarar_cpf
+from monitor.ingestion.core.privacidade import eh_cpf, mascarar_cpf, mascarar_cpfs_no_texto
 
 
 @pytest.mark.parametrize("cpf", ["12345678901", "123.456.789-01"])
@@ -28,3 +28,17 @@ def test_recusa_o_que_nao_e_cpf_sem_mostrar_o_documento(documento):
 )
 def test_reconhece_cpf_pelos_11_digitos(documento, esperado):
     assert eh_cpf(documento) is esperado
+
+
+@pytest.mark.parametrize(
+    ("texto", "esperado"),
+    [
+        ("JOAO DA SILVA 12345678901", "JOAO DA SILVA ***.456.789-**"),
+        ("MARIA 123.456.789-01 ME", "MARIA ***.456.789-** ME"),
+        ("POSTO EXEMPLO 12.345.678/0001-99", "POSTO EXEMPLO 12.345.678/0001-99"),
+        ("EMPRESA EXEMPLO 12345678000199", "EMPRESA EXEMPLO 12345678000199"),
+        ("PAPELARIA CENTRAL", "PAPELARIA CENTRAL"),
+    ],
+)
+def test_mascara_cpf_dentro_de_um_texto(texto, esperado):
+    assert mascarar_cpfs_no_texto(texto) == esperado
