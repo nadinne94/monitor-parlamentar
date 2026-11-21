@@ -5,8 +5,12 @@ snake_case. Campos que o projeto não usa são descartados (ver docs/spikes/s0-a
 """
 
 from datetime import datetime
+from decimal import Decimal
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from monitor.ingestion.core.privacidade import eh_cpf, mascarar_cpf, mascarar_cpfs_no_texto
 
 
 class DeputadoApi(BaseModel):
@@ -90,3 +94,45 @@ class VotoApi(BaseModel):
     tipo_voto: str | None = Field(alias="tipoVoto", min_length=1)
     data_registro_voto: datetime = Field(alias="dataRegistroVoto")
     deputado: DeputadoDoVotoApi = Field(alias="deputado_")
+
+
+class DespesaApi(BaseModel):
+    """Um item de `GET /deputados/{id}/despesas` (ver docs/spikes/s6-api-despesas.md).
+
+    O CPF de fornecedor pessoa física é mascarado já na validação, e o nome e o link do
+    comprovante dele são descartados (ADR-009, seção 6). O sinal do valor líquido é o da
+    API; a correção por categoria acontece no dbt (ADR-009, seção 5).
+    """
+
+    model_config = ConfigDict(extra="ignore", frozen=True, str_strip_whitespace=True)
+
+    ano: int = Field(ge=2000)
+    mes: int = Field(ge=1, le=12)
+    tipo_despesa: str = Field(alias="tipoDespesa", min_length=1)
+    cod_documento: str = Field(alias="codDocumento")
+    tipo_documento: str | None = Field(default=None, alias="tipoDocumento")
+    data_documento: datetime | None = Field(default=None, alias="dataDocumento")
+    num_documento: str | None = Field(default=None, alias="numDocumento")
+    valor_documento: Decimal | None = Field(default=None, alias="valorDocumento")
+    valor_glosa: Decimal = Field(default=Decimal(0), alias="valorGlosa")
+    valor_liquido: Decimal = Field(alias="valorLiquido")
+    url_documento: str | None = Field(default=None, alias="urlDocumento")
+    nome_fornecedor: str | None = Field(default=None, alias="nomeFornecedor")
+    documento_fornecedor: str | None = Field(default=None, alias="cnpjCpfFornecedor")
+    fornecedor_pessoa_fisica: bool = False
+    parcela: int | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _proteger_dados_pessoais(cls, dados: dict[str, Any]) -> dict[str, Any]:
+        """Roda antes de qualquer campo: o CPF completo nunca chega ao modelo."""
+        dados = dict(dados)
+        documento = dados.get("cnpjCpfFornecedor")
+        if eh_cpf(documento):
+            dados["cnpjCpfFornecedor"] = mascarar_cpf(documento)
+            dados["nomeFornecedor"] = None
+            dados["urlDocumento"] = None
+            dados["fornecedor_pessoa_fisica"] = True
+        elif dados.get("nomeFornecedor"):
+            dados["nomeFornecedor"] = mascarar_cpfs_no_texto(dados["nomeFornecedor"])
+        return dados
