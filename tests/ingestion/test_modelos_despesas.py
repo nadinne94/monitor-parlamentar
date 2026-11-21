@@ -61,3 +61,12 @@ def test_fornecedor_pessoa_fisica_sai_protegido(item_despesa):
     assert despesa.nome_fornecedor is None
     assert despesa.url_documento is None
     assert "12345678901" not in despesa.model_dump_json()
+
+
+def test_cpf_no_nome_de_empresa_e_mascarado(item_despesa):
+    item_despesa["nomeFornecedor"] = "JOAO DA SILVA 12345678901"
+
+    despesa = DespesaApi.model_validate(item_despesa)
+
+    assert despesa.nome_fornecedor == "JOAO DA SILVA ***.456.789-**"
+    assert despesa.fornecedor_pessoa_fisica is False

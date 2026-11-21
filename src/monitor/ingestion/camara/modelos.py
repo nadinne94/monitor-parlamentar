@@ -10,7 +10,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from monitor.ingestion.core.privacidade import eh_cpf, mascarar_cpf
+from monitor.ingestion.core.privacidade import eh_cpf, mascarar_cpf, mascarar_cpfs_no_texto
 
 
 class DeputadoApi(BaseModel):
@@ -133,4 +133,6 @@ class DespesaApi(BaseModel):
             dados["nomeFornecedor"] = None
             dados["urlDocumento"] = None
             dados["fornecedor_pessoa_fisica"] = True
+        elif dados.get("nomeFornecedor"):
+            dados["nomeFornecedor"] = mascarar_cpfs_no_texto(dados["nomeFornecedor"])
         return dados
