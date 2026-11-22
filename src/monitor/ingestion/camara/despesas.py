@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pyarrow as pa
 
+from monitor.ingestion.camara.deputados import buscar_deputados
 from monitor.ingestion.camara.modelos import DespesaApi
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
@@ -69,3 +70,9 @@ def gravar_despesas(despesas: dict[int, list[DespesaApi]], destino: Path) -> Pat
         for d in lista
     ]
     return gravar_tabela(linhas, ESQUEMA_DESPESAS, destino)
+
+
+def ingerir_despesas(cliente: ClienteApi, uf: str, mes: str, pasta: Path) -> list[Path]:
+    """Busca as despesas de cada deputado da UF na competência e grava um Parquet do mês."""
+    despesas = {d.id: buscar_despesas(cliente, d.id, mes) for d in buscar_deputados(cliente, uf)}
+    return [gravar_despesas(despesas, pasta / f"despesas_{mes}.parquet")]

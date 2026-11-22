@@ -5,7 +5,7 @@ import httpx
 import pytest
 
 from monitor.ingestion.camara.deputados import URL_API_CAMARA
-from monitor.ingestion.camara.despesas import buscar_despesas, gravar_despesas
+from monitor.ingestion.camara.despesas import buscar_despesas, gravar_despesas, ingerir_despesas
 from monitor.ingestion.camara.modelos import DespesaApi
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
@@ -77,3 +77,19 @@ def test_grava_as_despesas_com_valores_em_decimal(tmp_path):
         (74646, Decimal("-150.00"), "12345678000199", "DECIMAL(12,2)"),
         (204512, Decimal("-150.00"), "***.456.789-**", "DECIMAL(12,2)"),
     ]
+
+
+def test_ingere_as_despesas_de_cada_deputado_da_uf(tmp_path):
+    deputado = {"nome": "Dep", "siglaUf": "MG", "idLegislatura": 57}
+    rotas = {
+        "/deputados": [{**deputado, "id": 74646}, {**deputado, "id": 204512}],
+        "/deputados/74646/despesas": [despesa(), despesa(cod="2")],
+        "/deputados/204512/despesas": [],
+    }
+
+    with cliente_falso(rotas) as cliente:
+        arquivos = ingerir_despesas(cliente, "MG", "2026-10", tmp_path)
+
+    assert arquivos == [tmp_path / "despesas_2026-10.parquet"]
+    linhas = duckdb.sql(f"select id_deputado, cod_documento from '{arquivos[0]}'").fetchall()
+    assert sorted(linhas) == [(74646, "2"), (74646, "8166223")]
