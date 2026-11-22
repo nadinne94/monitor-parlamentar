@@ -9,6 +9,7 @@ from monitor.ingestion.camara.despesas import buscar_despesas, gravar_despesas, 
 from monitor.ingestion.camara.modelos import DespesaApi
 from monitor.ingestion.core.cliente import ClienteApi
 from monitor.ingestion.core.erros import IngestaoError
+from monitor.ingestion.core.privacidade import eh_cpf
 
 
 def despesa(cod="8166223", mes=10, documento="12345678000199"):
@@ -93,3 +94,13 @@ def test_ingere_as_despesas_de_cada_deputado_da_uf(tmp_path):
     assert arquivos == [tmp_path / "despesas_2026-10.parquet"]
     linhas = duckdb.sql(f"select id_deputado, cod_documento from '{arquivos[0]}'").fetchall()
     assert sorted(linhas) == [(74646, "2"), (74646, "8166223")]
+
+
+@pytest.mark.vcr
+def test_api_real_despesas_de_um_deputado_em_outubro():
+    with ClienteApi(URL_API_CAMARA) as cliente:
+        despesas = buscar_despesas(cliente, 74646, "2026-10")
+
+    assert len(despesas) >= 17
+    assert {(d.ano, d.mes) for d in despesas} == {(2026, 10)}
+    assert not any(eh_cpf(d.documento_fornecedor) for d in despesas)

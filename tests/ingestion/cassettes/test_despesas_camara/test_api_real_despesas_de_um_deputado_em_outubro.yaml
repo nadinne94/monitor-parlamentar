@@ -1,0 +1,168 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - dadosabertos.camara.leg.br
+      user-agent:
+      - monitor-parlamentar (+https://github.com/nadinne94/monitor-parlamentar)
+    method: GET
+    uri: https://dadosabertos.camara.leg.br/api/v2/deputados/74646/despesas?ano=2026&mes=10&ordem=ASC&ordenarPor=dataDocumento&itens=100
+  response:
+    body:
+      string: "{\"dados\": [{\"ano\": 2026, \"mes\": 10, \"tipoDespesa\": \"DIVULGA\xC7\xC3O
+        DA ATIVIDADE PARLAMENTAR.\", \"codDocumento\": \"8166223\", \"tipoDocumento\":
+        \"Nota Fiscal\", \"codTipoDocumento\": 0, \"dataDocumento\": \"2026-10-01T00:00:00\",
+        \"numDocumento\": \"23073\", \"valorDocumento\": 266.65, \"urlDocumento\":
+        \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8166223.pdf\",
+        \"nomeFornecedor\": \"DINAMIZE INFORMATICA LTDA\", \"cnpjCpfFornecedor\":
+        \"03962660000141\", \"valorLiquido\": -266.65, \"valorGlosa\": 0.0, \"numRessarcimento\":
+        \"\", \"codLote\": 2270923, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10,
+        \"tipoDespesa\": \"MANUTEN\xC7\xC3O DE ESCRIT\xD3RIO DE APOIO \xC0 ATIVIDADE
+        PARLAMENTAR\", \"codDocumento\": \"8162275\", \"tipoDocumento\": \"Recibos/Outros\",
+        \"codTipoDocumento\": 1, \"dataDocumento\": \"2026-10-05T00:00:00\", \"numDocumento\":
+        \"169541\", \"valorDocumento\": 3239.74, \"urlDocumento\": \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8162275.pdf\",
+        \"nomeFornecedor\": \"CONDOMINIO LONDON OFFICES\", \"cnpjCpfFornecedor\":
+        \"09494173000188\", \"valorLiquido\": -3239.74, \"valorGlosa\": 0.0, \"numRessarcimento\":
+        \"\", \"codLote\": 2268035, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10,
+        \"tipoDespesa\": \"PASSAGEM A\xC9REA - SIGEPA\", \"codDocumento\": \"CC162632-353E-4265-80BE-152C0BD4A57A\",
+        \"tipoDocumento\": \"Nota Fiscal\", \"codTipoDocumento\": 0, \"dataDocumento\":
+        \"2026-10-06T00:00:00\", \"numDocumento\": \"1272313387958\", \"valorDocumento\":
+        2175.53, \"urlDocumento\": null, \"nomeFornecedor\": \"Gol Linhas A\xE9reas\",
+        \"cnpjCpfFornecedor\": \"07575651000159\", \"valorLiquido\": 2175.53, \"valorGlosa\":
+        0.0, \"numRessarcimento\": \"0\", \"codLote\": 0, \"parcela\": 0}, {\"ano\":
+        2026, \"mes\": 10, \"tipoDespesa\": \"MANUTEN\xC7\xC3O DE ESCRIT\xD3RIO DE
+        APOIO \xC0 ATIVIDADE PARLAMENTAR\", \"codDocumento\": \"8168542\", \"tipoDocumento\":
+        \"Nota Fiscal\", \"codTipoDocumento\": 0, \"dataDocumento\": \"2026-10-07T00:00:00\",
+        \"numDocumento\": \"436671086\", \"valorDocumento\": 1174.63, \"urlDocumento\":
+        \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8168542.pdf\",
+        \"nomeFornecedor\": \"CEMIG DISTRIBUICAO S.A\", \"cnpjCpfFornecedor\": \"06981180000116\",
+        \"valorLiquido\": -1174.63, \"valorGlosa\": 0.0, \"numRessarcimento\": \"\",
+        \"codLote\": 2271531, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10, \"tipoDespesa\":
+        \"PASSAGEM A\xC9REA - SIGEPA\", \"codDocumento\": \"952D6C39-F5E0-4B96-A734-48F49D223899\",
+        \"tipoDocumento\": \"Nota Fiscal\", \"codTipoDocumento\": 0, \"dataDocumento\":
+        \"2026-10-08T00:00:00\", \"numDocumento\": \"1272313559229\", \"valorDocumento\":
+        2423.56, \"urlDocumento\": null, \"nomeFornecedor\": \"Gol Linhas A\xE9reas\",
+        \"cnpjCpfFornecedor\": \"07575651000159\", \"valorLiquido\": 2423.56, \"valorGlosa\":
+        0.0, \"numRessarcimento\": \"0\", \"codLote\": 0, \"parcela\": 0}, {\"ano\":
+        2026, \"mes\": 10, \"tipoDespesa\": \"PASSAGEM A\xC9REA - SIGEPA\", \"codDocumento\":
+        \"B0AB8796-A26D-4BE2-A035-7BC3EEDB2314\", \"tipoDocumento\": \"Nota Fiscal\",
+        \"codTipoDocumento\": 0, \"dataDocumento\": \"2026-10-13T00:00:00\", \"numDocumento\":
+        \"1272313923216\", \"valorDocumento\": 1940.25, \"urlDocumento\": null, \"nomeFornecedor\":
+        \"Gol Linhas A\xE9reas\", \"cnpjCpfFornecedor\": \"07575651000159\", \"valorLiquido\":
+        1940.25, \"valorGlosa\": 0.0, \"numRessarcimento\": \"0\", \"codLote\": 0,
+        \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10, \"tipoDespesa\": \"PASSAGEM
+        A\xC9REA - SIGEPA\", \"codDocumento\": \"134D8DFB-CBCB-4CBE-B5EE-3AAEE6605394\",
+        \"tipoDocumento\": \"Nota Fiscal\", \"codTipoDocumento\": 0, \"dataDocumento\":
+        \"2026-10-13T00:00:00\", \"numDocumento\": \"1272313919052\", \"valorDocumento\":
+        2395.49, \"urlDocumento\": null, \"nomeFornecedor\": \"Gol Linhas A\xE9reas\",
+        \"cnpjCpfFornecedor\": \"07575651000159\", \"valorLiquido\": 2395.49, \"valorGlosa\":
+        0.0, \"numRessarcimento\": \"0\", \"codLote\": 0, \"parcela\": 0}, {\"ano\":
+        2026, \"mes\": 10, \"tipoDespesa\": \"MANUTEN\xC7\xC3O DE ESCRIT\xD3RIO DE
+        APOIO \xC0 ATIVIDADE PARLAMENTAR\", \"codDocumento\": \"8167487\", \"tipoDocumento\":
+        \"Recibos/Outros\", \"codTipoDocumento\": 1, \"dataDocumento\": \"2026-10-14T00:00:00\",
+        \"numDocumento\": \"0126613686578\", \"valorDocumento\": 55.98, \"urlDocumento\":
+        \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8167487.pdf\",
+        \"nomeFornecedor\": \"MUNICIPIO DE BELO HORIZONTE\", \"cnpjCpfFornecedor\":
+        \"18715383000140\", \"valorLiquido\": -55.98, \"valorGlosa\": 0.0, \"numRessarcimento\":
+        \"\", \"codLote\": 2270923, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10,
+        \"tipoDespesa\": \"MANUTEN\xC7\xC3O DE ESCRIT\xD3RIO DE APOIO \xC0 ATIVIDADE
+        PARLAMENTAR\", \"codDocumento\": \"8166200\", \"tipoDocumento\": \"Recibos/Outros\",
+        \"codTipoDocumento\": 1, \"dataDocumento\": \"2026-10-14T00:00:00\", \"numDocumento\":
+        \"0126613662555\", \"valorDocumento\": 1618.49, \"urlDocumento\": \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8166200.pdf\",
+        \"nomeFornecedor\": \"MUNICIPIO DE BELO HORIZONTE\", \"cnpjCpfFornecedor\":
+        \"18715383000140\", \"valorLiquido\": -1535.38, \"valorGlosa\": 83.11, \"numRessarcimento\":
+        \"\", \"codLote\": 2270923, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10,
+        \"tipoDespesa\": \"MANUTEN\xC7\xC3O DE ESCRIT\xD3RIO DE APOIO \xC0 ATIVIDADE
+        PARLAMENTAR\", \"codDocumento\": \"8166203\", \"tipoDocumento\": \"Recibos/Outros\",
+        \"codTipoDocumento\": 1, \"dataDocumento\": \"2026-10-14T00:00:00\", \"numDocumento\":
+        \"0126613678630\", \"valorDocumento\": 60.26, \"urlDocumento\": \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8166203.pdf\",
+        \"nomeFornecedor\": \"MUNICIPIO DE BELO HORIZONTE\", \"cnpjCpfFornecedor\":
+        \"18715383000140\", \"valorLiquido\": -60.26, \"valorGlosa\": 0.0, \"numRessarcimento\":
+        \"\", \"codLote\": 2270923, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10,
+        \"tipoDespesa\": \"MANUTEN\xC7\xC3O DE ESCRIT\xD3RIO DE APOIO \xC0 ATIVIDADE
+        PARLAMENTAR\", \"codDocumento\": \"8166206\", \"tipoDocumento\": \"Recibos/Outros\",
+        \"codTipoDocumento\": 1, \"dataDocumento\": \"2026-10-15T00:00:00\", \"numDocumento\":
+        \"0126618345930\", \"valorDocumento\": 60.26, \"urlDocumento\": \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8166206.pdf\",
+        \"nomeFornecedor\": \"MUNICIPIO DE BELO HORIZONTE\", \"cnpjCpfFornecedor\":
+        \"18715383000140\", \"valorLiquido\": -60.26, \"valorGlosa\": 0.0, \"numRessarcimento\":
+        \"\", \"codLote\": 2270923, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10,
+        \"tipoDespesa\": \"MANUTEN\xC7\xC3O DE ESCRIT\xD3RIO DE APOIO \xC0 ATIVIDADE
+        PARLAMENTAR\", \"codDocumento\": \"8166215\", \"tipoDocumento\": \"Recibos/Outros\",
+        \"codTipoDocumento\": 1, \"dataDocumento\": \"2026-10-15T00:00:00\", \"numDocumento\":
+        \"0126618353607\", \"valorDocumento\": 60.26, \"urlDocumento\": \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8166215.pdf\",
+        \"nomeFornecedor\": \"MUNICIPIO DE BELO HORIZONTE\", \"cnpjCpfFornecedor\":
+        \"18715383000140\", \"valorLiquido\": -60.26, \"valorGlosa\": 0.0, \"numRessarcimento\":
+        \"\", \"codLote\": 2270923, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10,
+        \"tipoDespesa\": \"PASSAGEM A\xC9REA - SIGEPA\", \"codDocumento\": \"B1080A2B-8E17-45D9-8A79-A2EA6D0C5B05\",
+        \"tipoDocumento\": \"Nota Fiscal\", \"codTipoDocumento\": 0, \"dataDocumento\":
+        \"2026-10-17T00:00:00\", \"numDocumento\": \"1272314196816\", \"valorDocumento\":
+        2284.65, \"urlDocumento\": null, \"nomeFornecedor\": \"Gol Linhas A\xE9reas\",
+        \"cnpjCpfFornecedor\": \"07575651000159\", \"valorLiquido\": 2284.65, \"valorGlosa\":
+        0.0, \"numRessarcimento\": \"0\", \"codLote\": 0, \"parcela\": 0}, {\"ano\":
+        2026, \"mes\": 10, \"tipoDespesa\": \"PASSAGEM A\xC9REA - SIGEPA\", \"codDocumento\":
+        \"B1080A2B-8E17-45D9-8A79-A2EA6D0C5B05\", \"tipoDocumento\": \"Nota Fiscal\",
+        \"codTipoDocumento\": 0, \"dataDocumento\": \"2026-10-18T00:00:00\", \"numDocumento\":
+        \"1272314196816\", \"valorDocumento\": -2284.65, \"urlDocumento\": null, \"nomeFornecedor\":
+        \"Gol Linhas A\xE9reas\", \"cnpjCpfFornecedor\": \"07575651000159\", \"valorLiquido\":
+        -2284.65, \"valorGlosa\": 0.0, \"numRessarcimento\": \"0\", \"codLote\": 0,
+        \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10, \"tipoDespesa\": \"PASSAGEM
+        A\xC9REA - SIGEPA\", \"codDocumento\": \"F9659775-ADCD-4ED1-B934-B50F6DF0952B\",
+        \"tipoDocumento\": \"Nota Fiscal\", \"codTipoDocumento\": 0, \"dataDocumento\":
+        \"2026-10-22T00:00:00\", \"numDocumento\": \"1272314488439\", \"valorDocumento\":
+        2179.49, \"urlDocumento\": null, \"nomeFornecedor\": \"Gol Linhas A\xE9reas\",
+        \"cnpjCpfFornecedor\": \"07575651000159\", \"valorLiquido\": 2179.49, \"valorGlosa\":
+        0.0, \"numRessarcimento\": \"0\", \"codLote\": 0, \"parcela\": 0}, {\"ano\":
+        2026, \"mes\": 10, \"tipoDespesa\": \"MANUTEN\xC7\xC3O DE ESCRIT\xD3RIO DE
+        APOIO \xC0 ATIVIDADE PARLAMENTAR\", \"codDocumento\": \"8172701\", \"tipoDocumento\":
+        \"Recibos/Outros\", \"codTipoDocumento\": 1, \"dataDocumento\": \"2026-10-26T00:00:00\",
+        \"numDocumento\": \"144566\", \"valorDocumento\": 9000.0, \"urlDocumento\":
+        \"https://www.camara.leg.br/cota-parlamentar/documentos/publ/233/2026/8172701.pdf\",
+        \"nomeFornecedor\": \"ANUAR DONATO CONSULTORIA IMOBILIARIA LTDA\", \"cnpjCpfFornecedor\":
+        \"04292201000160\", \"valorLiquido\": -9000.0, \"valorGlosa\": 0.0, \"numRessarcimento\":
+        \"\", \"codLote\": 2273971, \"parcela\": 0}, {\"ano\": 2026, \"mes\": 10,
+        \"tipoDespesa\": \"TELEFONIA\", \"codDocumento\": \"8172716\", \"tipoDocumento\":
+        \"Nota Fiscal\", \"codTipoDocumento\": 0, \"dataDocumento\": \"2026-11-01T00:00:00\",
+        \"numDocumento\": \"00001143024565\", \"valorDocumento\": 451.0, \"urlDocumento\":
+        null, \"nomeFornecedor\": \"TELEFONICA BRASIL S.A.\", \"cnpjCpfFornecedor\":
+        \"02558157000162\", \"valorLiquido\": -451.0, \"valorGlosa\": 0.0, \"numRessarcimento\":
+        \"\", \"codLote\": 2273970, \"parcela\": 0}], \"links\": [{\"rel\": \"self\",
+        \"href\": \"https://dadosabertos.camara.leg.br/api/v2/deputados/74646/despesas?ano=2026&mes=10&ordem=ASC&ordenarPor=dataDocumento&itens=100\"},
+        {\"rel\": \"first\", \"href\": \"https://dadosabertos.camara.leg.br/api/v2/deputados/74646/despesas?ano=2026&mes=10&ordem=ASC&ordenarPor=dataDocumento&pagina=1&itens=100\"},
+        {\"rel\": \"last\", \"href\": \"https://dadosabertos.camara.leg.br/api/v2/deputados/74646/despesas?ano=2026&mes=10&ordem=ASC&ordenarPor=dataDocumento&pagina=1&itens=100\"}]}"
+    headers:
+      access-control-expose-headers:
+      - Link, X-Total-Count, X-Validation-Error
+      content-length:
+      - '9459'
+      content-type:
+      - application/json
+      date:
+      - Sun, 22 Nov 2026 19:39:35 GMT
+      link:
+      - <https://dadosabertos.camara.leg.br/api/v2/deputados/74646/despesas?ano=2026&mes=10&ordem=ASC&ordenarPor=dataDocumento&itens=100>;
+        rel="self",<https://dadosabertos.camara.leg.br/api/v2/deputados/74646/despesas?ano=2026&mes=10&ordem=ASC&ordenarPor=dataDocumento&pagina=1&itens=100>;
+        rel="first",<https://dadosabertos.camara.leg.br/api/v2/deputados/74646/despesas?ano=2026&mes=10&ordem=ASC&ordenarPor=dataDocumento&pagina=1&itens=100>;
+        rel="last",
+      retry-after:
+      - '30'
+      server:
+      - envoy
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin,Access-Control-Request-Method,Access-Control-Request-Headers, Accept-Encoding
+      x-envoy-upstream-service-time:
+      - '44'
+      x-total-count:
+      - '17'
+    status:
+      code: 200
+      message: OK
+version: 1
