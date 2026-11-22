@@ -24,3 +24,22 @@ def anonimizar_despesas(corpo: str) -> str:
         elif item.get("nomeFornecedor"):
             item["nomeFornecedor"] = mascarar_cpfs_no_texto(item["nomeFornecedor"])
     return json.dumps(dados, ensure_ascii=False)
+
+
+def preparar_resposta(resposta: dict) -> dict | None:
+    """Gancho do vcrpy antes de gravar uma resposta (before_record_response).
+
+    Não grava respostas 5xx, porque uma cassete deve guardar a API funcionando, e anonimiza
+    as respostas de despesas.
+    """
+    if resposta["status"]["code"] >= 500:
+        return None
+    corpo = resposta["body"]["string"]
+    texto = corpo.decode("utf-8") if isinstance(corpo, bytes) else corpo
+    if "cnpjCpfFornecedor" in texto:
+        anonimo = anonimizar_despesas(texto).encode("utf-8")
+        resposta["body"]["string"] = anonimo
+        for chave in resposta["headers"]:
+            if chave.lower() == "content-length":
+                resposta["headers"][chave] = [str(len(anonimo))]
+    return resposta
