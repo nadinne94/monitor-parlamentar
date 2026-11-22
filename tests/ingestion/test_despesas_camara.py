@@ -1,8 +1,10 @@
 import httpx
+import pytest
 
 from monitor.ingestion.camara.deputados import URL_API_CAMARA
 from monitor.ingestion.camara.despesas import buscar_despesas
 from monitor.ingestion.core.cliente import ClienteApi
+from monitor.ingestion.core.erros import IngestaoError
 
 
 def despesa(cod="8166223", mes=10, documento="12345678000199"):
@@ -46,3 +48,10 @@ def test_busca_as_despesas_do_deputado_com_ano_e_mes():
     assert params["mes"] == "10"
     assert params["itens"] == "100"
     assert [d.cod_documento for d in despesas] == ["8166223"]
+
+
+def test_falha_se_vier_despesa_de_outra_competencia():
+    rotas = {"/deputados/74646/despesas": [despesa(), despesa(cod="2", mes=9)]}
+
+    with cliente_falso(rotas) as cliente, pytest.raises(IngestaoError, match="2026-09"):
+        buscar_despesas(cliente, 74646, "2026-10")

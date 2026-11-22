@@ -2,6 +2,7 @@
 
 from monitor.ingestion.camara.modelos import DespesaApi
 from monitor.ingestion.core.cliente import ClienteApi
+from monitor.ingestion.core.erros import IngestaoError
 
 
 def buscar_despesas(cliente: ClienteApi, id_deputado: int, mes: str) -> list[DespesaApi]:
@@ -19,4 +20,10 @@ def buscar_despesas(cliente: ClienteApi, id_deputado: int, mes: str) -> list[Des
         "itens": 100,
     }
     caminho = f"/deputados/{id_deputado}/despesas"
-    return [DespesaApi.model_validate(item) for item in cliente.paginar(caminho, params)]
+    despesas = [DespesaApi.model_validate(item) for item in cliente.paginar(caminho, params)]
+    outras = sorted({f"{d.ano}-{d.mes:02d}" for d in despesas} - {mes})
+    if outras:
+        raise IngestaoError(
+            f"Pedido para {mes}, mas vieram despesas das competências: {', '.join(outras)}."
+        )
+    return despesas
